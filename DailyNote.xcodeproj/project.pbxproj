@@ -8,14 +8,22 @@
 
 /* Begin PBXBuildFile section */
 		4D8A3EF11CF3D14D000C2D42 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D8A3EF01CF3D14D000C2D42 /* main.m */; };
-		4D8A3EF41CF3D14D000C2D42 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D8A3EF31CF3D14D000C2D42 /* AppDelegate.m */; };
-		4D8A3EF71CF3D14D000C2D42 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D8A3EF61CF3D14D000C2D42 /* ViewController.m */; };
 		4D8A3EFA1CF3D14D000C2D42 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4D8A3EF81CF3D14D000C2D42 /* Main.storyboard */; };
 		4D8A3EFD1CF3D14D000C2D42 /* DailyNote.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4D8A3EFB1CF3D14D000C2D42 /* DailyNote.xcdatamodeld */; };
 		4D8A3EFF1CF3D14D000C2D42 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D8A3EFE1CF3D14D000C2D42 /* Assets.xcassets */; };
 		4D8A3F021CF3D14D000C2D42 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4D8A3F001CF3D14D000C2D42 /* LaunchScreen.storyboard */; };
 		4D8A3F0D1CF3D14D000C2D42 /* DailyNoteTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D8A3F0C1CF3D14D000C2D42 /* DailyNoteTests.m */; };
 		4D8A3F181CF3D14D000C2D42 /* DailyNoteUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D8A3F171CF3D14D000C2D42 /* DailyNoteUITests.m */; };
+		4D8A3F341CF3D615000C2D42 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D8A3F281CF3D615000C2D42 /* AppDelegate.m */; };
+		4D8A3F381CF3D769000C2D42 /* WLLDailyNoteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D8A3F361CF3D769000C2D42 /* WLLDailyNoteViewController.m */; };
+		4D8A3F391CF3D769000C2D42 /* WLLDailyNoteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D8A3F371CF3D769000C2D42 /* WLLDailyNoteViewController.xib */; };
+		4D8A3F3D1CF3D7A1000C2D42 /* WLLShareViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D8A3F3B1CF3D7A1000C2D42 /* WLLShareViewController.m */; };
+		4D8A3F3E1CF3D7A1000C2D42 /* WLLShareViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D8A3F3C1CF3D7A1000C2D42 /* WLLShareViewController.xib */; };
+		4D8A3F421CF3D7C1000C2D42 /* WLLUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D8A3F401CF3D7C1000C2D42 /* WLLUserViewController.m */; };
+		4D8A3F431CF3D7C1000C2D42 /* WLLUserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D8A3F411CF3D7C1000C2D42 /* WLLUserViewController.xib */; };
+		4D8A3F471CF423F1000C2D42 /* WLLLogInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D8A3F451CF423F1000C2D42 /* WLLLogInViewController.m */; };
+		4D8A3F481CF423F1000C2D42 /* WLLLogInViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D8A3F461CF423F1000C2D42 /* WLLLogInViewController.xib */; };
+		688F9BB8C948A1B2594BF8DD /* libPods-DailyNote.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A274DBB65D8CD8315FA844C /* libPods-DailyNote.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,12 +44,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0428E0BC44A15683D73BA0BF /* Pods-DailyNote.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DailyNote.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DailyNote/Pods-DailyNote.debug.xcconfig"; sourceTree = "<group>"; };
+		3A274DBB65D8CD8315FA844C /* libPods-DailyNote.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-DailyNote.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D8A3EEC1CF3D14D000C2D42 /* DailyNote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DailyNote.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D8A3EF01CF3D14D000C2D42 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		4D8A3EF21CF3D14D000C2D42 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		4D8A3EF31CF3D14D000C2D42 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		4D8A3EF51CF3D14D000C2D42 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		4D8A3EF61CF3D14D000C2D42 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		4D8A3EF91CF3D14D000C2D42 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		4D8A3EFC1CF3D14D000C2D42 /* DailyNote.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DailyNote.xcdatamodel; sourceTree = "<group>"; };
 		4D8A3EFE1CF3D14D000C2D42 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -53,6 +59,21 @@
 		4D8A3F131CF3D14D000C2D42 /* DailyNoteUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DailyNoteUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D8A3F171CF3D14D000C2D42 /* DailyNoteUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DailyNoteUITests.m; sourceTree = "<group>"; };
 		4D8A3F191CF3D14D000C2D42 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4D8A3F271CF3D615000C2D42 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		4D8A3F281CF3D615000C2D42 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		4D8A3F351CF3D769000C2D42 /* WLLDailyNoteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLDailyNoteViewController.h; sourceTree = "<group>"; };
+		4D8A3F361CF3D769000C2D42 /* WLLDailyNoteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLDailyNoteViewController.m; sourceTree = "<group>"; };
+		4D8A3F371CF3D769000C2D42 /* WLLDailyNoteViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WLLDailyNoteViewController.xib; sourceTree = "<group>"; };
+		4D8A3F3A1CF3D7A1000C2D42 /* WLLShareViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLShareViewController.h; sourceTree = "<group>"; };
+		4D8A3F3B1CF3D7A1000C2D42 /* WLLShareViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLShareViewController.m; sourceTree = "<group>"; };
+		4D8A3F3C1CF3D7A1000C2D42 /* WLLShareViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WLLShareViewController.xib; sourceTree = "<group>"; };
+		4D8A3F3F1CF3D7C1000C2D42 /* WLLUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLUserViewController.h; sourceTree = "<group>"; };
+		4D8A3F401CF3D7C1000C2D42 /* WLLUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLUserViewController.m; sourceTree = "<group>"; };
+		4D8A3F411CF3D7C1000C2D42 /* WLLUserViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WLLUserViewController.xib; sourceTree = "<group>"; };
+		4D8A3F441CF423F1000C2D42 /* WLLLogInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLLogInViewController.h; sourceTree = "<group>"; };
+		4D8A3F451CF423F1000C2D42 /* WLLLogInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLLogInViewController.m; sourceTree = "<group>"; };
+		4D8A3F461CF423F1000C2D42 /* WLLLogInViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WLLLogInViewController.xib; sourceTree = "<group>"; };
+		AA9803D23890D8C5859509F5 /* Pods-DailyNote.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DailyNote.release.xcconfig"; path = "Pods/Target Support Files/Pods-DailyNote/Pods-DailyNote.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +81,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				688F9BB8C948A1B2594BF8DD /* libPods-DailyNote.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -80,6 +102,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1399C1F2AA9549EC9B66AAC2 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				0428E0BC44A15683D73BA0BF /* Pods-DailyNote.debug.xcconfig */,
+				AA9803D23890D8C5859509F5 /* Pods-DailyNote.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		4D8A3EE31CF3D14D000C2D42 = {
 			isa = PBXGroup;
 			children = (
@@ -87,6 +118,8 @@
 				4D8A3F0B1CF3D14D000C2D42 /* DailyNoteTests */,
 				4D8A3F161CF3D14D000C2D42 /* DailyNoteUITests */,
 				4D8A3EED1CF3D14D000C2D42 /* Products */,
+				1399C1F2AA9549EC9B66AAC2 /* Pods */,
+				F4D1E47F5F7EEB4860E1E806 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -103,10 +136,7 @@
 		4D8A3EEE1CF3D14D000C2D42 /* DailyNote */ = {
 			isa = PBXGroup;
 			children = (
-				4D8A3EF21CF3D14D000C2D42 /* AppDelegate.h */,
-				4D8A3EF31CF3D14D000C2D42 /* AppDelegate.m */,
-				4D8A3EF51CF3D14D000C2D42 /* ViewController.h */,
-				4D8A3EF61CF3D14D000C2D42 /* ViewController.m */,
+				4D8A3F251CF3D615000C2D42 /* Classes */,
 				4D8A3EF81CF3D14D000C2D42 /* Main.storyboard */,
 				4D8A3EFE1CF3D14D000C2D42 /* Assets.xcassets */,
 				4D8A3F001CF3D14D000C2D42 /* LaunchScreen.storyboard */,
@@ -143,6 +173,131 @@
 			path = DailyNoteUITests;
 			sourceTree = "<group>";
 		};
+		4D8A3F251CF3D615000C2D42 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				4D8A3F261CF3D615000C2D42 /* AppDelegate */,
+				4D8A3F291CF3D615000C2D42 /* Headers */,
+				4D8A3F2A1CF3D615000C2D42 /* Helpers */,
+				4D8A3F2B1CF3D615000C2D42 /* Models */,
+				4D8A3F2C1CF3D615000C2D42 /* Resources */,
+				4D8A3F2D1CF3D615000C2D42 /* ThirdParties */,
+				4D8A3F2E1CF3D615000C2D42 /* ViewControllers */,
+				4D8A3F311CF3D615000C2D42 /* Views */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		4D8A3F261CF3D615000C2D42 /* AppDelegate */ = {
+			isa = PBXGroup;
+			children = (
+				4D8A3F271CF3D615000C2D42 /* AppDelegate.h */,
+				4D8A3F281CF3D615000C2D42 /* AppDelegate.m */,
+			);
+			path = AppDelegate;
+			sourceTree = "<group>";
+		};
+		4D8A3F291CF3D615000C2D42 /* Headers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Headers;
+			sourceTree = "<group>";
+		};
+		4D8A3F2A1CF3D615000C2D42 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		4D8A3F2B1CF3D615000C2D42 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		4D8A3F2C1CF3D615000C2D42 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		4D8A3F2D1CF3D615000C2D42 /* ThirdParties */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ThirdParties;
+			sourceTree = "<group>";
+		};
+		4D8A3F2E1CF3D615000C2D42 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				4D8A3F2F1CF3D615000C2D42 /* BaseViewControllers */,
+				4D8A3F301CF3D615000C2D42 /* NormalViewControllers */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		4D8A3F2F1CF3D615000C2D42 /* BaseViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				4D8A3F351CF3D769000C2D42 /* WLLDailyNoteViewController.h */,
+				4D8A3F361CF3D769000C2D42 /* WLLDailyNoteViewController.m */,
+				4D8A3F371CF3D769000C2D42 /* WLLDailyNoteViewController.xib */,
+				4D8A3F3A1CF3D7A1000C2D42 /* WLLShareViewController.h */,
+				4D8A3F3B1CF3D7A1000C2D42 /* WLLShareViewController.m */,
+				4D8A3F3C1CF3D7A1000C2D42 /* WLLShareViewController.xib */,
+				4D8A3F3F1CF3D7C1000C2D42 /* WLLUserViewController.h */,
+				4D8A3F401CF3D7C1000C2D42 /* WLLUserViewController.m */,
+				4D8A3F411CF3D7C1000C2D42 /* WLLUserViewController.xib */,
+			);
+			path = BaseViewControllers;
+			sourceTree = "<group>";
+		};
+		4D8A3F301CF3D615000C2D42 /* NormalViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				4D8A3F441CF423F1000C2D42 /* WLLLogInViewController.h */,
+				4D8A3F451CF423F1000C2D42 /* WLLLogInViewController.m */,
+				4D8A3F461CF423F1000C2D42 /* WLLLogInViewController.xib */,
+			);
+			path = NormalViewControllers;
+			sourceTree = "<group>";
+		};
+		4D8A3F311CF3D615000C2D42 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				4D8A3F321CF3D615000C2D42 /* BaseViews */,
+				4D8A3F331CF3D615000C2D42 /* NormalViews */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		4D8A3F321CF3D615000C2D42 /* BaseViews */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = BaseViews;
+			sourceTree = "<group>";
+		};
+		4D8A3F331CF3D615000C2D42 /* NormalViews */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = NormalViews;
+			sourceTree = "<group>";
+		};
+		F4D1E47F5F7EEB4860E1E806 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				3A274DBB65D8CD8315FA844C /* libPods-DailyNote.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -150,9 +305,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4D8A3F1C1CF3D14D000C2D42 /* Build configuration list for PBXNativeTarget "DailyNote" */;
 			buildPhases = (
+				687D59F55864EB441D6E68FD /* 📦 Check Pods Manifest.lock */,
 				4D8A3EE81CF3D14D000C2D42 /* Sources */,
 				4D8A3EE91CF3D14D000C2D42 /* Frameworks */,
 				4D8A3EEA1CF3D14D000C2D42 /* Resources */,
+				A8B17FDFBA93306E9968A1EA /* 📦 Embed Pods Frameworks */,
+				5D259A8E82E1CCBFE9AEA28D /* 📦 Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -248,7 +406,11 @@
 			files = (
 				4D8A3F021CF3D14D000C2D42 /* LaunchScreen.storyboard in Resources */,
 				4D8A3EFF1CF3D14D000C2D42 /* Assets.xcassets in Resources */,
+				4D8A3F3E1CF3D7A1000C2D42 /* WLLShareViewController.xib in Resources */,
+				4D8A3F481CF423F1000C2D42 /* WLLLogInViewController.xib in Resources */,
+				4D8A3F391CF3D769000C2D42 /* WLLDailyNoteViewController.xib in Resources */,
 				4D8A3EFA1CF3D14D000C2D42 /* Main.storyboard in Resources */,
+				4D8A3F431CF3D7C1000C2D42 /* WLLUserViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -268,15 +430,66 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		5D259A8E82E1CCBFE9AEA28D /* 📦 Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-DailyNote/Pods-DailyNote-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		687D59F55864EB441D6E68FD /* 📦 Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		A8B17FDFBA93306E9968A1EA /* 📦 Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-DailyNote/Pods-DailyNote-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		4D8A3EE81CF3D14D000C2D42 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4D8A3EF71CF3D14D000C2D42 /* ViewController.m in Sources */,
-				4D8A3EF41CF3D14D000C2D42 /* AppDelegate.m in Sources */,
 				4D8A3EF11CF3D14D000C2D42 /* main.m in Sources */,
 				4D8A3EFD1CF3D14D000C2D42 /* DailyNote.xcdatamodeld in Sources */,
+				4D8A3F381CF3D769000C2D42 /* WLLDailyNoteViewController.m in Sources */,
+				4D8A3F471CF423F1000C2D42 /* WLLLogInViewController.m in Sources */,
+				4D8A3F3D1CF3D7A1000C2D42 /* WLLShareViewController.m in Sources */,
+				4D8A3F341CF3D615000C2D42 /* AppDelegate.m in Sources */,
+				4D8A3F421CF3D7C1000C2D42 /* WLLUserViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -415,6 +628,7 @@
 		};
 		4D8A3F1D1CF3D14D000C2D42 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0428E0BC44A15683D73BA0BF /* Pods-DailyNote.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = DailyNote/Info.plist;
@@ -426,6 +640,7 @@
 		};
 		4D8A3F1E1CF3D14D000C2D42 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = AA9803D23890D8C5859509F5 /* Pods-DailyNote.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = DailyNote/Info.plist;
@@ -500,6 +715,7 @@
 				4D8A3F1E1CF3D14D000C2D42 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4D8A3F1F1CF3D14D000C2D42 /* Build configuration list for PBXNativeTarget "DailyNoteTests" */ = {
 			isa = XCConfigurationList;
@@ -508,6 +724,7 @@
 				4D8A3F211CF3D14D000C2D42 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4D8A3F221CF3D14D000C2D42 /* Build configuration list for PBXNativeTarget "DailyNoteUITests" */ = {
 			isa = XCConfigurationList;
@@ -516,6 +733,7 @@
 				4D8A3F241CF3D14D000C2D42 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

@@ -8,7 +8,11 @@
 
 #import "AppDelegate.h"
 
-@interface AppDelegate ()
+#import "WLLDailyNoteViewController.h"
+#import "WLLShareViewController.h"
+#import "WLLUserViewController.h"
+
+@interface AppDelegate ()<UITabBarControllerDelegate>
 
 @end
 
@@ -17,6 +21,38 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    
+    WLLDailyNoteViewController *dailyController;
+    dailyController = [[WLLDailyNoteViewController alloc] initWithNibName:@"WLLDailyNoteViewController"
+                                                                   bundle:[NSBundle mainBundle]];
+    dailyController.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"日记"
+                                                               image:[[UIImage imageNamed:@"dailyNote"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]
+                                                       selectedImage:[[UIImage imageNamed:@"selectedDailyNote"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
+    
+    WLLShareViewController *shareController;
+    shareController = [[WLLShareViewController alloc] initWithNibName:@"WLLShareViewController"
+                                                               bundle:[NSBundle mainBundle]];
+    shareController.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"分享"
+                                                               image:[[UIImage imageNamed:@"share"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]
+                                                       selectedImage:[[UIImage imageNamed:@"selectedShare"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
+    
+    WLLUserViewController *userController;
+    userController = [[WLLUserViewController alloc] initWithNibName:@"WLLUserViewController"
+                                                             bundle:[NSBundle mainBundle]];
+    userController.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"我的"
+                                                              image:[[UIImage imageNamed:@"user"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]
+                                                      selectedImage:[[UIImage imageNamed:@"selectedUser"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
+    
+    UITabBarController *tabController = [[UITabBarController alloc] init];
+    tabController.viewControllers = @[dailyController, shareController, userController];
+    
+    UINavigationController *nvController = [[UINavigationController alloc] initWithRootViewController:tabController];
+    
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    self.window.backgroundColor = [UIColor whiteColor];
+    [self.window makeKeyAndVisible];
+    self.window.rootViewController = nvController;
+    
     return YES;
 }
 

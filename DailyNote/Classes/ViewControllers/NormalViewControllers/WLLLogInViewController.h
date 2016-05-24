@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  WLLLogInViewController.h
 //  DailyNote
 //
 //  Created by Messi on 16/5/24.
@@ -8,8 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
-
+@interface WLLLogInViewController : UIViewController
 
 @end
-
