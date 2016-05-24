@@ -24,6 +24,16 @@
 		4D8A3F471CF423F1000C2D42 /* WLLLogInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D8A3F451CF423F1000C2D42 /* WLLLogInViewController.m */; };
 		4D8A3F481CF423F1000C2D42 /* WLLLogInViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D8A3F461CF423F1000C2D42 /* WLLLogInViewController.xib */; };
 		688F9BB8C948A1B2594BF8DD /* libPods-DailyNote.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A274DBB65D8CD8315FA844C /* libPods-DailyNote.a */; };
+		F3BE26EE1CF445F50071855E /* DailyNoteCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F3BE26EC1CF445F50071855E /* DailyNoteCell.m */; };
+		F3BE26EF1CF445F50071855E /* DailyNoteCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F3BE26ED1CF445F50071855E /* DailyNoteCell.xib */; };
+		F3BE26F81CF49DA00071855E /* WLLNoteDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F3BE26F61CF49DA00071855E /* WLLNoteDetailViewController.m */; };
+		F3BE26F91CF49DA00071855E /* WLLNoteDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F3BE26F71CF49DA00071855E /* WLLNoteDetailViewController.xib */; };
+		F3BE26FD1CF4ACA40071855E /* EditNoteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F3BE26FB1CF4ACA40071855E /* EditNoteViewController.m */; };
+		F3BE26FE1CF4ACA40071855E /* EditNoteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F3BE26FC1CF4ACA40071855E /* EditNoteViewController.xib */; };
+		F3BE27041CF4CC460071855E /* WLLCategoryButton.m in Sources */ = {isa = PBXBuildFile; fileRef = F3BE27031CF4CC460071855E /* WLLCategoryButton.m */; };
+		F3BE270F1CF4D99A0071855E /* WLLNotesCategoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = F3BE270E1CF4D99A0071855E /* WLLNotesCategoryView.m */; };
+		F3BE27121CF4DA0E0071855E /* WLLNotesCategoryController.m in Sources */ = {isa = PBXBuildFile; fileRef = F3BE27111CF4DA0E0071855E /* WLLNotesCategoryController.m */; };
+		F3BE27141CF4DA2C0071855E /* WLLNotesCategoryController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F3BE27131CF4DA2C0071855E /* WLLNotesCategoryController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,6 +84,22 @@
 		4D8A3F451CF423F1000C2D42 /* WLLLogInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLLogInViewController.m; sourceTree = "<group>"; };
 		4D8A3F461CF423F1000C2D42 /* WLLLogInViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WLLLogInViewController.xib; sourceTree = "<group>"; };
 		AA9803D23890D8C5859509F5 /* Pods-DailyNote.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DailyNote.release.xcconfig"; path = "Pods/Target Support Files/Pods-DailyNote/Pods-DailyNote.release.xcconfig"; sourceTree = "<group>"; };
+		F3BE26EB1CF445F50071855E /* DailyNoteCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DailyNoteCell.h; sourceTree = "<group>"; };
+		F3BE26EC1CF445F50071855E /* DailyNoteCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DailyNoteCell.m; sourceTree = "<group>"; };
+		F3BE26ED1CF445F50071855E /* DailyNoteCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DailyNoteCell.xib; sourceTree = "<group>"; };
+		F3BE26F51CF49DA00071855E /* WLLNoteDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLNoteDetailViewController.h; sourceTree = "<group>"; };
+		F3BE26F61CF49DA00071855E /* WLLNoteDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLNoteDetailViewController.m; sourceTree = "<group>"; };
+		F3BE26F71CF49DA00071855E /* WLLNoteDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WLLNoteDetailViewController.xib; sourceTree = "<group>"; };
+		F3BE26FA1CF4ACA40071855E /* EditNoteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditNoteViewController.h; sourceTree = "<group>"; };
+		F3BE26FB1CF4ACA40071855E /* EditNoteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditNoteViewController.m; sourceTree = "<group>"; };
+		F3BE26FC1CF4ACA40071855E /* EditNoteViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditNoteViewController.xib; sourceTree = "<group>"; };
+		F3BE27021CF4CC460071855E /* WLLCategoryButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLCategoryButton.h; sourceTree = "<group>"; };
+		F3BE27031CF4CC460071855E /* WLLCategoryButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLCategoryButton.m; sourceTree = "<group>"; };
+		F3BE270D1CF4D99A0071855E /* WLLNotesCategoryView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLNotesCategoryView.h; sourceTree = "<group>"; };
+		F3BE270E1CF4D99A0071855E /* WLLNotesCategoryView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLNotesCategoryView.m; sourceTree = "<group>"; };
+		F3BE27101CF4DA0E0071855E /* WLLNotesCategoryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLNotesCategoryController.h; sourceTree = "<group>"; };
+		F3BE27111CF4DA0E0071855E /* WLLNotesCategoryController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLNotesCategoryController.m; sourceTree = "<group>"; };
+		F3BE27131CF4DA2C0071855E /* WLLNotesCategoryController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WLLNotesCategoryController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -263,6 +289,15 @@
 				4D8A3F441CF423F1000C2D42 /* WLLLogInViewController.h */,
 				4D8A3F451CF423F1000C2D42 /* WLLLogInViewController.m */,
 				4D8A3F461CF423F1000C2D42 /* WLLLogInViewController.xib */,
+				F3BE26F51CF49DA00071855E /* WLLNoteDetailViewController.h */,
+				F3BE26F61CF49DA00071855E /* WLLNoteDetailViewController.m */,
+				F3BE26F71CF49DA00071855E /* WLLNoteDetailViewController.xib */,
+				F3BE26FA1CF4ACA40071855E /* EditNoteViewController.h */,
+				F3BE26FB1CF4ACA40071855E /* EditNoteViewController.m */,
+				F3BE26FC1CF4ACA40071855E /* EditNoteViewController.xib */,
+				F3BE27101CF4DA0E0071855E /* WLLNotesCategoryController.h */,
+				F3BE27111CF4DA0E0071855E /* WLLNotesCategoryController.m */,
+				F3BE27131CF4DA2C0071855E /* WLLNotesCategoryController.xib */,
 			);
 			path = NormalViewControllers;
 			sourceTree = "<group>";
@@ -279,6 +314,9 @@
 		4D8A3F321CF3D615000C2D42 /* BaseViews */ = {
 			isa = PBXGroup;
 			children = (
+				F3BE26EB1CF445F50071855E /* DailyNoteCell.h */,
+				F3BE26EC1CF445F50071855E /* DailyNoteCell.m */,
+				F3BE26ED1CF445F50071855E /* DailyNoteCell.xib */,
 			);
 			path = BaseViews;
 			sourceTree = "<group>";
@@ -286,6 +324,10 @@
 		4D8A3F331CF3D615000C2D42 /* NormalViews */ = {
 			isa = PBXGroup;
 			children = (
+				F3BE27021CF4CC460071855E /* WLLCategoryButton.h */,
+				F3BE27031CF4CC460071855E /* WLLCategoryButton.m */,
+				F3BE270D1CF4D99A0071855E /* WLLNotesCategoryView.h */,
+				F3BE270E1CF4D99A0071855E /* WLLNotesCategoryView.m */,
 			);
 			path = NormalViews;
 			sourceTree = "<group>";
@@ -406,8 +448,12 @@
 			files = (
 				4D8A3F021CF3D14D000C2D42 /* LaunchScreen.storyboard in Resources */,
 				4D8A3EFF1CF3D14D000C2D42 /* Assets.xcassets in Resources */,
+				F3BE26F91CF49DA00071855E /* WLLNoteDetailViewController.xib in Resources */,
+				F3BE27141CF4DA2C0071855E /* WLLNotesCategoryController.xib in Resources */,
 				4D8A3F3E1CF3D7A1000C2D42 /* WLLShareViewController.xib in Resources */,
+				F3BE26EF1CF445F50071855E /* DailyNoteCell.xib in Resources */,
 				4D8A3F481CF423F1000C2D42 /* WLLLogInViewController.xib in Resources */,
+				F3BE26FE1CF4ACA40071855E /* EditNoteViewController.xib in Resources */,
 				4D8A3F391CF3D769000C2D42 /* WLLDailyNoteViewController.xib in Resources */,
 				4D8A3EFA1CF3D14D000C2D42 /* Main.storyboard in Resources */,
 				4D8A3F431CF3D7C1000C2D42 /* WLLUserViewController.xib in Resources */,
@@ -485,7 +531,13 @@
 			files = (
 				4D8A3EF11CF3D14D000C2D42 /* main.m in Sources */,
 				4D8A3EFD1CF3D14D000C2D42 /* DailyNote.xcdatamodeld in Sources */,
+				F3BE26FD1CF4ACA40071855E /* EditNoteViewController.m in Sources */,
+				F3BE27121CF4DA0E0071855E /* WLLNotesCategoryController.m in Sources */,
+				F3BE27041CF4CC460071855E /* WLLCategoryButton.m in Sources */,
 				4D8A3F381CF3D769000C2D42 /* WLLDailyNoteViewController.m in Sources */,
+				F3BE26F81CF49DA00071855E /* WLLNoteDetailViewController.m in Sources */,
+				F3BE270F1CF4D99A0071855E /* WLLNotesCategoryView.m in Sources */,
+				F3BE26EE1CF445F50071855E /* DailyNoteCell.m in Sources */,
 				4D8A3F471CF423F1000C2D42 /* WLLLogInViewController.m in Sources */,
 				4D8A3F3D1CF3D7A1000C2D42 /* WLLShareViewController.m in Sources */,
 				4D8A3F341CF3D615000C2D42 /* AppDelegate.m in Sources */,
