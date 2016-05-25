@@ -8,6 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
+@class NoteDetail;
+
 @interface DailyNoteCell : UITableViewCell
+
+/* 日记模型 */
+@property (nonatomic, strong) NoteDetail *model;
 
 @end

@@ -10,4 +10,6 @@
 
 @interface EditNoteViewController : UIViewController
 
+@property (nonatomic, strong) NSIndexPath *index;
+
 @end

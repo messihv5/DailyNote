@@ -7,8 +7,11 @@
 //
 
 #import "WLLNotesCategoryController.h"
+#import "WLLNotesCategoryView.h"
 
 @interface WLLNotesCategoryController ()<UITableViewDelegate, UITableViewDataSource>
+
+@property (nonatomic, strong) WLLNotesCategoryView *categoryView;
 
 @end
 
@@ -23,8 +26,8 @@
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
-    self.tableView.delegate = self;
-    self.tableView.dataSource = self;
+    self.categoryView.delegate = self;
+    self.categoryView.dataSource = self;
 }
 
 - (void)didReceiveMemoryWarning {

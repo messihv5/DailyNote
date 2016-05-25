@@ -8,6 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+@class NoteDetail;
+
 @interface WLLNoteDetailViewController : UIViewController
+
+@property (nonatomic, strong) NoteDetail *noteDetail;
+
+@property (nonatomic, assign) NSIndexPath *index;
 
 @end

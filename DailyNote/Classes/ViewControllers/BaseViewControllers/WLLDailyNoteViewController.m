@@ -12,15 +12,18 @@
 #import "EditNoteViewController.h"
 #import "WLLCategoryButton.h"
 #import "WLLNotesCategoryView.h"
+#import "NoteDetail.h"
+#import "WLLDailyNoteDataManager.h"
 
 #define kWidth CGRectGetWidth([UIScreen mainScreen].bounds)
 #define kHeight CGRectGetHeight([UIScreen mainScreen].bounds)
 
 @interface WLLDailyNoteViewController ()<UITableViewDelegate, UITableViewDataSource>
+/* 日记页面 */
 @property (weak, nonatomic) IBOutlet UITableView *notesTableView;
-
+/* 日记分类页面 */
 @property (nonatomic, strong) UITableView *notesCategoryView;
-
+/* 判断日记分类页面隐藏与否 */
 @property (nonatomic, assign, getter=isHidden) BOOL hidden;
 
 @end
@@ -32,8 +35,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.hidden = YES;
-    // notesTableView 设置
+    // notesTableView 代理设置
     self.notesTableView.delegate = self;
     self.notesTableView.dataSource = self;
     
@@ -41,41 +43,61 @@ static NSString  *const reuseIdentifier = @"note_cell";
     [self.notesTableView registerNib:[UINib nibWithNibName:@"DailyNoteCell" bundle:nil] forCellReuseIdentifier:reuseIdentifier];
     
     // 设置分类button
+    [self initNaviButton];
+    
+    // 请求数据
+    [[WLLDailyNoteDataManager sharedInstance] requestDataAndFinished:^{
+        [self.notesTableView reloadData];
+    }];
+}
+
+// 初始化分类页面按钮
+- (void)initNaviButton {
     WLLCategoryButton *titleButton = [WLLCategoryButton buttonWithType:UIButtonTypeSystem];
     titleButton.frame = CGRectMake(0, 0, kWidth*0.2, kWidth*0.0725);
     [titleButton setImage:[UIImage imageNamed:@"down"] forState:UIControlStateNormal];
-    [titleButton setTitle:@"全部的地球有多大" forState:UIControlStateNormal];
+    [titleButton setTitle:@"全部" forState:UIControlStateNormal];
     
     [titleButton addTarget:self action:@selector(notesCategory:) forControlEvents:UIControlEventTouchUpInside];
-        
+    
     self.parentViewController.navigationItem.titleView = titleButton;
 }
 
+// view完成加载后 加载分类页面初始位置
 - (void)viewDidAppear:(BOOL)animated {
     
     [super viewDidAppear:YES];
     
+    // 分类页面初始为隐藏
+    self.hidden = YES;
+    // 分类页面初始位置在屏幕以外, 将其高度设置为0
     self.notesCategoryView = [[WLLNotesCategoryView alloc] initWithFrame:CGRectMake((kWidth-kWidth*0.4831)/2, kWidth*0.1546, kWidth*0.4831, 0) style:UITableViewStylePlain];
     
     self.notesCategoryView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.5];
     [self.view addSubview:self.notesCategoryView];
 }
 
-// 分类
+// 分类按钮响应
 - (void)notesCategory:(UIButton *)button {
-
+    
+    // 如果分类页面隐藏, 则显示
     if (self.isHidden == YES) {
+        // 为其高度赋值即可
         [UIView animateWithDuration:0.25 animations:^{
             self.notesCategoryView.frame = CGRectMake((kWidth-kWidth*0.4831)/2, kWidth*0.1546, kWidth*0.4831, kWidth*1.2077);
             [button setImage:[UIImage imageNamed:@"up"] forState:UIControlStateNormal];
         }];
+        // 将分类页面置为显示
         self.hidden = NO;
     }
+    // 如果分类页面显示, 则隐藏
     else if (self.isHidden == NO) {
+        // 将其高度更改为0
         [UIView animateWithDuration:0.25 animations:^{
             self.notesCategoryView.frame = CGRectMake((kWidth-kWidth*0.4831)/2, kWidth*0.1546, kWidth*0.4831, 0);
             [button setImage:[UIImage imageNamed:@"down"] forState:UIControlStateNormal];
         }];
+        // 分类页面隐藏
         self.hidden = YES;
     }
 }
@@ -110,18 +132,21 @@ static NSString  *const reuseIdentifier = @"note_cell";
 - (void)newDaily:(UIBarButtonItem *)button {
     
     EditNoteViewController *EditVC = [[EditNoteViewController alloc] initWithNibName:@"EditNoteViewController" bundle:[NSBundle mainBundle]];
+    
     [self.navigationController pushViewController:EditVC animated:YES];
 }
 
 #pragma mark - UITableView DataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
-    return 10;
+    return [[WLLDailyNoteDataManager sharedInstance] countOfNoteArray];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     DailyNoteCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier forIndexPath:indexPath];
+    NoteDetail *model = [[WLLDailyNoteDataManager sharedInstance] returnModelWithIndex:indexPath.row];
+    cell.model = model;
 
     return cell;
 }
@@ -134,6 +159,9 @@ static NSString  *const reuseIdentifier = @"note_cell";
 #pragma mark - cell 点击事件响应
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     WLLNoteDetailViewController *NoteDetailVC = [[WLLNoteDetailViewController alloc] initWithNibName:@"WLLNoteDetailViewController" bundle:[NSBundle mainBundle]];
+    
+    NoteDetailVC.index = indexPath;
+    
     [self.navigationController pushViewController:NoteDetailVC animated:YES];
     
 }

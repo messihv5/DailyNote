@@ -7,6 +7,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EditNoteViewController">
             <connections>
+                <outlet property="contentText" destination="N3h-90-wDi" id="VnS-8D-Paq"/>
+                <outlet property="countLabel" destination="RsE-Tt-lc3" id="YgF-Sg-Es3"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -14,7 +16,28 @@
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RsE-Tt-lc3">
+                    <rect key="frame" x="590" y="69" width="0.0" height="0.0"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="N3h-90-wDi">
+                    <rect key="frame" x="10" y="79" width="580" height="18"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
+            </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="N3h-90-wDi" firstAttribute="top" secondItem="RsE-Tt-lc3" secondAttribute="bottom" constant="10" id="MNs-bJ-ijz"/>
+                <constraint firstAttribute="trailing" secondItem="N3h-90-wDi" secondAttribute="trailing" constant="10" id="ZlY-2b-fHQ"/>
+                <constraint firstItem="N3h-90-wDi" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="c9M-fu-dci"/>
+                <constraint firstItem="RsE-Tt-lc3" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="69" id="deD-tH-XcN"/>
+                <constraint firstAttribute="trailing" secondItem="RsE-Tt-lc3" secondAttribute="trailing" constant="10" id="knD-gS-8UO"/>
+            </constraints>
+            <point key="canvasLocation" x="494" y="84"/>
         </view>
     </objects>
 </document>
