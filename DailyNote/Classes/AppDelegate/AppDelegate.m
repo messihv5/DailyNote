@@ -52,7 +52,7 @@
     UITabBarController *tabController = [[UITabBarController alloc] init];
     tabController.viewControllers = @[dailyController, shareController, userController];
     
-    tabController.delegate = self;
+
     
     tabController.tabBar.tintColor = [UIColor orangeColor];
     
