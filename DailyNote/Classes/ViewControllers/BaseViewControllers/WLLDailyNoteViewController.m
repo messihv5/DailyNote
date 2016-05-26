@@ -45,6 +45,9 @@ static NSString  *const reuseIdentifier = @"note_cell";
     // 设置分类button
     [self initNaviButton];
     
+    // 加载分类页面
+    [self initCategoryView];
+    
     // 请求数据
     [[WLLDailyNoteDataManager sharedInstance] requestDataAndFinished:^{
         [self.notesTableView reloadData];
@@ -63,8 +66,8 @@ static NSString  *const reuseIdentifier = @"note_cell";
     self.parentViewController.navigationItem.titleView = titleButton;
 }
 
-// view完成加载后 加载分类页面初始位置
-- (void)viewDidAppear:(BOOL)animated {
+// 加载分类页面初始位置
+- (void)initCategoryView {
     
     [super viewDidAppear:YES];
     
@@ -151,6 +154,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
     return cell;
 }
 
+// 返回cell 高度为屏幕高度的0.15倍
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     return kHeight * 0.15;

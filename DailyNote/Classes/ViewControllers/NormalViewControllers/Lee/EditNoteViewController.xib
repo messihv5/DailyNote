@@ -7,7 +7,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EditNoteViewController">
             <connections>
-                <outlet property="contentText" destination="N3h-90-wDi" id="VnS-8D-Paq"/>
+                <outlet property="contentText" destination="5A9-Ep-Pco" id="6ZZ-gj-3oQ"/>
                 <outlet property="countLabel" destination="RsE-Tt-lc3" id="YgF-Sg-Es3"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -17,24 +17,26 @@
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RsE-Tt-lc3">
-                    <rect key="frame" x="590" y="69" width="0.0" height="0.0"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="222222222" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RsE-Tt-lc3">
+                    <rect key="frame" x="534" y="69" width="55.5" height="12"/>
                     <fontDescription key="fontDescription" type="system" pointSize="10"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="N3h-90-wDi">
-                    <rect key="frame" x="10" y="79" width="580" height="18"/>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="5A9-Ep-Pco">
+                    <rect key="frame" x="10" y="91" width="580" height="600"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                    <textInputTraits key="textInputTraits"/>
-                </textField>
+                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                </textView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="N3h-90-wDi" firstAttribute="top" secondItem="RsE-Tt-lc3" secondAttribute="bottom" constant="10" id="MNs-bJ-ijz"/>
-                <constraint firstAttribute="trailing" secondItem="N3h-90-wDi" secondAttribute="trailing" constant="10" id="ZlY-2b-fHQ"/>
-                <constraint firstItem="N3h-90-wDi" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="c9M-fu-dci"/>
+                <constraint firstAttribute="trailing" secondItem="5A9-Ep-Pco" secondAttribute="trailing" constant="10" id="BXd-EO-V0s"/>
+                <constraint firstItem="5A9-Ep-Pco" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="Huo-W9-Q6G"/>
                 <constraint firstItem="RsE-Tt-lc3" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="69" id="deD-tH-XcN"/>
+                <constraint firstItem="5A9-Ep-Pco" firstAttribute="height" secondItem="i5M-Pr-FkT" secondAttribute="height" id="fTr-7I-RNb"/>
+                <constraint firstItem="5A9-Ep-Pco" firstAttribute="top" secondItem="RsE-Tt-lc3" secondAttribute="bottom" constant="10" id="fvW-DE-vKC"/>
                 <constraint firstAttribute="trailing" secondItem="RsE-Tt-lc3" secondAttribute="trailing" constant="10" id="knD-gS-8UO"/>
             </constraints>
             <point key="canvasLocation" x="494" y="84"/>

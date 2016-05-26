@@ -14,16 +14,19 @@
 
 #define kWidth CGRectGetWidth([UIScreen mainScreen].bounds)
 
-@interface EditNoteViewController ()
+@interface EditNoteViewController ()<UITextViewDelegate>
 @property (nonatomic, assign, getter=isHidden) BOOL hidden;
 
 @property (nonatomic, strong) UITableView *notesCategoryView;
-@property (weak, nonatomic) IBOutlet UITextField *contentText;
+@property (weak, nonatomic) IBOutlet UITextView *contentText;
 @property (weak, nonatomic) IBOutlet UILabel *countLabel;
 
 @end
 
-@implementation EditNoteViewController
+@implementation EditNoteViewController{
+    
+    NSInteger count;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -31,6 +34,15 @@
     [self initNaviButton];
     
     [self dataFromDetail];
+    
+    self.contentText.delegate = self;
+}
+
+- (void)textViewDidBeginEditing:(UITextView *)textView {
+    
+    
+    
+    self.countLabel.text = [NSString stringWithFormat:@"%ld", count];
     
 }
 
@@ -40,7 +52,7 @@
         NoteDetail *model = [[WLLDailyNoteDataManager sharedInstance] returnModelWithIndex:self.index.row];
         
         self.contentText.text = model.content;
-        
+    
         self.countLabel.text = [NSString stringWithFormat:@"%ld", self.contentText.text.length];
     }
 }
