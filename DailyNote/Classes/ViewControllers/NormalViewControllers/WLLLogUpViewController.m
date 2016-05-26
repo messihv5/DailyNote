@@ -39,7 +39,7 @@
     
     [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"注册成功"
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"注册成功,请到邮箱激活账号"
                                                                            message:@""
                                                                     preferredStyle:UIAlertControllerStyleAlert];
             
