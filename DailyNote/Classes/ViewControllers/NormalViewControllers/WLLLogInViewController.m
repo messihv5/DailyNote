@@ -7,8 +7,15 @@
 //
 
 #import "WLLLogInViewController.h"
+#import "WLLLogUpViewController.h"
+#import "WLLResetPasswordViewController.h"
 
 @interface WLLLogInViewController ()
+
+@property (weak, nonatomic) IBOutlet UIImageView *headImageView;
+@property (weak, nonatomic) IBOutlet UITextField *emailTextField;
+@property (weak, nonatomic) IBOutlet UITextField *passwordTextField;
+@property (weak, nonatomic) IBOutlet UIButton *logInButton;
 
 @end
 
@@ -16,7 +23,61 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.passwordTextField.secureTextEntry = YES;
+    
+    self.logInButton.layer.cornerRadius = 10;
+    
+    UIBarButtonItem *left = [[UIBarButtonItem alloc] initWithTitle:@"注册"
+                                                             style:UIBarButtonItemStyleDone
+                                                            target:self
+                                                            action:@selector(logUpAction)];
+    UIBarButtonItem *right = [[UIBarButtonItem alloc] initWithTitle:@"重置密码"
+                                                              style:UIBarButtonItemStyleDone
+                                                             target:self
+                                                             action:@selector(resetPassword)];
+    self.navigationItem.leftBarButtonItem = left;
+    self.navigationItem.rightBarButtonItem = right;
+    
+    
     // Do any additional setup after loading the view from its nib.
+    
+}
+
+- (IBAction)logInAction:(UIButton *)sender {
+    [AVUser logInWithUsernameInBackground:self.emailTextField.text
+                                 password:self.passwordTextField.text
+                                    block:^(AVUser *user, NSError *error) {
+        if (user != nil) {
+            [self dismissViewControllerAnimated:YES completion:nil];
+        } else {
+            NSLog(@"登录出错：%@", error);
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"邮箱或密码有误"
+                                                                           message:@"" preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive
+                                                           handler:^(UIAlertAction * _Nonnull action) {
+                
+            }];
+            [alert addAction:action];
+            [self presentViewController:alert animated:YES completion:nil];
+            
+        }
+    }];
+}
+
+
+#pragma mark - 跳转至注册页面以及重置密码
+- (void)logUpAction {
+    WLLLogUpViewController *logUpVC = [[WLLLogUpViewController alloc] initWithNibName:@"WLLLogUpViewController"
+                                                                               bundle:[NSBundle mainBundle]];
+    [self.navigationController pushViewController:logUpVC animated:YES];
+}
+
+- (void)resetPassword {
+    WLLResetPasswordViewController *resetVC;
+    resetVC= [[WLLResetPasswordViewController alloc] initWithNibName:@"WLLResetPasswordViewController"
+                                                              bundle:[NSBundle mainBundle]];
+    [self.navigationController pushViewController:resetVC animated:YES];
 }
 
 - (void)didReceiveMemoryWarning {

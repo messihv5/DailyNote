@@ -1,14 +1,17 @@
 PODS:
+  - AVOSCloud (3.2.12)
   - SDWebImage (3.7.6):
     - SDWebImage/Core (= 3.7.6)
   - SDWebImage/Core (3.7.6)
 
 DEPENDENCIES:
+  - AVOSCloud (~> 3.2.12)
   - SDWebImage (~> 3.7.6)
 
 SPEC CHECKSUMS:
+  AVOSCloud: fcbb5c2bcccaddbdea8c2b4f6c1ad7f13e6639fe
   SDWebImage: c325cf02c30337336b95beff20a13df489ec0ec9
 
-PODFILE CHECKSUM: 9d97058f403f25452083b600ee408ec6a99df20d
+PODFILE CHECKSUM: 024ff45a36d373307b4b9562af25f1ea76488ff5
 
 COCOAPODS: 1.0.0

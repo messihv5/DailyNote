@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4D48D1C21CF5678600D9E4F1 /* WLLLogUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D48D1C01CF5678600D9E4F1 /* WLLLogUpViewController.m */; };
+		4D48D1C31CF5678600D9E4F1 /* WLLLogUpViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D48D1C11CF5678600D9E4F1 /* WLLLogUpViewController.xib */; };
+		4D48D1C71CF56CDA00D9E4F1 /* WLLResetPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D48D1C51CF56CDA00D9E4F1 /* WLLResetPasswordViewController.m */; };
+		4D48D1C81CF56CDA00D9E4F1 /* WLLResetPasswordViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D48D1C61CF56CDA00D9E4F1 /* WLLResetPasswordViewController.xib */; };
+		4D48D1CA1CF59B9400D9E4F1 /* NickName.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D48D1C91CF59B9400D9E4F1 /* NickName.png */; };
+		4D48D1CC1CF59C4B00D9E4F1 /* smile.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D48D1CB1CF59C4B00D9E4F1 /* smile.png */; };
 		4D8A3EF11CF3D14D000C2D42 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D8A3EF01CF3D14D000C2D42 /* main.m */; };
 		4D8A3EFA1CF3D14D000C2D42 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4D8A3EF81CF3D14D000C2D42 /* Main.storyboard */; };
 		4D8A3EFD1CF3D14D000C2D42 /* DailyNote.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4D8A3EFB1CF3D14D000C2D42 /* DailyNote.xcdatamodeld */; };
@@ -23,6 +29,8 @@
 		4D8A3F431CF3D7C1000C2D42 /* WLLUserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D8A3F411CF3D7C1000C2D42 /* WLLUserViewController.xib */; };
 		4D8A3F471CF423F1000C2D42 /* WLLLogInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D8A3F451CF423F1000C2D42 /* WLLLogInViewController.m */; };
 		4D8A3F481CF423F1000C2D42 /* WLLLogInViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D8A3F461CF423F1000C2D42 /* WLLLogInViewController.xib */; };
+		4D8A3F4C1CF442E9000C2D42 /* email.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D8A3F4B1CF442E9000C2D42 /* email.png */; };
+		4D8A3F4E1CF443F3000C2D42 /* lock.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D8A3F4D1CF443F3000C2D42 /* lock.png */; };
 		688F9BB8C948A1B2594BF8DD /* libPods-DailyNote.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A274DBB65D8CD8315FA844C /* libPods-DailyNote.a */; };
 /* End PBXBuildFile section */
 
@@ -46,6 +54,15 @@
 /* Begin PBXFileReference section */
 		0428E0BC44A15683D73BA0BF /* Pods-DailyNote.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DailyNote.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DailyNote/Pods-DailyNote.debug.xcconfig"; sourceTree = "<group>"; };
 		3A274DBB65D8CD8315FA844C /* libPods-DailyNote.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-DailyNote.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4D48D1BF1CF5678600D9E4F1 /* WLLLogUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLLogUpViewController.h; sourceTree = "<group>"; };
+		4D48D1C01CF5678600D9E4F1 /* WLLLogUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLLogUpViewController.m; sourceTree = "<group>"; };
+		4D48D1C11CF5678600D9E4F1 /* WLLLogUpViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WLLLogUpViewController.xib; sourceTree = "<group>"; };
+		4D48D1C41CF56CDA00D9E4F1 /* WLLResetPasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLResetPasswordViewController.h; sourceTree = "<group>"; };
+		4D48D1C51CF56CDA00D9E4F1 /* WLLResetPasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLResetPasswordViewController.m; sourceTree = "<group>"; };
+		4D48D1C61CF56CDA00D9E4F1 /* WLLResetPasswordViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WLLResetPasswordViewController.xib; sourceTree = "<group>"; };
+		4D48D1C91CF59B9400D9E4F1 /* NickName.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = NickName.png; sourceTree = "<group>"; };
+		4D48D1CB1CF59C4B00D9E4F1 /* smile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = smile.png; sourceTree = "<group>"; };
+		4D48D1CD1CF5F68200D9E4F1 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		4D8A3EEC1CF3D14D000C2D42 /* DailyNote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DailyNote.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D8A3EF01CF3D14D000C2D42 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4D8A3EF91CF3D14D000C2D42 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -73,6 +90,8 @@
 		4D8A3F441CF423F1000C2D42 /* WLLLogInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLLogInViewController.h; sourceTree = "<group>"; };
 		4D8A3F451CF423F1000C2D42 /* WLLLogInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLLogInViewController.m; sourceTree = "<group>"; };
 		4D8A3F461CF423F1000C2D42 /* WLLLogInViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WLLLogInViewController.xib; sourceTree = "<group>"; };
+		4D8A3F4B1CF442E9000C2D42 /* email.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = email.png; sourceTree = "<group>"; };
+		4D8A3F4D1CF443F3000C2D42 /* lock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lock.png; sourceTree = "<group>"; };
 		AA9803D23890D8C5859509F5 /* Pods-DailyNote.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DailyNote.release.xcconfig"; path = "Pods/Target Support Files/Pods-DailyNote/Pods-DailyNote.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -109,6 +128,22 @@
 				AA9803D23890D8C5859509F5 /* Pods-DailyNote.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		4D48D1BE1CF5667B00D9E4F1 /* WChao */ = {
+			isa = PBXGroup;
+			children = (
+				4D8A3F441CF423F1000C2D42 /* WLLLogInViewController.h */,
+				4D8A3F451CF423F1000C2D42 /* WLLLogInViewController.m */,
+				4D8A3F461CF423F1000C2D42 /* WLLLogInViewController.xib */,
+				4D48D1BF1CF5678600D9E4F1 /* WLLLogUpViewController.h */,
+				4D48D1C01CF5678600D9E4F1 /* WLLLogUpViewController.m */,
+				4D48D1C11CF5678600D9E4F1 /* WLLLogUpViewController.xib */,
+				4D48D1C41CF56CDA00D9E4F1 /* WLLResetPasswordViewController.h */,
+				4D48D1C51CF56CDA00D9E4F1 /* WLLResetPasswordViewController.m */,
+				4D48D1C61CF56CDA00D9E4F1 /* WLLResetPasswordViewController.xib */,
+			);
+			name = WChao;
 			sourceTree = "<group>";
 		};
 		4D8A3EE31CF3D14D000C2D42 = {
@@ -151,6 +186,7 @@
 			isa = PBXGroup;
 			children = (
 				4D8A3EF01CF3D14D000C2D42 /* main.m */,
+				4D48D1CD1CF5F68200D9E4F1 /* PrefixHeader.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -221,6 +257,10 @@
 		4D8A3F2C1CF3D615000C2D42 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				4D48D1CB1CF59C4B00D9E4F1 /* smile.png */,
+				4D8A3F4D1CF443F3000C2D42 /* lock.png */,
+				4D8A3F4B1CF442E9000C2D42 /* email.png */,
+				4D48D1C91CF59B9400D9E4F1 /* NickName.png */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -260,9 +300,7 @@
 		4D8A3F301CF3D615000C2D42 /* NormalViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				4D8A3F441CF423F1000C2D42 /* WLLLogInViewController.h */,
-				4D8A3F451CF423F1000C2D42 /* WLLLogInViewController.m */,
-				4D8A3F461CF423F1000C2D42 /* WLLLogInViewController.xib */,
+				4D48D1BE1CF5667B00D9E4F1 /* WChao */,
 			);
 			path = NormalViewControllers;
 			sourceTree = "<group>";
@@ -368,6 +406,7 @@
 				TargetAttributes = {
 					4D8A3EEB1CF3D14D000C2D42 = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = B7ERBCTM4Y;
 					};
 					4D8A3F071CF3D14D000C2D42 = {
 						CreatedOnToolsVersion = 7.3.1;
@@ -405,11 +444,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				4D8A3F021CF3D14D000C2D42 /* LaunchScreen.storyboard in Resources */,
+				4D48D1CA1CF59B9400D9E4F1 /* NickName.png in Resources */,
+				4D48D1C81CF56CDA00D9E4F1 /* WLLResetPasswordViewController.xib in Resources */,
 				4D8A3EFF1CF3D14D000C2D42 /* Assets.xcassets in Resources */,
+				4D8A3F4E1CF443F3000C2D42 /* lock.png in Resources */,
 				4D8A3F3E1CF3D7A1000C2D42 /* WLLShareViewController.xib in Resources */,
 				4D8A3F481CF423F1000C2D42 /* WLLLogInViewController.xib in Resources */,
+				4D48D1CC1CF59C4B00D9E4F1 /* smile.png in Resources */,
+				4D8A3F4C1CF442E9000C2D42 /* email.png in Resources */,
 				4D8A3F391CF3D769000C2D42 /* WLLDailyNoteViewController.xib in Resources */,
 				4D8A3EFA1CF3D14D000C2D42 /* Main.storyboard in Resources */,
+				4D48D1C31CF5678600D9E4F1 /* WLLLogUpViewController.xib in Resources */,
 				4D8A3F431CF3D7C1000C2D42 /* WLLUserViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -483,8 +528,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4D48D1C21CF5678600D9E4F1 /* WLLLogUpViewController.m in Sources */,
 				4D8A3EF11CF3D14D000C2D42 /* main.m in Sources */,
 				4D8A3EFD1CF3D14D000C2D42 /* DailyNote.xcdatamodeld in Sources */,
+				4D48D1C71CF56CDA00D9E4F1 /* WLLResetPasswordViewController.m in Sources */,
 				4D8A3F381CF3D769000C2D42 /* WLLDailyNoteViewController.m in Sources */,
 				4D8A3F471CF423F1000C2D42 /* WLLLogInViewController.m in Sources */,
 				4D8A3F3D1CF3D7A1000C2D42 /* WLLShareViewController.m in Sources */,
@@ -631,6 +678,9 @@
 			baseConfigurationReference = 0428E0BC44A15683D73BA0BF /* Pods-DailyNote.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = /Users/messi/Documents/Developer/DailyNote/DailyNote/PrefixHeader.pch;
 				INFOPLIST_FILE = DailyNote/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.JustThree.DailyNote;
@@ -643,6 +693,9 @@
 			baseConfigurationReference = AA9803D23890D8C5859509F5 /* Pods-DailyNote.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = /Users/messi/Documents/Developer/DailyNote/DailyNote/PrefixHeader.pch;
 				INFOPLIST_FILE = DailyNote/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.JustThree.DailyNote;

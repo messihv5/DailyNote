@@ -11,8 +11,9 @@
 #import "WLLDailyNoteViewController.h"
 #import "WLLShareViewController.h"
 #import "WLLUserViewController.h"
+#import "WLLLogInViewController.h"
 
-@interface AppDelegate ()<UITabBarControllerDelegate>
+@interface AppDelegate ()
 
 @end
 
@@ -22,6 +23,11 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
+    //注册Leancloud
+    [AVOSCloud setApplicationId:@"gQw0p6Gi1ncURhwJozkPTA7d-gzGzoHsz"
+                      clientKey:@"nKPTchiJiuqVHuHVnH4DnEtJ"];
+
+    //设置3个根视图的控制器
     WLLDailyNoteViewController *dailyController;
     dailyController = [[WLLDailyNoteViewController alloc] initWithNibName:@"WLLDailyNoteViewController"
                                                                    bundle:[NSBundle mainBundle]];
@@ -54,6 +60,15 @@
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     self.window.rootViewController = nvController;
+    
+    
+    //进入App先推出登录页面
+    WLLLogInViewController *logController;
+    logController = [[WLLLogInViewController alloc] initWithNibName:@"WLLLogInViewController"
+                                                             bundle:[NSBundle mainBundle]];
+    UINavigationController *navigationController;
+    navigationController= [[UINavigationController alloc] initWithRootViewController:logController];
+    [nvController presentViewController:navigationController animated:YES completion:nil];
     
     return YES;
 }
