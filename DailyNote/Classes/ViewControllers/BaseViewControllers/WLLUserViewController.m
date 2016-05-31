@@ -9,6 +9,9 @@
 #import "WLLUserViewController.h"
 #import "SystemModel.h"
 #import "WLLLogInViewController.h"
+#import "WLLModifyInfomationViewController.h"
+#import "AppDelegate.h"
+#import "UserInfo.h"
 
 
 //屏幕宽高
@@ -27,6 +30,8 @@
 @property (strong, nonatomic) UIImageView *starImageView;
 @property (strong, nonatomic) UILabel *starNumberLabel;
 @property (strong, nonatomic) UILabel *signatureLabel;
+@property (strong, nonatomic) AppDelegate *userDelegate;
+@property (strong, nonatomic) NSManagedObjectContext *userContext;
 
 @end
 
@@ -46,6 +51,14 @@
     
     [self.userTableView registerClass:[UITableViewCell class]
                forCellReuseIdentifier:@"CW_Cell"];
+    
+    //设置返回键名字，使下以页面的返回键显示“返回”
+    UIBarButtonItem *theBarButtonItem = [[UIBarButtonItem alloc] init];
+    theBarButtonItem.title = @"返回";
+    self.parentViewController.navigationItem.backBarButtonItem = theBarButtonItem;
+    
+    //查询nickName及signature
+    [self searchForNickNameAndSignature];
     
 }
 
@@ -70,7 +83,7 @@
     
     CGRect nickNameLabelRect = CGRectMake(20, CGRectGetMaxY(headImageViewRect) + 10, UIScreenWidth - 40, 20);
     self.nickNameLabel = [[UILabel alloc] initWithFrame:nickNameLabelRect];
-    self.nickNameLabel.text = @"LionelMessi";
+//    self.nickNameLabel.text = @"LionelMessi";
     self.nickNameLabel.textAlignment = NSTextAlignmentCenter;
     [view addSubview:self.nickNameLabel];
     
@@ -129,6 +142,21 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     return 10;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.row == 0) {
+        WLLModifyInfomationViewController *modifyVC = [[WLLModifyInfomationViewController alloc] initWithNibName:@"WLLModifyInfomationViewController" bundle:[NSBundle mainBundle]];
+        [self.parentViewController.navigationController pushViewController:modifyVC animated:YES];
+        
+        modifyVC.nickNameString = self.nickNameLabel.text;
+        modifyVC.signatureString = self.signatureLabel.text;
+        
+        modifyVC.block = ^ (NSString *nickNameString, NSString *signatureString) {
+            self.nickNameLabel.text = nickNameString;
+            self.signatureLabel.text = signatureString;
+        };
+    }
 }
 
 #pragma mark - 数组添加数据
@@ -195,6 +223,27 @@
         
         self.theBackgroundImageView.frame = CGRectMake(-(UIScreenWidth * zoomingScale - UIScreenWidth) / 2, offset, UIScreenWidth * zoomingScale, heightAfterScroll);
     }
+}
+
+#pragma mark - 使用coreData查询用户的nickName及signature
+- (void)searchForNickNameAndSignature {
+    //创建查询对象
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    
+    //创建查询实体
+    self.userDelegate = [UIApplication sharedApplication].delegate;
+    self.userContext = self.userDelegate.managedObjectContext;
+    
+    NSEntityDescription *description = [NSEntityDescription entityForName:@"UserInfo" inManagedObjectContext:self.userContext];
+    [fetchRequest setEntity:description];
+    
+    NSError *error = nil;
+    NSArray *fetchedObjects = [self.userContext executeFetchRequest:fetchRequest error:&error];
+    UserInfo *userInfo = fetchedObjects[0];
+    self.nickNameLabel.text = userInfo.nickName;
+    self.signatureLabel.text = userInfo.signature;
+    
+    
 }
 
 #pragma mark -

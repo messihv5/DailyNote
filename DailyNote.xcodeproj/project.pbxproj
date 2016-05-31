@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		4D1550BC1CFD7270001CF139 /* share.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D1550BB1CFD7270001CF139 /* share.png */; };
+		4D1550CD1CFD8A11001CF139 /* UserInfo+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D1550CA1CFD8A11001CF139 /* UserInfo+CoreDataProperties.m */; };
+		4D1550CE1CFD8A11001CF139 /* UserInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D1550CC1CFD8A11001CF139 /* UserInfo.m */; };
+		4D1550D21CFD8B79001CF139 /* WLLModifyInfomationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D1550D01CFD8B79001CF139 /* WLLModifyInfomationViewController.m */; };
+		4D1550D31CFD8B79001CF139 /* WLLModifyInfomationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D1550D11CFD8B79001CF139 /* WLLModifyInfomationViewController.xib */; };
 		4D1C30E01CF85E9900C675D7 /* star.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D1C30DF1CF85E9900C675D7 /* star.png */; };
 		4D1C30E41CF87A7E00C675D7 /* wanting.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D1C30E31CF87A7E00C675D7 /* wanting.png */; };
 		4D1C30E61CF87B7B00C675D7 /* messi.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D1C30E51CF87B7B00C675D7 /* messi.png */; };
@@ -83,6 +87,13 @@
 		0428E0BC44A15683D73BA0BF /* Pods-DailyNote.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DailyNote.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DailyNote/Pods-DailyNote.debug.xcconfig"; sourceTree = "<group>"; };
 		3A274DBB65D8CD8315FA844C /* libPods-DailyNote.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-DailyNote.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D1550BB1CFD7270001CF139 /* share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = share.png; sourceTree = "<group>"; };
+		4D1550C91CFD8A11001CF139 /* UserInfo+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UserInfo+CoreDataProperties.h"; sourceTree = "<group>"; };
+		4D1550CA1CFD8A11001CF139 /* UserInfo+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UserInfo+CoreDataProperties.m"; sourceTree = "<group>"; };
+		4D1550CB1CFD8A11001CF139 /* UserInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfo.h; sourceTree = "<group>"; };
+		4D1550CC1CFD8A11001CF139 /* UserInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfo.m; sourceTree = "<group>"; };
+		4D1550CF1CFD8B79001CF139 /* WLLModifyInfomationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLModifyInfomationViewController.h; sourceTree = "<group>"; };
+		4D1550D01CFD8B79001CF139 /* WLLModifyInfomationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLModifyInfomationViewController.m; sourceTree = "<group>"; };
+		4D1550D11CFD8B79001CF139 /* WLLModifyInfomationViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WLLModifyInfomationViewController.xib; sourceTree = "<group>"; };
 		4D1C30DF1CF85E9900C675D7 /* star.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = star.png; sourceTree = "<group>"; };
 		4D1C30E31CF87A7E00C675D7 /* wanting.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wanting.png; sourceTree = "<group>"; };
 		4D1C30E51CF87B7B00C675D7 /* messi.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = messi.png; sourceTree = "<group>"; };
@@ -214,6 +225,10 @@
 		4D1C30EA1CF8807700C675D7 /* WChao */ = {
 			isa = PBXGroup;
 			children = (
+				4D1550C91CFD8A11001CF139 /* UserInfo+CoreDataProperties.h */,
+				4D1550CA1CFD8A11001CF139 /* UserInfo+CoreDataProperties.m */,
+				4D1550CB1CFD8A11001CF139 /* UserInfo.h */,
+				4D1550CC1CFD8A11001CF139 /* UserInfo.m */,
 				4D1C30EE1CF8856F00C675D7 /* SystemModel.h */,
 				4D1C30EF1CF8856F00C675D7 /* SystemModel.m */,
 			);
@@ -232,6 +247,9 @@
 				4D48D1C41CF56CDA00D9E4F1 /* WLLResetPasswordViewController.h */,
 				4D48D1C51CF56CDA00D9E4F1 /* WLLResetPasswordViewController.m */,
 				4D48D1C61CF56CDA00D9E4F1 /* WLLResetPasswordViewController.xib */,
+				4D1550CF1CFD8B79001CF139 /* WLLModifyInfomationViewController.h */,
+				4D1550D01CFD8B79001CF139 /* WLLModifyInfomationViewController.m */,
+				4D1550D11CFD8B79001CF139 /* WLLModifyInfomationViewController.xib */,
 			);
 			name = WChao;
 			sourceTree = "<group>";
@@ -615,6 +633,7 @@
 				4DB98D851CF6D0D600D3A3EF /* WLLNotesCategoryController.xib in Resources */,
 				4DB98D811CF6D0D600D3A3EF /* EditNoteViewController.xib in Resources */,
 				4D48D1CA1CF59B9400D9E4F1 /* NickName.png in Resources */,
+				4D1550D31CFD8B79001CF139 /* WLLModifyInfomationViewController.xib in Resources */,
 				4D48D1C81CF56CDA00D9E4F1 /* WLLResetPasswordViewController.xib in Resources */,
 				4D8A3EFF1CF3D14D000C2D42 /* Assets.xcassets in Resources */,
 				4D8A3F4E1CF443F3000C2D42 /* lock.png in Resources */,
@@ -716,12 +735,15 @@
 				4D8A3EF11CF3D14D000C2D42 /* main.m in Sources */,
 				4D8A3EFD1CF3D14D000C2D42 /* DailyNote.xcdatamodeld in Sources */,
 				4DB98D821CF6D0D600D3A3EF /* WLLNoteDetailViewController.m in Sources */,
+				4D1550CE1CFD8A11001CF139 /* UserInfo.m in Sources */,
+				4D1550CD1CFD8A11001CF139 /* UserInfo+CoreDataProperties.m in Sources */,
 				4D48D1C71CF56CDA00D9E4F1 /* WLLResetPasswordViewController.m in Sources */,
 				4D1C30F01CF8856F00C675D7 /* SystemModel.m in Sources */,
 				4D8A3F381CF3D769000C2D42 /* WLLDailyNoteViewController.m in Sources */,
 				F37114781CF69EF30078A317 /* WLLDailyNoteDataManager.m in Sources */,
 				F371146E1CF69ED60078A317 /* WLLCategoryButton.m in Sources */,
 				F37114741CF69EE70078A317 /* NoteDetail.m in Sources */,
+				4D1550D21CFD8B79001CF139 /* WLLModifyInfomationViewController.m in Sources */,
 				4D8A3F471CF423F1000C2D42 /* WLLLogInViewController.m in Sources */,
 				4D8A3F3D1CF3D7A1000C2D42 /* WLLShareViewController.m in Sources */,
 				4D8A3F341CF3D615000C2D42 /* AppDelegate.m in Sources */,

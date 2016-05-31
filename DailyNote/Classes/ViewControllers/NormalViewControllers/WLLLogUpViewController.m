@@ -7,6 +7,8 @@
 //
 
 #import "WLLLogUpViewController.h"
+#import "UserInfo.h"
+#import "AppDelegate.h"
 
 @interface WLLLogUpViewController ()
 
@@ -15,6 +17,8 @@
 @property (weak, nonatomic) IBOutlet UITextField *nickNameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordTextField;
 @property (weak, nonatomic) IBOutlet UIButton *logUpButton;
+@property (strong, nonatomic) AppDelegate *logUpDelegate;
+
 
 @end
 
@@ -28,6 +32,8 @@
     self.logUpButton.layer.cornerRadius = 10;
     self.passwordTextField.secureTextEntry = YES;
     
+    
+    
     }
 
 #pragma mark - 注册操作
@@ -40,6 +46,20 @@
     
     [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
+            
+            //获取本app上下文
+             self.logUpDelegate = [UIApplication sharedApplication].delegate ;
+            NSManagedObjectContext *context = self.logUpDelegate.managedObjectContext;
+            
+            //获取实体描述
+            NSEntityDescription *description = [NSEntityDescription entityForName:@"UserInfo" inManagedObjectContext:context];
+            
+            //创建被管理的对象
+            UserInfo * info = [[UserInfo alloc] initWithEntity:description insertIntoManagedObjectContext:context];
+            info.nickName = self.nickNameTextField.text;
+//            [self.logUpDelegate saveContext];//需要有改动且没有错误
+            NSError *error = nil;
+            [context save:&error];//无论是否有改动都存储
             
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"注册成功,请到邮箱激活账号"
                                                                            message:@""
