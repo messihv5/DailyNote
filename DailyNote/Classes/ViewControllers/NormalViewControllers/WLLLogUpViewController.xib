@@ -63,7 +63,7 @@
                         <action selector="logUpAction:" destination="-1" eventType="touchUpInside" id="57o-1C-YMW"/>
                     </connections>
                 </button>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="smile.png" translatesAutoresizingMaskIntoConstraints="NO" id="8Va-Tx-nXb">
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="wanting.png" translatesAutoresizingMaskIntoConstraints="NO" id="8Va-Tx-nXb">
                     <rect key="frame" x="107" y="100" width="107" height="107"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="8Va-Tx-nXb" secondAttribute="height" id="ueU-dB-aE2"/>
@@ -116,6 +116,6 @@
         <image name="NickName.png" width="32" height="32"/>
         <image name="email.png" width="32" height="32"/>
         <image name="lock.png" width="32" height="32"/>
-        <image name="smile.png" width="128" height="128"/>
+        <image name="wanting.png" width="200" height="112"/>
     </resources>
 </document>

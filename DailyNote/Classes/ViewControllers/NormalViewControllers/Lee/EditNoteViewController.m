@@ -54,6 +54,26 @@
         self.contentText.text = model.content;
     
         self.countLabel.text = [NSString stringWithFormat:@"%ld", self.contentText.text.length];
+    } else {
+        //WChao did this.
+        AVUser *currentUser = [AVUser currentUser];
+        AVObject *dairy = [AVObject objectWithClassName:@"Dairy"];
+        NSString *contentOfDaily = @"今天是2016.5.29，星日，我还得继续努力啊man";
+        [dairy setObject:contentOfDaily forKey:@"content"];
+        [dairy setObject:@"第一类" forKey:@"Category"];
+        [dairy setObject:currentUser forKey:@"belong"];
+        //+++++++++++++++++++++++++++++在日记里添加图片（AVFile保存图片）
+        UIImage *theImage = [UIImage imageNamed:@"star.png"];
+        NSData *data = UIImagePNGRepresentation(theImage);
+        AVFile *file = [AVFile fileWithName:@"head.png" data:data];
+   
+        UIImage *secondImage = [UIImage imageNamed:@"share.png"];
+        NSData *secondData = UIImagePNGRepresentation(secondImage);
+        AVFile *secondFile = [AVFile fileWithData:secondData];
+        NSArray *array = [NSArray arrayWithObjects:file, secondFile, nil];
+        [dairy addUniqueObjectsFromArray:array forKey:@"picture"];
+        [dairy saveInBackground];
+
     }
 }
 
@@ -122,6 +142,7 @@
 - (void)saveNote:(UIBarButtonItem *)button {
     
     NSLog(@"%s", __func__);
+    
 }
 
 - (void)cancel {

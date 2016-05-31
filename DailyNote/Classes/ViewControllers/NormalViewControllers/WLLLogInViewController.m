@@ -44,6 +44,7 @@
     
 }
 
+#pragma mark - 登录操作
 - (IBAction)logInAction:(UIButton *)sender {
     [AVUser logInWithUsernameInBackground:self.emailTextField.text
                                  password:self.passwordTextField.text
@@ -51,7 +52,6 @@
         if (user != nil) {
             [self dismissViewControllerAnimated:YES completion:nil];
         } else {
-            NSLog(@"登录出错：%@", error);
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"邮箱或密码有误"
                                                                            message:@"" preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive

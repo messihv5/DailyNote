@@ -7,6 +7,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WLLUserViewController">
             <connections>
+                <outlet property="userTableView" destination="ecb-3J-PDu" id="cMu-AN-uzz"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -14,8 +15,20 @@
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ecb-3J-PDu">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </tableView>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="ecb-3J-PDu" secondAttribute="bottom" id="G7c-dS-kIO"/>
+                <constraint firstAttribute="trailing" secondItem="ecb-3J-PDu" secondAttribute="trailing" id="VsN-7E-gLI"/>
+                <constraint firstItem="ecb-3J-PDu" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="fjU-bl-5iT"/>
+                <constraint firstItem="ecb-3J-PDu" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="njQ-na-sQg"/>
+            </constraints>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
-            <point key="canvasLocation" x="91" y="54"/>
+            <point key="canvasLocation" x="130" y="33"/>
         </view>
     </objects>
 </document>

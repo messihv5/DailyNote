@@ -27,7 +27,8 @@
     self.navigationItem.title = @"注册";
     self.logUpButton.layer.cornerRadius = 10;
     self.passwordTextField.secureTextEntry = YES;
-}
+    
+    }
 
 #pragma mark - 注册操作
 - (IBAction)logUpAction:(UIButton *)sender {
@@ -39,6 +40,7 @@
     
     [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
+            
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"注册成功,请到邮箱激活账号"
                                                                            message:@""
                                                                     preferredStyle:UIAlertControllerStyleAlert];

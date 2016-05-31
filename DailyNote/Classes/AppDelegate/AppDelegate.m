@@ -26,6 +26,7 @@
     //注册Leancloud
     [AVOSCloud setApplicationId:@"gQw0p6Gi1ncURhwJozkPTA7d-gzGzoHsz"
                       clientKey:@"nKPTchiJiuqVHuHVnH4DnEtJ"];
+//    [AVOSCloud setAllLogsEnabled:YES];
 
     //设置3个根视图的控制器
     WLLDailyNoteViewController *dailyController;
@@ -51,9 +52,6 @@
     
     UITabBarController *tabController = [[UITabBarController alloc] init];
     tabController.viewControllers = @[dailyController, shareController, userController];
-    
-
-    
     tabController.tabBar.tintColor = [UIColor orangeColor];
     
     UINavigationController *nvController = [[UINavigationController alloc] initWithRootViewController:tabController];
