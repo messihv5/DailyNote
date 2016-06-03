@@ -26,7 +26,7 @@
     //注册Leancloud
     [AVOSCloud setApplicationId:@"gQw0p6Gi1ncURhwJozkPTA7d-gzGzoHsz"
                       clientKey:@"nKPTchiJiuqVHuHVnH4DnEtJ"];
-//    [AVOSCloud setAllLogsEnabled:YES];
+    [AVOSCloud setAllLogsEnabled:NO];
 
     //设置3个根视图的控制器
     WLLDailyNoteViewController *dailyController;
@@ -55,20 +55,33 @@
     tabController.tabBar.tintColor = [UIColor orangeColor];
     
     UINavigationController *nvController = [[UINavigationController alloc] initWithRootViewController:tabController];
-    
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     self.window.rootViewController = nvController;
     
     
-    //进入App先推出登录页面
-    WLLLogInViewController *logController;
-    logController = [[WLLLogInViewController alloc] initWithNibName:@"WLLLogInViewController"
-                                                             bundle:[NSBundle mainBundle]];
-    UINavigationController *navigationController;
-    navigationController= [[UINavigationController alloc] initWithRootViewController:logController];
-    [nvController presentViewController:navigationController animated:YES completion:nil];
+    //进入App推出登录页面
+    dispatch_async(dispatch_get_main_queue(), ^{
+        WLLLogInViewController *logController;
+        logController = [[WLLLogInViewController alloc] initWithNibName:@"WLLLogInViewController"
+                                                                 bundle:[NSBundle mainBundle]];
+        UINavigationController *navigationController;
+        navigationController= [[UINavigationController alloc] initWithRootViewController:logController];
+        [self.window.rootViewController presentViewController:navigationController animated:NO completion:nil];
+    });
+//    double delay = 10;
+//    dispatch_time_t time = dispatch_time(DISPATCH_TIME_NOW, delay);
+//    dispatch_after(time, dispatch_get_main_queue(), ^{
+//        WLLLogInViewController *logController;
+//                logController = [[WLLLogInViewController alloc] initWithNibName:@"WLLLogInViewController"
+//                                                                         bundle:[NSBundle mainBundle]];
+//                UINavigationController *navigationController;
+//                navigationController= [[UINavigationController alloc] initWithRootViewController:logController];
+//                [self.window.rootViewController presentViewController:navigationController animated:NO completion:nil];
+//    });
+
+    
     
     return YES;
 }

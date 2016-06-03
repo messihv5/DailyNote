@@ -20,7 +20,10 @@
 
 @interface WLLUserViewController ()<UITableViewDelegate,
                                     UITableViewDataSource,
-                                    UIScrollViewDelegate>
+                                    UIScrollViewDelegate,
+                                    UIImagePickerControllerDelegate,
+                                    UINavigationControllerDelegate>
+
 @property (weak, nonatomic) IBOutlet UITableView *userTableView;
 
 @property (strong, nonatomic) NSMutableArray *data;
@@ -32,6 +35,8 @@
 @property (strong, nonatomic) UILabel *signatureLabel;
 @property (strong, nonatomic) AppDelegate *userDelegate;
 @property (strong, nonatomic) NSManagedObjectContext *userContext;
+@property (assign, nonatomic) BOOL isTheBackgroundImageView;
+@property (assign, nonatomic) BOOL isHeadImageView;
 
 @end
 
@@ -44,6 +49,7 @@
     self.automaticallyAdjustsScrollViewInsets = YES
     ;
     [self settingTableViewHeaderView];
+    
     self.userTableView.delegate = self;
     self.userTableView.dataSource = self;
     
@@ -71,7 +77,13 @@
     self.theBackgroundImageView = [[UIImageView alloc] initWithFrame:viewRect];
     self.theBackgroundImageView.backgroundColor = [UIColor grayColor];
     self.theBackgroundImageView.image = [UIImage imageNamed:@"scenery"];
+    
+    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(theBackgroudImageViewTapAction)];
+    [self.theBackgroundImageView addGestureRecognizer:tapGestureRecognizer];
+    self.theBackgroundImageView.userInteractionEnabled = YES;
+
     [view addSubview:self.theBackgroundImageView];
+    
     
     CGRect headImageViewRect = CGRectMake(UIScreenWidth / 2 - UIScreenHeight / 18, UIScreenHeight / 9 - 30, UIScreenHeight / 9, UIScreenHeight / 9);
     self.headImageView = [[UIImageView alloc] initWithFrame:headImageViewRect];
@@ -79,6 +91,11 @@
     self.headImageView.image = [UIImage imageNamed:@"wanting"];
     self.headImageView.layer.masksToBounds = YES;
     self.headImageView.layer.cornerRadius = UIScreenHeight / 18;
+    
+    UITapGestureRecognizer *headImageViewTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(headImageViewTapAction)];
+    [self.headImageView addGestureRecognizer:headImageViewTapGestureRecognizer];
+    self.headImageView.userInteractionEnabled = YES;
+    
     [view addSubview:self.headImageView];
     
     CGRect nickNameLabelRect = CGRectMake(20, CGRectGetMaxY(headImageViewRect) + 10, UIScreenWidth - 40, 20);
@@ -210,8 +227,15 @@
 #pragma mark - 退出系统
 - (void)logOutAction:(UIButton *)sender {
     [AVUser logOut];
-    [[[UIApplication sharedApplication] delegate ] application:[UIApplication sharedApplication]
-                                 didFinishLaunchingWithOptions:nil]  ;
+    WLLLogInViewController *logInViwController = [[WLLLogInViewController alloc] initWithNibName:@"WLLLogInViewController" bundle:[NSBundle mainBundle]];
+    
+    UINavigationController *naviController = [[UINavigationController alloc] initWithRootViewController:logInViwController];
+    UITabBarController *controller = (UITabBarController *)self.parentViewController;
+    controller.selectedIndex = 0;
+    [self.navigationController presentViewController:naviController animated:YES completion:nil];
+    
+//    [[[UIApplication sharedApplication] delegate ] application:[UIApplication sharedApplication]
+//                                 didFinishLaunchingWithOptions:nil]  ;
 }
 
 #pragma mark - tableview下拉滚动视图
@@ -227,6 +251,9 @@
 
 #pragma mark - 使用coreData查询用户的nickName及signature
 - (void)searchForNickNameAndSignature {
+    
+    //CoreData查询用户的nickName和signature
+    /*
     //创建查询对象
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     
@@ -241,9 +268,88 @@
     NSArray *fetchedObjects = [self.userContext executeFetchRequest:fetchRequest error:&error];
     UserInfo *userInfo = fetchedObjects[0];
     self.nickNameLabel.text = userInfo.nickName;
-    self.signatureLabel.text = userInfo.signature;
+    self.signatureLabel.text = userInfo.signature;*/
     
+    //通过数据库查询用户的nickName和signature
+    AVUser *user = [AVUser currentUser];
+    self.nickNameLabel.text = [user objectForKey:@"nickName"];
+    self.signatureLabel.text = [user objectForKey:@"signature"];
     
+}
+
+#pragma mark - 轻击手势切换图片
+- (void)theBackgroudImageViewTapAction {
+    
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"更换背景" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    UIAlertAction *cameroAction = [UIAlertAction actionWithTitle:@"相机拍摄" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+        imagePicker.delegate = self;
+        imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+        imagePicker.allowsEditing = YES;
+        [self.navigationController presentViewController:imagePicker animated:YES completion:nil ];
+    }];
+    UIAlertAction *pictureAction = [UIAlertAction actionWithTitle:@"相册选取" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+        imagePicker.delegate = self;
+        imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        imagePicker.allowsEditing = YES;
+        [self.navigationController presentViewController:imagePicker animated:YES completion:nil];
+    }];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        
+    }];
+    
+    [alertController addAction:cameroAction];
+    [alertController addAction:pictureAction];
+    [alertController addAction:cancelAction];
+    
+    [self presentViewController:alertController animated:YES completion:nil];
+    self.isTheBackgroundImageView = YES;
+}
+
+- (void)headImageViewTapAction {
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"切换图像" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    UIAlertAction *cameroAction = [UIAlertAction actionWithTitle:@"相机" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+        imagePicker.delegate = self;
+        imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+        imagePicker.allowsEditing = YES;
+        [self.navigationController presentViewController:imagePicker animated:YES completion:nil];
+    }];
+    
+    UIAlertAction *albumAction = [UIAlertAction actionWithTitle:@"从相册选取" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+        imagePicker.delegate = self;
+        imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        imagePicker.allowsEditing = YES;
+        [self.navigationController presentViewController:imagePicker animated:YES completion:nil];
+    }];
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        
+    }];
+    
+    [alertController addAction:cameroAction];
+    [alertController addAction:albumAction];
+    [alertController addAction:cancelAction];
+    
+    [self.navigationController presentViewController:alertController animated:YES completion:nil];
+    
+    self.isHeadImageView = YES;
+                                          
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
+    if (self.isTheBackgroundImageView == YES) {
+        self.theBackgroundImageView.image = info[UIImagePickerControllerOriginalImage];
+        self.isTheBackgroundImageView = NO;
+    } else if (self.isHeadImageView == YES) {
+        self.headImageView.image = info[UIImagePickerControllerOriginalImage];
+        self.isHeadImageView = NO;
+    }
+    [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark -

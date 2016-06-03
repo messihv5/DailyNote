@@ -55,14 +55,19 @@
     
         self.countLabel.text = [NSString stringWithFormat:@"%ld", self.contentText.text.length];
     } else {
-        //WChao did this.
-        AVUser *currentUser = [AVUser currentUser];
+        
+        //点击编辑按钮后，保存日记
+        AVUser *currentUser = [AVUser currentUser];//不加这句，日记就没有关联到指定的用户，相当于分享的日记
         AVObject *dairy = [AVObject objectWithClassName:@"Dairy"];
         NSString *contentOfDaily = @"今天是2016.5.29，星日，我还得继续努力啊man";
+        
         [dairy setObject:contentOfDaily forKey:@"content"];
         [dairy setObject:@"第一类" forKey:@"Category"];
-        [dairy setObject:currentUser forKey:@"belong"];
-        //+++++++++++++++++++++++++++++在日记里添加图片（AVFile保存图片）
+        [dairy setObject:@"public" forKey:@"isPrivate"];
+        [dairy setObject:currentUser forKey:@"belong"];//日记没有指定用户，分享的日记
+        [dairy setObject:[NSMutableArray array] forKey:@"staredUser"];//存储点赞的用户
+        [dairy setObject:@0 forKey:@"starNumber"];//存储点赞数
+        
         UIImage *theImage = [UIImage imageNamed:@"star.png"];
         NSData *data = UIImagePNGRepresentation(theImage);
         AVFile *file = [AVFile fileWithName:@"head.png" data:data];

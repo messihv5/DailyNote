@@ -44,9 +44,14 @@
     user.email = self.emailTextField.text;
     user.password = self.passwordTextField.text;
     
+    //设置user的nickName
+    [user setObject:self.nickNameTextField.text forKey:@"nickName"];
+    
     [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
             
+            //通过coreData存储用户的nickName和signature
+            /*//把用户的昵称通过coreData保存在本地
             //获取本app上下文
              self.logUpDelegate = [UIApplication sharedApplication].delegate ;
             NSManagedObjectContext *context = self.logUpDelegate.managedObjectContext;
@@ -59,7 +64,7 @@
             info.nickName = self.nickNameTextField.text;
 //            [self.logUpDelegate saveContext];//需要有改动且没有错误
             NSError *error = nil;
-            [context save:&error];//无论是否有改动都存储
+            [context save:&error];//无论是否有改动都存储*/
             
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"注册成功,请到邮箱激活账号"
                                                                            message:@""

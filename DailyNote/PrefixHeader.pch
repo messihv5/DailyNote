@@ -16,3 +16,16 @@
 
 #import "AVOSCloud/AVOSCloud.h"
 
+//#ifdef DEBUG
+//#define NSLog(...) NSLog(__VA_ARGS__)
+//#define debugMethod() NSLog(@"%s", __func__)
+//#else
+//#define NSLog(...)
+//#define debugMethod()
+//#endif
+
+#ifndef __OPTIMIZE__
+#define NSLog(...) NSLog(__VA_ARGS__)
+#else
+#define NSLog(...) {}
+#endif

@@ -34,7 +34,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+        
     // notesTableView 代理设置
     self.notesTableView.delegate = self;
     self.notesTableView.dataSource = self;
