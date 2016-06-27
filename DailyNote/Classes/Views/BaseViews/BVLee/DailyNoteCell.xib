@@ -66,8 +66,8 @@
                             <constraint firstItem="xxz-sj-mXC" firstAttribute="width" secondItem="cIb-5H-8id" secondAttribute="width" constant="-2" id="pnM-j9-7Cv"/>
                         </constraints>
                     </view>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YxL-ie-p0k" userLabel="内容View">
-                        <rect key="frame" x="51" y="10" width="300" height="104.5"/>
+                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YxL-ie-p0k" userLabel="内容View">
+                        <rect key="frame" x="53" y="10" width="300" height="104.5"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2sq-65-Ed5" userLabel="内容">
                                 <rect key="frame" x="0.0" y="0.0" width="300" height="0.0"/>

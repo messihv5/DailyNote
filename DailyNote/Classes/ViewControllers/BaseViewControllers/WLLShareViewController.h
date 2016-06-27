@@ -10,4 +10,6 @@
 
 @interface WLLShareViewController : UIViewController
 
+@property (strong, nonatomic) NSIndexPath *passedIndexPath;
+
 @end

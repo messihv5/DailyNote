@@ -12,8 +12,18 @@
 #import "WLLShareViewController.h"
 #import "WLLUserViewController.h"
 #import "WLLLogInViewController.h"
+#import "WLLLockViewController.h"
+#import <ShareSDK/ShareSDK.h>
+#import <ShareSDKConnector/ShareSDKConnector.h>
 
-@interface AppDelegate ()
+//腾讯开放平台（对应QQ和QQ空间）SDK头文件
+#import <TencentOpenAPI/TencentOAuth.h>
+#import <TencentOpenAPI/QQApiInterface.h>
+
+//微信SDK头文件
+#import "WXApi.h"
+
+@interface AppDelegate ()<UINavigationControllerDelegate>
 
 @end
 
@@ -22,6 +32,40 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    
+    //shareSDK注册
+    [ShareSDK  registerApp:@"13e3f417e934c"
+           activePlatforms:@[@(SSDKPlatformTypeWechat),
+                             @(SSDKPlatformTypeQQ)]
+                  onImport:^(SSDKPlatformType platformType) {
+                      switch (platformType)
+                      {
+                          case SSDKPlatformTypeWechat:
+                              [ShareSDKConnector connectWeChat:[WXApi class]];
+                              break;
+                          case SSDKPlatformTypeQQ:
+                              [ShareSDKConnector connectQQ:[QQApiInterface class] tencentOAuthClass:[TencentOAuth class]];
+                              break;
+                            default:
+                              break;
+                      }
+                  }
+           onConfiguration:^(SSDKPlatformType platformType, NSMutableDictionary *appInfo) {
+               switch (platformType)
+               {
+                    case SSDKPlatformTypeWechat:
+                       [appInfo SSDKSetupWeChatByAppId:@"wx4868b35061f87885"
+                                             appSecret:@"64020361b8ec4c99936c0e3999a9f249"];
+                       break;
+                   case SSDKPlatformTypeQQ:
+                       [appInfo SSDKSetupQQByAppId:@"1105401337"
+                                            appKey:@"LsqWb7ULTObHWWjf"
+                                          authType:SSDKAuthTypeBoth];
+                       break;
+                   default:
+                       break;
+               }
+           }];
     
     //注册Leancloud
     [AVOSCloud setApplicationId:@"gQw0p6Gi1ncURhwJozkPTA7d-gzGzoHsz"
@@ -55,35 +99,45 @@
     tabController.tabBar.tintColor = [UIColor orangeColor];
     
     UINavigationController *nvController = [[UINavigationController alloc] initWithRootViewController:tabController];
+    
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     self.window.rootViewController = nvController;
+    nvController .delegate = self;
     
-    
-    //进入App推出登录页面
-    dispatch_async(dispatch_get_main_queue(), ^{
-        WLLLogInViewController *logController;
-        logController = [[WLLLogInViewController alloc] initWithNibName:@"WLLLogInViewController"
-                                                                 bundle:[NSBundle mainBundle]];
-        UINavigationController *navigationController;
-        navigationController= [[UINavigationController alloc] initWithRootViewController:logController];
-        [self.window.rootViewController presentViewController:navigationController animated:NO completion:nil];
-    });
-//    double delay = 10;
-//    dispatch_time_t time = dispatch_time(DISPATCH_TIME_NOW, delay);
-//    dispatch_after(time, dispatch_get_main_queue(), ^{
-//        WLLLogInViewController *logController;
-//                logController = [[WLLLogInViewController alloc] initWithNibName:@"WLLLogInViewController"
-//                                                                         bundle:[NSBundle mainBundle]];
-//                UINavigationController *navigationController;
-//                navigationController= [[UINavigationController alloc] initWithRootViewController:logController];
-//                [self.window.rootViewController presentViewController:navigationController animated:NO completion:nil];
-//    });
+    //如果用户没有退出系统，再进入时不用弹出登录界面进入App推出登录页面
+//    if (![AVUser currentUser]) {
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            WLLLogInViewController *logController;
+//            logController = [[WLLLogInViewController alloc] initWithNibName:@"WLLLogInViewController"
+//                                                                     bundle:[NSBundle mainBundle]];
+//            UINavigationController *naviController;
+//            naviController= [[UINavigationController alloc] initWithRootViewController:logController];
+//            [self.window.rootViewController presentViewController:naviController animated:NO completion:nil];
+//        });
+//    }
 
     
-    
+    //leancloud消息推送
+    if ([[UIDevice currentDevice].systemVersion floatValue] < 8.0) {
+        UIRemoteNotificationType remoteTypes = UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound;
+        [application registerForRemoteNotificationTypes:remoteTypes];
+    } else {
+        UIUserNotificationType userTypes = UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound;
+        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:userTypes categories:nil];
+        [application registerUserNotificationSettings:settings];
+        [application registerForRemoteNotifications];
+    }
     return YES;
+}
+
+
+//用户已注册远程推送消息，得到deviceToken,可以从控制台推送消息
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    AVInstallation *currentInstallation = [AVInstallation currentInstallation];
+    [currentInstallation setDeviceTokenFromData:deviceToken];
+    [currentInstallation saveInBackground];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -98,6 +152,13 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+    //判断用户是否设置手势锁，设置了就弹出解锁界面
+    NSUserDefaults *user = [NSUserDefaults standardUserDefaults];
+    NSString *switchString = [user objectForKey:@"privateCode"];
+    if ([switchString isEqualToString:@"YES"]) {
+        WLLLockViewController *lockController = [[WLLLockViewController alloc] init];
+        [self.window.rootViewController presentViewController:lockController animated:YES completion:nil];
+    }
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {

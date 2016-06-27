@@ -5,6 +5,10 @@ This application makes use of the following third party libraries:
 
 Copyright 2015 LeanCloud, Inc. See https://leancloud.cn/terms.html
 
+## LeanCloudFeedback
+
+Copyright 2015 LeanCloud, Inc. See https://leancloud.cn/terms.html
+
 ## SDWebImage
 
 Copyright (c) 2016 Olivier Poitrey rs@dailymotion.com

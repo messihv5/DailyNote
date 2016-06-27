@@ -14,6 +14,8 @@
 #import "WLLNotesCategoryView.h"
 #import "NoteDetail.h"
 #import "WLLDailyNoteDataManager.h"
+#import "WLLDailyNoteDataManager.h"
+#import "WLLLogInViewController.h"
 
 #define kWidth CGRectGetWidth([UIScreen mainScreen].bounds)
 #define kHeight CGRectGetHeight([UIScreen mainScreen].bounds)
@@ -25,6 +27,12 @@
 @property (nonatomic, strong) UITableView *notesCategoryView;
 /* 判断日记分类页面隐藏与否 */
 @property (nonatomic, assign, getter=isHidden) BOOL hidden;
+//messi did this
+@property (strong, nonatomic) UIImage *firstPageImage;
+//导航栏颜色
+@property (strong, nonatomic) UIColor *theBarTintColor;
+@property (strong, nonatomic) NSUserDefaults *userDefaults;
+@property (strong, nonatomic) AVUser *theCurrentUser;
 
 @end
 
@@ -34,16 +42,14 @@ static NSString  *const reuseIdentifier = @"note_cell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-        
+    
     // notesTableView 代理设置
     self.notesTableView.delegate = self;
     self.notesTableView.dataSource = self;
-    
     // 注册 NoteCell
     [self.notesTableView registerNib:[UINib nibWithNibName:@"DailyNoteCell" bundle:nil] forCellReuseIdentifier:reuseIdentifier];
     
     // 设置分类button
-    [self initNaviButton];
     
     // 加载分类页面
     [self initCategoryView];
@@ -52,7 +58,14 @@ static NSString  *const reuseIdentifier = @"note_cell";
     [[WLLDailyNoteDataManager sharedInstance] requestDataAndFinished:^{
         [self.notesTableView reloadData];
     }];
+    
+    
+    [WLLDailyNoteDataManager sharedInstance].topicImage = [self imageWithView:self.view];
+    
+    self.userDefaults = [NSUserDefaults standardUserDefaults];
 }
+
+
 
 // 初始化分类页面按钮
 - (void)initNaviButton {
@@ -105,10 +118,97 @@ static NSString  *const reuseIdentifier = @"note_cell";
     }
 }
 
+//在视图已出现的时候渲染image，保存所需的4种颜色的类型，最后的一种将显示在界面上
+- (void)viewDidAppear:(BOOL)animated {
+    
+    //进入app时，弹出登录界面，如果用户没有退出系统，再进入时不用弹出登录界面
+    if (![AVUser currentUser]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            WLLLogInViewController *logController;
+            logController = [[WLLLogInViewController alloc] initWithNibName:@"WLLLogInViewController"
+                                                                     bundle:[NSBundle mainBundle]];
+            UINavigationController *naviController;
+            naviController= [[UINavigationController alloc] initWithRootViewController:logController];
+            [self.parentViewController.navigationController presentViewController:naviController animated:NO completion:nil];
+        });
+    }
+
+    //获取当前的导航栏和tab栏
+    UITabBar *tabbar = self.tabBarController.tabBar;
+    UINavigationBar *bar = self.tabBarController.navigationController.navigationBar;
+    
+    //第一次进入页面时，获取四种颜色的image
+    NSData *imageData = [self.userDefaults objectForKey:@"navigationImagesAndTabbarImages"];
+    if (imageData == nil) {
+        NSMutableData *navigationImagesAndTabbarImages = [[NSMutableData alloc] init];
+        
+        NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:navigationImagesAndTabbarImages];
+
+        [tabbar setTintColor:[UIColor lightGrayColor]];
+        [bar setBarTintColor:[UIColor lightGrayColor]];
+        UIImage *tabbarImage4 = [self imageWithView:tabbar];
+        UIImage *navigationImage4 = [self imageWithView:bar];
+        
+        [tabbar setTintColor:[UIColor darkTextColor]];
+        [bar setBarTintColor:[UIColor darkTextColor]];
+        UIImage *tabbarImage2 = [self imageWithView:tabbar];
+        UIImage *navigationImage2 = [self imageWithView:bar];
+        
+        [tabbar setTintColor:[UIColor redColor]];
+        [bar setBarTintColor:[UIColor redColor]];
+        UIImage *tabbarImage3 = [self imageWithView:tabbar];
+        UIImage *navigationImage3 = [self imageWithView:bar];
+        
+        [tabbar setTintColor:[UIColor blueColor]];
+        [bar setBarTintColor:[UIColor blueColor]];
+        UIImage *tabbarImage1 = [self imageWithView:tabbar];
+        UIImage *navigationImage1 = [self imageWithView:bar];
+        
+        [archiver encodeObject:tabbarImage1 forKey:@"tabbarImage1"];
+        [archiver encodeObject:navigationImage1 forKey:@"navigationImage1"];
+        [archiver encodeObject:tabbarImage2 forKey:@"tabbarImage2"];
+        [archiver encodeObject:navigationImage2 forKey:@"navigationImage2"];
+        [archiver encodeObject:tabbarImage3 forKey:@"tabbarImage3"];
+        [archiver encodeObject:navigationImage3 forKey:@"navigationImage3"];
+        [archiver encodeObject:tabbarImage4 forKey:@"tabbarImage4"];
+        [archiver encodeObject:navigationImage4 forKey:@"navigationImage4"];
+        [archiver finishEncoding];
+        
+        //保存在NSUserDefaults里面，使得在同一手机登录的用户主题相同
+        [self.userDefaults setObject:navigationImagesAndTabbarImages forKey:@"navigationImagesAndTabbarImages"];
+        [self.userDefaults synchronize];
+    }
+    
+    //从currentUser的navigationColor字段获取颜色
+    NSString *colorString = [[AVUser currentUser] objectForKey:@"navigationColor"];
+    if (colorString == nil) {
+        [tabbar setTintColor:[UIColor blueColor]];
+        [bar setBarTintColor:[UIColor blueColor]];
+    } else if ([colorString isEqualToString:@"blue"]){
+        [tabbar setTintColor:[UIColor blueColor]];
+        [bar setBarTintColor:[UIColor blueColor]];
+    } else if ([colorString isEqualToString:@"black"]) {
+        [tabbar setTintColor:[UIColor darkTextColor]];
+        [bar setBarTintColor:[UIColor darkTextColor]];
+    } else if ([colorString isEqualToString:@"red"]) {
+        [tabbar setTintColor:[UIColor redColor]];
+        [bar setBarTintColor:[UIColor redColor]];
+    } else if ([colorString isEqualToString:@"gray"]) {
+        [tabbar setTintColor:[UIColor lightGrayColor]];
+        [bar setBarTintColor:[UIColor lightGrayColor]];
+    }
+
+ 
+    
+}
+
 // 加载 barButton Item
 - (void)viewWillAppear:(BOOL)animated {
+    
     [super viewWillAppear:YES];
     
+    [self initNaviButton];
+
     // 设置左侧barbutton
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"calendarNotes"]
                                                                  style:(UIBarButtonItemStylePlain)
@@ -124,6 +224,15 @@ static NSString  *const reuseIdentifier = @"note_cell";
                                                                  action:@selector(newDaily:)];
     self.parentViewController.navigationItem.rightBarButtonItem = rightItem;
     self.parentViewController.navigationItem.rightBarButtonItem.tintColor = [UIColor grayColor];
+    self.parentViewController.navigationController.navigationBar.opaque = YES;
+}
+
+//视图消失的时候取消掉navigationItem上的控件
+- (void)viewWillDisappear:(BOOL)animated {
+    
+    self.parentViewController.navigationItem.rightBarButtonItem = nil;
+    self.parentViewController.navigationItem.leftBarButtonItem = nil;
+    self.parentViewController.navigationItem.titleView = nil;
 }
 
 // 查看以前日志
@@ -169,6 +278,28 @@ static NSString  *const reuseIdentifier = @"note_cell";
     [self.navigationController pushViewController:NoteDetailVC animated:YES];
     
 }
+
+//渲染view.layer获取image
+- (UIImage *)imageWithView:(UIView *)view {
+    
+    //获取view的image
+    UIGraphicsBeginImageContextWithOptions(view.bounds.size, NO, 0.0);
+    [view.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
+
+#pragma mark - 键值观察者方法
+//- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
+//
+//    NSLog(@"change me");
+//    [WLLDailyNoteDataManager sharedInstance].topicImage = [self imageWithView:self.view];
+//    UIView *tabbarView = self.tabBarController.tabBar;
+//    [WLLDailyNoteDataManager sharedInstance].tabbarImage = [self imageWithView:tabbarView];
+//    UIView *navigationView = self.tabBarController.navigationController.navigationBar;
+//    [WLLDailyNoteDataManager sharedInstance].navigationImage = [self imageWithView:navigationView];
+//}
 
 #pragma mark - Memory Warning
 - (void)didReceiveMemoryWarning {

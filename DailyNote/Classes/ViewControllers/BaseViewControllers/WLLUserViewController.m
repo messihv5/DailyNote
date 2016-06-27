@@ -12,6 +12,11 @@
 #import "WLLModifyInfomationViewController.h"
 #import "AppDelegate.h"
 #import "UserInfo.h"
+#import "WLLFunctionController.h"
+#import "WLLSettingViewController.h"
+#import <ShareSDK/ShareSDK.h>
+#import <ShareSDKUI/ShareSDK+SSUI.h>
+#import "WLLShareViewController.h"
 
 
 //屏幕宽高
@@ -29,6 +34,7 @@
 @property (strong, nonatomic) NSMutableArray *data;
 @property (strong, nonatomic) UIImageView *headImageView;
 @property (strong, nonatomic) UIImageView *theBackgroundImageView;
+@property (strong, nonatomic) UIImageView *fuckImageView;
 @property (strong, nonatomic) UILabel *nickNameLabel;
 @property (strong, nonatomic) UIImageView *starImageView;
 @property (strong, nonatomic) UILabel *starNumberLabel;
@@ -37,6 +43,7 @@
 @property (strong, nonatomic) NSManagedObjectContext *userContext;
 @property (assign, nonatomic) BOOL isTheBackgroundImageView;
 @property (assign, nonatomic) BOOL isHeadImageView;
+@property (strong, nonatomic) AVUser *theCurrentUser;
 
 @end
 
@@ -44,10 +51,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    //设置userTableView的代理
-    self.parentViewController.navigationController.navigationBar.opaque = YES;
-    self.automaticallyAdjustsScrollViewInsets = YES
-    ;
+    
+    //得到当前用户
+    self.theCurrentUser = [AVUser currentUser];
+    
+    
+    
     [self settingTableViewHeaderView];
     
     self.userTableView.delegate = self;
@@ -58,7 +67,7 @@
     [self.userTableView registerClass:[UITableViewCell class]
                forCellReuseIdentifier:@"CW_Cell"];
     
-    //设置返回键名字，使下以页面的返回键显示“返回”
+    //设置返回键名字，使下一页面的返回键显示“返回”
     UIBarButtonItem *theBarButtonItem = [[UIBarButtonItem alloc] init];
     theBarButtonItem.title = @"返回";
     self.parentViewController.navigationItem.backBarButtonItem = theBarButtonItem;
@@ -68,29 +77,76 @@
     
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    self.navigationController.navigationBar.hidden = YES;
+    
+    //计算用户获得的总赞数
+    AVQuery *query = [AVQuery queryWithClassName:@"Dairy"];
+    [query whereKey:@"isPrivate" equalTo:@"public"];
+    [query whereKey:@"belong" equalTo:self.theCurrentUser];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        NSInteger totalStar = 0;
+        if (error == nil) {
+            for (AVObject *object in objects) {
+                NSNumber *num = [object objectForKey:@"starNumber"];
+                totalStar = totalStar + [num integerValue];
+            }
+        }
+        self.starNumberLabel.text = [NSString stringWithFormat:@"%ld", totalStar];
+        [self.theCurrentUser setObject:self.starNumberLabel.text forKey:@"starNumber"];
+        [self.theCurrentUser saveInBackground];
+    }];
+    
+    
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    self.navigationController.navigationBar.hidden = NO;
+}
+
 #pragma mark - 设置tableHeaderView
 - (void)settingTableViewHeaderView {
+    
+    //查询背景图片和
     CGRect viewRect = CGRectMake(0, 0, UIScreenWidth, UIScreenHeight / 3);
     UIView *view = [[UIView alloc] initWithFrame:viewRect];
     view.backgroundColor = [UIColor greenColor];
-    
+
     self.theBackgroundImageView = [[UIImageView alloc] initWithFrame:viewRect];
-    self.theBackgroundImageView.backgroundColor = [UIColor grayColor];
-    self.theBackgroundImageView.image = [UIImage imageNamed:@"scenery"];
+    self.theBackgroundImageView.backgroundColor = [UIColor colorWithRed:1 green:0.1 blue:0.1 alpha:1];
     
-    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(theBackgroudImageViewTapAction)];
+    NSString *nickName = [self.theCurrentUser objectForKey:@"nickName"];
+    NSLog(@"%@", nickName);
+    
+    AVFile *theBackgroundImageFile = [self.theCurrentUser objectForKey:@"theBackgroundImage"];
+    [theBackgroundImageFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.theBackgroundImageView.image = [UIImage imageWithData:data];
+        });
+    }];
+    
+    UITapGestureRecognizer *tapGestureRecognizer;
+    tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                   action:@selector(theBackgroudImageViewTapAction)];
     [self.theBackgroundImageView addGestureRecognizer:tapGestureRecognizer];
     self.theBackgroundImageView.userInteractionEnabled = YES;
-
     [view addSubview:self.theBackgroundImageView];
     
     
-    CGRect headImageViewRect = CGRectMake(UIScreenWidth / 2 - UIScreenHeight / 18, UIScreenHeight / 9 - 30, UIScreenHeight / 9, UIScreenHeight / 9);
+    CGRect headImageViewRect = CGRectMake(UIScreenWidth / 2 - UIScreenHeight / 18, UIScreenHeight / 18, UIScreenHeight / 9, UIScreenHeight / 9);
     self.headImageView = [[UIImageView alloc] initWithFrame:headImageViewRect];
-    self.headImageView.backgroundColor = [UIColor blueColor];
-    self.headImageView.image = [UIImage imageNamed:@"wanting"];
-    self.headImageView.layer.masksToBounds = YES;
+    self.headImageView.backgroundColor = [UIColor cyanColor];
+    
+    AVFile *headImageFile = [self.theCurrentUser objectForKey:@"headImage"];
+    [headImageFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.headImageView.image = [UIImage imageWithData:data];
+        });
+    }];
+    
     self.headImageView.layer.cornerRadius = UIScreenHeight / 18;
+    self.headImageView.layer.masksToBounds = YES;
+    
     
     UITapGestureRecognizer *headImageViewTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(headImageViewTapAction)];
     [self.headImageView addGestureRecognizer:headImageViewTapGestureRecognizer];
@@ -98,32 +154,30 @@
     
     [view addSubview:self.headImageView];
     
-    CGRect nickNameLabelRect = CGRectMake(20, CGRectGetMaxY(headImageViewRect) + 10, UIScreenWidth - 40, 20);
+    CGRect nickNameLabelRect = CGRectMake(20, CGRectGetMaxY(headImageViewRect) + UIScreenHeight / 36, UIScreenWidth - 40, UIScreenHeight * 5 / 108);
     self.nickNameLabel = [[UILabel alloc] initWithFrame:nickNameLabelRect];
-//    self.nickNameLabel.text = @"LionelMessi";
     self.nickNameLabel.textAlignment = NSTextAlignmentCenter;
     [view addSubview:self.nickNameLabel];
     
-    CGRect starImageViewRect = CGRectMake(UIScreenWidth / 2  - 10, CGRectGetMaxY(nickNameLabelRect) + 10, 20, 20);
+    CGRect starImageViewRect = CGRectMake(UIScreenWidth / 2  - 10, CGRectGetMaxY(nickNameLabelRect), 20, UIScreenHeight * 5 / 108);
     self.starImageView = [[UIImageView alloc] initWithFrame:starImageViewRect];
     self.starImageView.image = [UIImage imageNamed:@"star"];
     [view addSubview:self.starImageView];
     
-    CGRect starNumberLabelRect = CGRectMake(CGRectGetMaxX(starImageViewRect) + 5, starImageViewRect.origin.y, 50, 20);
+    CGRect starNumberLabelRect = CGRectMake(CGRectGetMaxX(starImageViewRect) + 5, starImageViewRect.origin.y, 50, UIScreenHeight * 5 / 108);
     self.starNumberLabel = [[UILabel alloc] initWithFrame:starNumberLabelRect];
     self.starNumberLabel.text = @"100";
     self.starNumberLabel.textAlignment = NSTextAlignmentLeft;
     [view addSubview:self.starNumberLabel];
     
-    CGRect signatureLabelRect = CGRectMake(20, CGRectGetMaxY(starNumberLabelRect) + 10, UIScreenWidth - 40, 40);
+    CGRect signatureLabelRect = CGRectMake(20, CGRectGetMaxY(starNumberLabelRect), UIScreenWidth - 40, UIScreenHeight * 5 / 108);
     self.signatureLabel = [[UILabel alloc] initWithFrame:signatureLabelRect];
     self.signatureLabel.text = @"Life is so hard now, but you have no choice, you have to move on, man";
     self.signatureLabel.textAlignment = NSTextAlignmentCenter;
     [view addSubview:self.signatureLabel];
-    
     self.userTableView.tableHeaderView = view;
     
-    CGRect footViewRect = CGRectMake(0, 0, UIScreenWidth, 80);
+    CGRect footViewRect = CGRectMake(0, 0, UIScreenWidth, 100);
     UIView *footView = [[UIView alloc] initWithFrame:footViewRect];
     
     CGRect logOutButtonRect = CGRectMake(UIScreenWidth / 2 - 100, 10, 200, 30);
@@ -137,9 +191,10 @@
     logOutButton.layer.cornerRadius = 2;
     
     self.userTableView.tableFooterView = footView;
-    
 }
+
 #pragma mark - tableView代理方法设置
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [self.data[section] count];
 }
@@ -162,43 +217,105 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row == 0) {
+    if (indexPath.row == 0 && indexPath.section == 0) {
+        
+        //修改nickName和signature
         WLLModifyInfomationViewController *modifyVC = [[WLLModifyInfomationViewController alloc] initWithNibName:@"WLLModifyInfomationViewController" bundle:[NSBundle mainBundle]];
         [self.parentViewController.navigationController pushViewController:modifyVC animated:YES];
         
         modifyVC.nickNameString = self.nickNameLabel.text;
         modifyVC.signatureString = self.signatureLabel.text;
         
+        //block反向传值实现
         modifyVC.block = ^ (NSString *nickNameString, NSString *signatureString) {
             self.nickNameLabel.text = nickNameString;
             self.signatureLabel.text = signatureString;
         };
+    } else if (indexPath.section == 0 && indexPath.row == 1) {
+        
+        //进入收藏页面
+        WLLShareViewController *shareController = [[WLLShareViewController alloc] initWithNibName:@"WLLShareViewController" bundle:[NSBundle mainBundle]];
+        
+        [self.navigationController pushViewController:shareController animated:YES];
+    } else if (indexPath.section == 1 && indexPath.row == 0) {
+        
+        //进入AppStore去评价
+        NSString *str = @"https://itunes.apple.com/us/app/wu-ji-zuo-zui-hao-jing-zhi/id1084747109?mt=8";
+        
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:str]];
+
+    } else if (indexPath.section == 1 && indexPath.row == 1) {
+        
+        //进入更多功能的界面
+        WLLFunctionController *fucntionController = [[WLLFunctionController alloc] initWithNibName:@"WLLFunctionController" bundle:[NSBundle mainBundle]];
+        [self.navigationController pushViewController:fucntionController animated:YES];
+    } else if (indexPath.section == 1 && indexPath.row == 2) {
+        WLLSettingViewController * viewController = [[WLLSettingViewController alloc] initWithNibName:@"WLLSettingViewController" bundle:[NSBundle mainBundle]];
+        [self.navigationController pushViewController:viewController animated:YES];
+    } else if (indexPath.section == 1 && indexPath.row == 3) {
+        NSArray* imageArray = @[[UIImage imageNamed:@"blue_circle"]];
+        if (imageArray) {
+            
+            NSMutableDictionary *shareParams = [NSMutableDictionary dictionary];
+            [shareParams SSDKSetupShareParamsByText:@"分享内容"
+                                             images:imageArray
+                                                url:[NSURL URLWithString:@"http://mob.com"]
+                                              title:@"分享标题"
+                                               type:SSDKContentTypeAuto];
+            //2、分享（可以弹出我们的分享菜单和编辑界面）
+            [ShareSDK showShareActionSheet:nil //要显示菜单的视图, iPad版中此参数作为弹出菜单的参照视图，只有传这个才可以弹出我们的分享菜单，可以传分享的按钮对象或者自己创建小的view 对象，iPhone可以传nil不会影响
+                                     items:nil
+                               shareParams:shareParams
+                       onShareStateChanged:^(SSDKResponseState state, SSDKPlatformType platformType, NSDictionary *userData, SSDKContentEntity *contentEntity, NSError *error, BOOL end) {
+                           
+                           switch (state) {
+                               case SSDKResponseStateSuccess:
+                               {
+                                   UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"分享成功"
+                                                                                       message:nil
+                                                                                      delegate:nil
+                                                                             cancelButtonTitle:@"确定"
+                                                                             otherButtonTitles:nil];
+                                   [alertView show];
+                                   break;
+                               }
+                               case SSDKResponseStateFail:
+                               {
+                                   UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"分享失败"
+                                                                                   message:[NSString stringWithFormat:@"%@",error]
+                                                                                  delegate:nil
+                                                                         cancelButtonTitle:@"OK"
+                                                                         otherButtonTitles:nil, nil];
+                                   [alert show];
+                                   break;
+                               }
+                               default:
+                                   break;
+                           }
+                       }  
+             ];}
     }
 }
 
 #pragma mark - 数组添加数据
+
 - (void)addData {
     self.data = [NSMutableArray array];
     NSMutableArray *firstSection = [NSMutableArray array];
+    
     SystemModel *userDocumentModel = [[SystemModel alloc] init];
     userDocumentModel.systemImage = [UIImage imageNamed:@"changeUserInformation"];
     userDocumentModel.systemString = @"资料修改";
-    SystemModel *upGradeModel = [[SystemModel alloc] init];
-    upGradeModel.systemImage = [UIImage imageNamed:@"UpGrade"];
-    upGradeModel.systemString = @"升级账户";
+    
+    SystemModel *collectionModel = [[SystemModel alloc] init];
+    collectionModel.systemImage = [UIImage imageNamed:@"systemNotice2"];
+    collectionModel.systemString = @"个人收藏";
+    
     [firstSection addObject:userDocumentModel];
-    [firstSection addObject:upGradeModel];
+    [firstSection addObject:collectionModel];
     [self.data addObject:firstSection];
     
-    NSMutableArray *secondSection = [NSMutableArray array];
-    SystemModel *systemNoticeModel = [[SystemModel alloc] init];
-    systemNoticeModel.systemImage = [UIImage imageNamed:@"systemNotice2"];
-    systemNoticeModel.systemString = @"系统通知";
-    [secondSection addObject:systemNoticeModel];
-    [self.data addObject:secondSection];
-    
     NSMutableArray *thirdSection = [NSMutableArray array];
-    
     SystemModel *encourageModel = [[SystemModel alloc] init];
     encourageModel.systemImage = [UIImage imageNamed:@"encourage"];
     encourageModel.systemString = @"给予好评";
@@ -225,31 +342,40 @@
 }
 
 #pragma mark - 退出系统
+
 - (void)logOutAction:(UIButton *)sender {
     [AVUser logOut];
-    WLLLogInViewController *logInViwController = [[WLLLogInViewController alloc] initWithNibName:@"WLLLogInViewController" bundle:[NSBundle mainBundle]];
     
-    UINavigationController *naviController = [[UINavigationController alloc] initWithRootViewController:logInViwController];
-    UITabBarController *controller = (UITabBarController *)self.parentViewController;
-    controller.selectedIndex = 0;
-    [self.navigationController presentViewController:naviController animated:YES completion:nil];
+//    WLLLogInViewController *logInViwController;
+//    logInViwController = [[WLLLogInViewController alloc] initWithNibName:@"WLLLogInViewController"
+//                                                                  bundle:[NSBundle mainBundle]];
+//
+//    UINavigationController *naviController;
+//    naviController = [[UINavigationController alloc] initWithRootViewController:logInViwController];
+//    
+//    //弹出登录界面之前，先让tabbarController回到主页面，然后在present出登录界面
+//    UITabBarController *controller = (UITabBarController *)self.parentViewController;
+//    controller.selectedIndex = 0;
+//    [self.navigationController presentViewController:naviController animated:YES completion:nil];
+    [[UIApplication sharedApplication].delegate application:[UIApplication sharedApplication] didFinishLaunchingWithOptions:nil];
     
-//    [[[UIApplication sharedApplication] delegate ] application:[UIApplication sharedApplication]
-//                                 didFinishLaunchingWithOptions:nil]  ;
 }
 
 #pragma mark - tableview下拉滚动视图
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    
     CGFloat offset = scrollView.contentOffset.y;
     if (offset < 0) {
         CGFloat heightAfterScroll = UIScreenHeight / 3 - (offset);
         CGFloat zoomingScale = heightAfterScroll / (UIScreenHeight / 3);
-        
-        self.theBackgroundImageView.frame = CGRectMake(-(UIScreenWidth * zoomingScale - UIScreenWidth) / 2, offset, UIScreenWidth * zoomingScale, heightAfterScroll);
+        self.theBackgroundImageView.frame = CGRectMake(-(UIScreenWidth * zoomingScale - UIScreenWidth) / 2, offset,
+                                                       UIScreenWidth * zoomingScale, heightAfterScroll);
     }
 }
 
 #pragma mark - 使用coreData查询用户的nickName及signature
+
 - (void)searchForNickNameAndSignature {
     
     //CoreData查询用户的nickName和signature
@@ -271,16 +397,16 @@
     self.signatureLabel.text = userInfo.signature;*/
     
     //通过数据库查询用户的nickName和signature
-    AVUser *user = [AVUser currentUser];
-    self.nickNameLabel.text = [user objectForKey:@"nickName"];
-    self.signatureLabel.text = [user objectForKey:@"signature"];
+    self.nickNameLabel.text = [self.theCurrentUser objectForKey:@"nickName"];
+    self.signatureLabel.text = [self.theCurrentUser objectForKey:@"signature"];
     
 }
 
 #pragma mark - 轻击手势切换图片
+
 - (void)theBackgroudImageViewTapAction {
     
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"更换背景" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"更换背景" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
     
     UIAlertAction *cameroAction = [UIAlertAction actionWithTitle:@"相机拍摄" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
@@ -289,7 +415,7 @@
         imagePicker.allowsEditing = YES;
         [self.navigationController presentViewController:imagePicker animated:YES completion:nil ];
     }];
-    UIAlertAction *pictureAction = [UIAlertAction actionWithTitle:@"相册选取" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertAction *pictureAction = [UIAlertAction actionWithTitle:@"相册选取" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
         imagePicker.delegate = self;
         imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
@@ -309,7 +435,9 @@
 }
 
 - (void)headImageViewTapAction {
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"切换图像" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"切换图像"
+                                                                             message:@""
+                                                                      preferredStyle:UIAlertControllerStyleActionSheet];
     
     UIAlertAction *cameroAction = [UIAlertAction actionWithTitle:@"相机" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
@@ -319,7 +447,7 @@
         [self.navigationController presentViewController:imagePicker animated:YES completion:nil];
     }];
     
-    UIAlertAction *albumAction = [UIAlertAction actionWithTitle:@"从相册选取" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertAction *albumAction = [UIAlertAction actionWithTitle:@"从相册选取" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
         imagePicker.delegate = self;
         imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
@@ -341,14 +469,26 @@
                                           
 }
 
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
+- (void)imagePickerController:(UIImagePickerController *)picker
+didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
+    //判断是点击背景图片还是图像图片
     if (self.isTheBackgroundImageView == YES) {
-        self.theBackgroundImageView.image = info[UIImagePickerControllerOriginalImage];
+        self.theBackgroundImageView.image = info[@"UIImagePickerControllerOriginalImage"];
+        NSData *data = UIImagePNGRepresentation(self.theBackgroundImageView.image);
+        AVFile *file = [AVFile fileWithData:data];
+        [self.theCurrentUser setObject:file forKey:@"theBackgroundImage"];
         self.isTheBackgroundImageView = NO;
     } else if (self.isHeadImageView == YES) {
-        self.headImageView.image = info[UIImagePickerControllerOriginalImage];
+        self.headImageView.image = info[@"UIImagePickerControllerOriginalImage"];
+        NSData *data = UIImagePNGRepresentation(self.headImageView.image);
+        AVFile *file = [AVFile fileWithData:data];
+        [self.theCurrentUser setObject:file forKey:@"headImage"];
         self.isHeadImageView = NO;
     }
+    
+    self.theCurrentUser.fetchWhenSave = YES;
+    [self.theCurrentUser saveInBackground];
+    
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
 

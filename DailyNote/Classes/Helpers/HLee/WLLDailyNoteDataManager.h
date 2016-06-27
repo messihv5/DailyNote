@@ -15,6 +15,15 @@
 
 @interface WLLDailyNoteDataManager : NSObject
 
+@property (strong, nonatomic) UIImage *topicImage;
+@property (strong, nonatomic) UIImage *navigationImage1;
+@property (strong, nonatomic) UIImage *navigationImage2;
+@property (strong, nonatomic) UIImage *navigationImage3;
+@property (strong, nonatomic) UIImage *navigationImage4;
+@property (strong, nonatomic) UIImage *tabbarImage1;
+@property (strong, nonatomic) UIImage *tabbarImage2;
+@property (strong, nonatomic) UIImage *tabbarImage3;
+@property (strong, nonatomic) UIImage *tabbarImage4;
 
 /**
  * 单例

@@ -8,7 +8,7 @@
 
 #import "WLLResetPasswordViewController.h"
 
-@interface WLLResetPasswordViewController ()
+@interface WLLResetPasswordViewController ()<UITextFieldDelegate>
 
 @property (weak, nonatomic) IBOutlet UIImageView *resetImageView;
 @property (weak, nonatomic) IBOutlet UITextField *emailTextField;
@@ -23,6 +23,10 @@
     
     self.navigationItem.title = @"重置密码";
     self.resetPasswordButton.layer.cornerRadius = 10;
+    
+    self.emailTextField.returnKeyType = UIReturnKeyDefault;
+    
+    self.emailTextField.delegate = self;
     
     // Do any additional setup after loading the view from its nib.
 }
@@ -55,7 +59,12 @@
     }];
 }
 
+#pragma mark -textField代理方法
 
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
+    return YES;
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

@@ -1,17 +1,21 @@
 PODS:
   - AVOSCloud (3.2.12)
+  - LeanCloudFeedback (0.1.1):
+    - AVOSCloud
   - SDWebImage (3.7.6):
     - SDWebImage/Core (= 3.7.6)
   - SDWebImage/Core (3.7.6)
 
 DEPENDENCIES:
   - AVOSCloud (~> 3.2.12)
+  - LeanCloudFeedback (~> 0.1.1)
   - SDWebImage (~> 3.7.6)
 
 SPEC CHECKSUMS:
   AVOSCloud: fcbb5c2bcccaddbdea8c2b4f6c1ad7f13e6639fe
+  LeanCloudFeedback: 686305ea196931c7eae49800c384e42d78408482
   SDWebImage: c325cf02c30337336b95beff20a13df489ec0ec9
 
-PODFILE CHECKSUM: 024ff45a36d373307b4b9562af25f1ea76488ff5
+PODFILE CHECKSUM: 9a0cee2b88128cb61af45678440a174b5c9656e1
 
 COCOAPODS: 1.0.0

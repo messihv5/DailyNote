@@ -13,7 +13,9 @@
 @interface WLLNoteDetailViewController : UIViewController
 
 @property (nonatomic, strong) NoteDetail *noteDetail;
-
 @property (nonatomic, assign) NSIndexPath *index;
+
+//接受从shareViewController传过来的日记
+@property (strong, nonatomic) AVObject *passedObject;
 
 @end

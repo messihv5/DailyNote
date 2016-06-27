@@ -39,7 +39,7 @@
                 <constraint firstItem="5A9-Ep-Pco" firstAttribute="top" secondItem="RsE-Tt-lc3" secondAttribute="bottom" constant="10" id="fvW-DE-vKC"/>
                 <constraint firstAttribute="trailing" secondItem="RsE-Tt-lc3" secondAttribute="trailing" constant="10" id="knD-gS-8UO"/>
             </constraints>
-            <point key="canvasLocation" x="494" y="84"/>
+            <point key="canvasLocation" x="572" y="38"/>
         </view>
     </objects>
 </document>

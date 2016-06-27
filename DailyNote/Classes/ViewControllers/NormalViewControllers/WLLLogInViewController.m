@@ -10,7 +10,7 @@
 #import "WLLLogUpViewController.h"
 #import "WLLResetPasswordViewController.h"
 
-@interface WLLLogInViewController ()
+@interface WLLLogInViewController ()<UITextFieldDelegate>
 
 @property (weak, nonatomic) IBOutlet UIImageView *headImageView;
 @property (weak, nonatomic) IBOutlet UITextField *emailTextField;
@@ -23,6 +23,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.emailTextField.returnKeyType = UIReturnKeyNext;
+    
+    self.emailTextField.delegate = self;
+    self.passwordTextField.delegate = self;
     
     self.passwordTextField.secureTextEntry = YES;
     
@@ -45,6 +50,7 @@
 }
 
 #pragma mark - 登录操作
+
 - (IBAction)logInAction:(UIButton *)sender {
     [AVUser logInWithUsernameInBackground:self.emailTextField.text
                                  password:self.passwordTextField.text
@@ -67,6 +73,7 @@
 
 
 #pragma mark - 跳转至注册页面以及重置密码
+
 - (void)logUpAction {
     WLLLogUpViewController *logUpVC = [[WLLLogUpViewController alloc] initWithNibName:@"WLLLogUpViewController"
                                                                                bundle:[NSBundle mainBundle]];
@@ -78,6 +85,24 @@
     resetVC= [[WLLResetPasswordViewController alloc] initWithNibName:@"WLLResetPasswordViewController"
                                                               bundle:[NSBundle mainBundle]];
     [self.navigationController pushViewController:resetVC animated:YES];
+}
+
+#pragma mark - textFiled代理方法，处理键盘
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    if ([textField isEqual:self.emailTextField]) {
+        [textField resignFirstResponder];
+        [self.passwordTextField becomeFirstResponder];
+        CGRect viewRect = self.view.frame;
+        viewRect.origin.y = viewRect.origin.y - 20;
+        self.view.frame = viewRect;
+    } else {
+        [textField resignFirstResponder];
+        CGRect originalRect = self.view.frame;
+        originalRect.origin.y = originalRect.origin.y + 20;
+        self.view.frame = originalRect;
+    }
+    return YES;
 }
 
 - (void)didReceiveMemoryWarning {

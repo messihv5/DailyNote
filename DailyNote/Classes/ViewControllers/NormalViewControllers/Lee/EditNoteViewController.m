@@ -11,15 +11,19 @@
 #import "WLLNotesCategoryView.h"
 #import "WLLDailyNoteDataManager.h"
 #import "NoteDetail.h"
+#import <CoreLocation/CoreLocation.h>
 
 #define kWidth CGRectGetWidth([UIScreen mainScreen].bounds)
 
-@interface EditNoteViewController ()<UITextViewDelegate>
-@property (nonatomic, assign, getter=isHidden) BOOL hidden;
+@interface EditNoteViewController ()<UITextViewDelegate, CLLocationManagerDelegate>
 
+@property (nonatomic, assign, getter=isHidden) BOOL hidden;
 @property (nonatomic, strong) UITableView *notesCategoryView;
 @property (weak, nonatomic) IBOutlet UITextView *contentText;
 @property (weak, nonatomic) IBOutlet UILabel *countLabel;
+@property (strong, nonatomic) CLLocationManager *locationManager;
+@property (strong, nonatomic) CLGeocoder *geoCoder;
+@property (strong, nonatomic) NSString *theString;
 
 @end
 
@@ -36,7 +40,22 @@
     [self dataFromDetail];
     
     self.contentText.delegate = self;
+    
+    //开启定位功能
+    [CLLocationManager locationServicesEnabled];
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.delegate = self;
+    self.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation;
+    self.locationManager.distanceFilter = kCLDistanceFilterNone;
+    [self.locationManager requestWhenInUseAuthorization];
+    CLAuthorizationStatus status  = [CLLocationManager authorizationStatus];
+    if (status == kCLAuthorizationStatusAuthorizedWhenInUse) {
+        [self.locationManager startUpdatingLocation];
+    }
+    
+    self.geoCoder = [[CLGeocoder alloc] init];
 }
+
 
 - (void)textViewDidBeginEditing:(UITextView *)textView {
     
@@ -45,6 +64,7 @@
     self.countLabel.text = [NSString stringWithFormat:@"%ld", count];
     
 }
+
 
 - (void)dataFromDetail {
     
@@ -57,28 +77,9 @@
     } else {
         
         //点击编辑按钮后，保存日记
-        AVUser *currentUser = [AVUser currentUser];//不加这句，日记就没有关联到指定的用户，相当于分享的日记
-        AVObject *dairy = [AVObject objectWithClassName:@"Dairy"];
-        NSString *contentOfDaily = @"今天是2016.5.29，星日，我还得继续努力啊man";
         
-        [dairy setObject:contentOfDaily forKey:@"content"];
-        [dairy setObject:@"第一类" forKey:@"Category"];
-        [dairy setObject:@"public" forKey:@"isPrivate"];
-        [dairy setObject:currentUser forKey:@"belong"];//日记没有指定用户，分享的日记
-        [dairy setObject:[NSMutableArray array] forKey:@"staredUser"];//存储点赞的用户
-        [dairy setObject:@0 forKey:@"starNumber"];//存储点赞数
+        //获取用户的位置信息,并进行定位
         
-        UIImage *theImage = [UIImage imageNamed:@"star.png"];
-        NSData *data = UIImagePNGRepresentation(theImage);
-        AVFile *file = [AVFile fileWithName:@"head.png" data:data];
-   
-        UIImage *secondImage = [UIImage imageNamed:@"share.png"];
-        NSData *secondData = UIImagePNGRepresentation(secondImage);
-        AVFile *secondFile = [AVFile fileWithData:secondData];
-        NSArray *array = [NSArray arrayWithObjects:file, secondFile, nil];
-        [dairy addUniqueObjectsFromArray:array forKey:@"picture"];
-        [dairy saveInBackground];
-
     }
 }
 
@@ -154,5 +155,65 @@
     
     [self.navigationController popViewControllerAnimated:YES];
 }
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations {
+    CLLocation *location = [locations lastObject];
+    
+    CLLocation *meLocation = [[CLLocation alloc] initWithLatitude:location.coordinate.latitude longitude:location.coordinate.longitude];
+    
+    [self.geoCoder reverseGeocodeLocation:meLocation completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
+        if (error == nil && placemarks.count > 0) {
+            NSDictionary *dic = [[placemarks objectAtIndex:0] addressDictionary];
+            
+            NSString *city = dic[@"City"];
+            
+            NSString *state = dic[@"State"];
+            
+            NSString *sublocality = dic[@"SubLocality"];
+            
+            NSString *string1 = [state stringByAppendingString:city];
+            
+            string1 = [string1 stringByAppendingString:sublocality];
+
+            AVUser *currentUser = [AVUser currentUser];//不加这句，日记就没有关联到指定的用户，相当于分享的日记
+            AVObject *dairy = [AVObject objectWithClassName:@"Dairy"];
+            NSString *contentOfDaily = @"今天是2016.5.29，星日，我还得继续努力啊man";
+            
+            [dairy setObject:contentOfDaily forKey:@"content"];
+            [dairy setObject:@"第一类" forKey:@"Category"];
+            [dairy setObject:@"public" forKey:@"isPrivate"];
+            [dairy setObject:currentUser forKey:@"belong"];//日记没有指定用户，分享的日记
+            [dairy setObject:[NSMutableArray array] forKey:@"staredUser"];//存储点赞的用户
+            [dairy setObject:@"0" forKey:@"starNumber"];//存储点赞数
+            [dairy setObject:string1 forKey:@"myLocation"];
+            [dairy setObject:@"0" forKey:@"readTime"];
+            
+            UIImage *theImage = [UIImage imageNamed:@"star.png"];
+            NSData *data = UIImagePNGRepresentation(theImage);
+            AVFile *file = [AVFile fileWithName:@"head.png" data:data];
+            
+            UIImage *secondImage = [UIImage imageNamed:@"share.png"];
+            NSData *secondData = UIImagePNGRepresentation(secondImage);
+            AVFile *secondFile = [AVFile fileWithData:secondData];
+            
+            NSArray *array = [NSArray arrayWithObjects:file, secondFile, nil];
+            [dairy addUniqueObjectsFromArray:array forKey:@"picture"];
+            
+            //保持网络和本地的日记同步
+            dairy.fetchWhenSave = YES;
+            [dairy saveInBackground];
+
+            [self.locationManager stopUpdatingLocation];
+
+        } else {
+            [self.locationManager stopUpdatingLocation];
+        }
+    }];
+
+}
+
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
+}
+
 
 @end

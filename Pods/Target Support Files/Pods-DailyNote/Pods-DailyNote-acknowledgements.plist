@@ -22,6 +22,14 @@
 		</dict>
 		<dict>
 			<key>FooterText</key>
+			<string>Copyright 2015 LeanCloud, Inc. See https://leancloud.cn/terms.html</string>
+			<key>Title</key>
+			<string>LeanCloudFeedback</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>FooterText</key>
 			<string>Copyright (c) 2016 Olivier Poitrey rs@dailymotion.com
  
 Permission is hereby granted, free of charge, to any person obtaining a copy
