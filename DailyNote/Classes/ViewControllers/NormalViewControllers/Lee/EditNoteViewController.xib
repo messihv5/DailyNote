@@ -7,8 +7,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EditNoteViewController">
             <connections>
-                <outlet property="contentText" destination="5A9-Ep-Pco" id="6ZZ-gj-3oQ"/>
-                <outlet property="countLabel" destination="RsE-Tt-lc3" id="YgF-Sg-Es3"/>
+                <outlet property="contentText" destination="PmO-Tq-4W1" id="lYJ-RN-GBo"/>
+                <outlet property="countLabel" destination="csS-rw-Bvx" id="Eg3-Hw-ias"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -17,29 +17,29 @@
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="222222222" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RsE-Tt-lc3">
-                    <rect key="frame" x="534" y="69" width="55.5" height="12"/>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="PmO-Tq-4W1">
+                    <rect key="frame" x="0.0" y="10" width="600" height="590"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                </textView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="csS-rw-Bvx">
+                    <rect key="frame" x="563.5" y="69" width="26.5" height="12"/>
                     <fontDescription key="fontDescription" type="system" pointSize="10"/>
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="5A9-Ep-Pco">
-                    <rect key="frame" x="10" y="91" width="580" height="600"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                </textView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstAttribute="trailing" secondItem="5A9-Ep-Pco" secondAttribute="trailing" constant="10" id="BXd-EO-V0s"/>
-                <constraint firstItem="5A9-Ep-Pco" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="Huo-W9-Q6G"/>
-                <constraint firstItem="RsE-Tt-lc3" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="69" id="deD-tH-XcN"/>
-                <constraint firstItem="5A9-Ep-Pco" firstAttribute="height" secondItem="i5M-Pr-FkT" secondAttribute="height" id="fTr-7I-RNb"/>
-                <constraint firstItem="5A9-Ep-Pco" firstAttribute="top" secondItem="RsE-Tt-lc3" secondAttribute="bottom" constant="10" id="fvW-DE-vKC"/>
-                <constraint firstAttribute="trailing" secondItem="RsE-Tt-lc3" secondAttribute="trailing" constant="10" id="knD-gS-8UO"/>
+                <constraint firstAttribute="trailing" secondItem="PmO-Tq-4W1" secondAttribute="trailing" id="BIc-ga-Uxi"/>
+                <constraint firstItem="PmO-Tq-4W1" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="10" id="Itw-Ai-eua"/>
+                <constraint firstAttribute="bottom" secondItem="PmO-Tq-4W1" secondAttribute="bottom" id="Kax-5Z-eBX"/>
+                <constraint firstItem="PmO-Tq-4W1" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="M2x-PG-82x"/>
+                <constraint firstAttribute="trailing" secondItem="csS-rw-Bvx" secondAttribute="trailing" constant="10" id="S2p-Wq-Xmq"/>
+                <constraint firstItem="csS-rw-Bvx" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="69" id="k3m-xO-FRj"/>
             </constraints>
-            <point key="canvasLocation" x="572" y="38"/>
+            <point key="canvasLocation" x="553" y="74"/>
         </view>
     </objects>
 </document>

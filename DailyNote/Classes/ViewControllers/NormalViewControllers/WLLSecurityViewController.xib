@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WLLSecurityViewController">
+            <connections>
+                <outlet property="firstNewCodeTextField" destination="VRb-2h-bay" id="a4M-C7-dde"/>
+                <outlet property="previousCodeTextField" destination="N5U-Zy-WNp" id="mpu-qW-fOu"/>
+                <outlet property="secondNewCodeTextField" destination="uwX-iK-NgH" id="wnV-ww-WgR"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lIR-nk-qho">
+                    <rect key="frame" x="20" y="99" width="280" height="1"/>
+                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="bBm-iA-JKc"/>
+                    </constraints>
+                </view>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="请输入新密码" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="VRb-2h-bay">
+                    <rect key="frame" x="20" y="105" width="280" height="30"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uzW-Wb-ZxY">
+                    <rect key="frame" x="20" y="140" width="280" height="1"/>
+                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="XYD-MJ-5qP"/>
+                    </constraints>
+                </view>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="请输入新密码" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="uwX-iK-NgH">
+                    <rect key="frame" x="20" y="146" width="280" height="30"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="请输入原密码" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="N5U-Zy-WNp">
+                    <rect key="frame" x="20" y="64" width="280" height="30"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="spb-q6-8Tg">
+                    <rect key="frame" x="20" y="181" width="280" height="1"/>
+                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="40a-p4-nYT"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="lIR-nk-qho" firstAttribute="leading" secondItem="N5U-Zy-WNp" secondAttribute="leading" id="1NM-Bm-73H"/>
+                <constraint firstItem="uwX-iK-NgH" firstAttribute="trailing" secondItem="N5U-Zy-WNp" secondAttribute="trailing" id="1sS-nM-qAh"/>
+                <constraint firstItem="uzW-Wb-ZxY" firstAttribute="leading" secondItem="N5U-Zy-WNp" secondAttribute="leading" id="Cgb-Kx-r6O"/>
+                <constraint firstItem="VRb-2h-bay" firstAttribute="leading" secondItem="N5U-Zy-WNp" secondAttribute="leading" id="FsQ-k0-WnX"/>
+                <constraint firstItem="VRb-2h-bay" firstAttribute="top" secondItem="lIR-nk-qho" secondAttribute="bottom" constant="5" id="J1m-Vf-XjW"/>
+                <constraint firstAttribute="trailing" secondItem="N5U-Zy-WNp" secondAttribute="trailing" constant="20" id="PUj-mm-ajU"/>
+                <constraint firstItem="VRb-2h-bay" firstAttribute="trailing" secondItem="N5U-Zy-WNp" secondAttribute="trailing" id="W8x-vx-DjY"/>
+                <constraint firstItem="N5U-Zy-WNp" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="WDv-Og-KW5"/>
+                <constraint firstItem="lIR-nk-qho" firstAttribute="trailing" secondItem="N5U-Zy-WNp" secondAttribute="trailing" id="Wrz-7s-AI6"/>
+                <constraint firstItem="uwX-iK-NgH" firstAttribute="top" secondItem="uzW-Wb-ZxY" secondAttribute="bottom" constant="5" id="bMB-kN-Rof"/>
+                <constraint firstItem="uwX-iK-NgH" firstAttribute="height" secondItem="N5U-Zy-WNp" secondAttribute="height" id="eQe-fU-QgS"/>
+                <constraint firstItem="VRb-2h-bay" firstAttribute="centerX" secondItem="N5U-Zy-WNp" secondAttribute="centerX" id="jIP-oG-fAT"/>
+                <constraint firstItem="uzW-Wb-ZxY" firstAttribute="top" secondItem="VRb-2h-bay" secondAttribute="bottom" constant="5" id="nEz-XN-6rb"/>
+                <constraint firstItem="N5U-Zy-WNp" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="64" id="oSe-2c-OfN"/>
+                <constraint firstItem="spb-q6-8Tg" firstAttribute="top" secondItem="uwX-iK-NgH" secondAttribute="bottom" constant="5" id="ova-9z-LCW"/>
+                <constraint firstItem="spb-q6-8Tg" firstAttribute="leading" secondItem="N5U-Zy-WNp" secondAttribute="leading" id="pqG-BU-s9U"/>
+                <constraint firstItem="lIR-nk-qho" firstAttribute="top" secondItem="N5U-Zy-WNp" secondAttribute="bottom" constant="5" id="rGs-wK-s3M"/>
+                <constraint firstItem="VRb-2h-bay" firstAttribute="height" secondItem="N5U-Zy-WNp" secondAttribute="height" id="rvd-Vg-Men"/>
+                <constraint firstItem="uzW-Wb-ZxY" firstAttribute="trailing" secondItem="N5U-Zy-WNp" secondAttribute="trailing" id="u62-R8-U3Q"/>
+                <constraint firstItem="spb-q6-8Tg" firstAttribute="trailing" secondItem="N5U-Zy-WNp" secondAttribute="trailing" id="vGB-2o-3dz"/>
+                <constraint firstItem="uwX-iK-NgH" firstAttribute="leading" secondItem="N5U-Zy-WNp" secondAttribute="leading" id="zLI-DS-BxD"/>
+            </constraints>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="jIP-oG-fAT"/>
+                </mask>
+            </variation>
+            <point key="canvasLocation" x="465" y="306"/>
+        </view>
+    </objects>
+</document>

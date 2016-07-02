@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="WLLToolView">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="64"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ucA-vS-iJq" userLabel="字体">
+                    <rect key="frame" x="25" y="9.5" width="45" height="45"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="ucA-vS-iJq" secondAttribute="height" id="oo2-3q-e2M"/>
+                    </constraints>
+                    <state key="normal" image="fonts"/>
+                    <connections>
+                        <action selector="changeNoteFontEvent:" destination="iN0-l3-epB" eventType="touchUpInside" id="Nx9-le-0vu"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cGt-Bq-isL" userLabel="背景">
+                    <rect key="frame" x="103" y="9.5" width="44.5" height="45"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="cGt-Bq-isL" secondAttribute="height" id="2A2-oV-kc9"/>
+                    </constraints>
+                    <state key="normal" image="background"/>
+                    <connections>
+                        <action selector="choiceBackgroundColor:" destination="iN0-l3-epB" eventType="touchUpInside" id="46D-Kv-bF7"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nQv-Bv-OxA" userLabel="图片">
+                    <rect key="frame" x="185" y="9.5" width="44.5" height="45"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="nQv-Bv-OxA" secondAttribute="height" id="TaJ-0O-vzb"/>
+                    </constraints>
+                    <state key="normal" image="picture"/>
+                    <connections>
+                        <action selector="insertPicturesIntoNote:" destination="iN0-l3-epB" eventType="touchUpInside" id="fTs-Jc-He7"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tBw-fn-obf" userLabel="心情">
+                    <rect key="frame" x="268.5" y="9.5" width="44.5" height="45"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="tBw-fn-obf" secondAttribute="height" id="0km-Py-BAk"/>
+                    </constraints>
+                    <state key="normal" image="mood"/>
+                    <connections>
+                        <action selector="choiceMood:" destination="iN0-l3-epB" eventType="touchUpInside" id="NE1-2M-mtI"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uY6-FC-LZx" userLabel="收放">
+                    <rect key="frame" x="349" y="10" width="45" height="45"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="uY6-FC-LZx" secondAttribute="height" id="aLB-He-4gX"/>
+                    </constraints>
+                    <state key="normal" image="upKey"/>
+                    <connections>
+                        <action selector="showOrHiddenKeyborad:" destination="iN0-l3-epB" eventType="touchUpInside" id="Tm9-r6-pVy"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="tBw-fn-obf" firstAttribute="width" secondItem="ucA-vS-iJq" secondAttribute="width" id="4jf-e0-gmQ"/>
+                <constraint firstItem="uY6-FC-LZx" firstAttribute="width" secondItem="ucA-vS-iJq" secondAttribute="width" id="6QC-7z-kZT"/>
+                <constraint firstItem="uY6-FC-LZx" firstAttribute="width" secondItem="uY6-FC-LZx" secondAttribute="height" id="C50-KW-hlv"/>
+                <constraint firstItem="ucA-vS-iJq" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="D3q-Pa-EDR"/>
+                <constraint firstItem="cGt-Bq-isL" firstAttribute="leading" secondItem="ucA-vS-iJq" secondAttribute="trailing" constant="33" id="FDV-9F-iNa"/>
+                <constraint firstItem="uY6-FC-LZx" firstAttribute="centerY" secondItem="ucA-vS-iJq" secondAttribute="centerY" id="GoT-PK-A94"/>
+                <constraint firstItem="nQv-Bv-OxA" firstAttribute="width" secondItem="ucA-vS-iJq" secondAttribute="width" id="NZE-Jm-cBn"/>
+                <constraint firstAttribute="trailing" secondItem="uY6-FC-LZx" secondAttribute="trailing" constant="20" id="Oha-XV-5Sl"/>
+                <constraint firstItem="cGt-Bq-isL" firstAttribute="centerY" secondItem="ucA-vS-iJq" secondAttribute="centerY" id="Rdy-he-7Ub"/>
+                <constraint firstItem="uY6-FC-LZx" firstAttribute="leading" secondItem="tBw-fn-obf" secondAttribute="trailing" constant="36" id="UEP-CE-6px"/>
+                <constraint firstItem="ucA-vS-iJq" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="25" id="WV6-aq-LPf"/>
+                <constraint firstItem="cGt-Bq-isL" firstAttribute="width" secondItem="ucA-vS-iJq" secondAttribute="width" id="Z8w-T2-zfr"/>
+                <constraint firstItem="ucA-vS-iJq" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" multiplier="0.7" id="ed9-Dk-eTM"/>
+                <constraint firstItem="nQv-Bv-OxA" firstAttribute="centerY" secondItem="ucA-vS-iJq" secondAttribute="centerY" id="g6y-SC-34O"/>
+                <constraint firstItem="cGt-Bq-isL" firstAttribute="width" secondItem="cGt-Bq-isL" secondAttribute="height" id="lHG-6L-GdZ"/>
+                <constraint firstItem="tBw-fn-obf" firstAttribute="centerY" secondItem="ucA-vS-iJq" secondAttribute="centerY" id="qTx-wc-tfq"/>
+                <constraint firstItem="nQv-Bv-OxA" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="qac-6Z-Qgz"/>
+                <constraint firstItem="tBw-fn-obf" firstAttribute="width" secondItem="tBw-fn-obf" secondAttribute="height" id="t6H-aM-AkZ"/>
+                <constraint firstItem="nQv-Bv-OxA" firstAttribute="width" secondItem="nQv-Bv-OxA" secondAttribute="height" id="yys-gu-f2B"/>
+                <constraint firstItem="uY6-FC-LZx" firstAttribute="width" secondItem="uY6-FC-LZx" secondAttribute="height" id="zys-rG-za0"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="152" y="-417.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="background" width="43" height="43"/>
+        <image name="fonts" width="43" height="43"/>
+        <image name="mood" width="43" height="43"/>
+        <image name="picture" width="43" height="43"/>
+        <image name="upKey" width="43" height="43"/>
+    </resources>
+</document>

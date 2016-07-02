@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WLLAboutDailyNoteViewController">
+            <connections>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="About DailyNote" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LUt-mk-XBC">
+                    <rect key="frame" x="20" y="64" width="125" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1、DailyNote是一款实用的日记应用；" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ce1-lK-G5v">
+                    <rect key="frame" x="20" y="105" width="280" height="14.5"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2、DailyNote可以发表文字、图片，保存在服务器，不会丢失" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wxk-kP-VZU">
+                    <rect key="frame" x="20" y="139" width="280" height="14.5"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3、DailyNote致力于保护用户的隐私，设置账号密码，以及隐私锁，为您提供一个私人王国；" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nyL-cH-rMz">
+                    <rect key="frame" x="20" y="174" width="280" height="15"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="4、DailyNote会越做越好，希望你给DailyNote一个评价，让我们朝着好的方向做。" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bcu-rk-jQm">
+                    <rect key="frame" x="20" y="209" width="280" height="15"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d7q-Jy-2w6">
+                    <rect key="frame" x="20" y="244" width="280" height="30"/>
+                    <color key="backgroundColor" red="1" green="0.67692101800000004" blue="0.97253154210000003" alpha="1" colorSpace="calibratedRGB"/>
+                    <state key="normal" title="去评价DailyNote"/>
+                    <connections>
+                        <action selector="commitAction:" destination="-1" eventType="touchUpInside" id="4SK-YX-foD"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="bcu-rk-jQm" firstAttribute="top" secondItem="nyL-cH-rMz" secondAttribute="bottom" constant="20" id="6B8-Ch-LXS"/>
+                <constraint firstItem="d7q-Jy-2w6" firstAttribute="top" secondItem="bcu-rk-jQm" secondAttribute="bottom" constant="20" id="7wt-ad-PIV"/>
+                <constraint firstItem="nyL-cH-rMz" firstAttribute="leading" secondItem="LUt-mk-XBC" secondAttribute="leading" id="AxM-Ae-rrN"/>
+                <constraint firstItem="LUt-mk-XBC" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="FDW-xu-99h"/>
+                <constraint firstAttribute="trailing" secondItem="nyL-cH-rMz" secondAttribute="trailing" constant="20" id="JID-Lh-8gh"/>
+                <constraint firstItem="d7q-Jy-2w6" firstAttribute="leading" secondItem="LUt-mk-XBC" secondAttribute="leading" id="KDs-EB-jVn"/>
+                <constraint firstItem="wxk-kP-VZU" firstAttribute="leading" secondItem="LUt-mk-XBC" secondAttribute="leading" id="Ktv-La-acT"/>
+                <constraint firstAttribute="trailing" secondItem="ce1-lK-G5v" secondAttribute="trailing" constant="20" id="UsG-Hz-RFg"/>
+                <constraint firstItem="LUt-mk-XBC" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="64" id="b72-Dy-0oV"/>
+                <constraint firstItem="nyL-cH-rMz" firstAttribute="top" secondItem="wxk-kP-VZU" secondAttribute="bottom" constant="20" id="il1-jo-dUH"/>
+                <constraint firstItem="ce1-lK-G5v" firstAttribute="top" secondItem="LUt-mk-XBC" secondAttribute="bottom" constant="20" id="jKl-Qh-Ohc"/>
+                <constraint firstAttribute="trailing" secondItem="d7q-Jy-2w6" secondAttribute="trailing" constant="20" id="kBi-Dj-fVz"/>
+                <constraint firstItem="bcu-rk-jQm" firstAttribute="leading" secondItem="LUt-mk-XBC" secondAttribute="leading" id="pfU-Ns-w2h"/>
+                <constraint firstAttribute="trailing" secondItem="bcu-rk-jQm" secondAttribute="trailing" constant="20" id="tz2-2q-hmL"/>
+                <constraint firstItem="wxk-kP-VZU" firstAttribute="top" secondItem="ce1-lK-G5v" secondAttribute="bottom" constant="20" id="u4r-X0-tnH"/>
+                <constraint firstAttribute="trailing" secondItem="wxk-kP-VZU" secondAttribute="trailing" constant="20" id="z2S-bo-hak"/>
+                <constraint firstItem="ce1-lK-G5v" firstAttribute="leading" secondItem="LUt-mk-XBC" secondAttribute="leading" id="zwP-Hg-aNi"/>
+            </constraints>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+            <point key="canvasLocation" x="458" y="180"/>
+        </view>
+    </objects>
+</document>

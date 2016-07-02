@@ -7,22 +7,16 @@
 //
 
 #import "DailyNoteCell.h"
-#import "NoteDetail.h"
 
 @interface DailyNoteCell ()
 
-/* 时间轴中两个圈 */
-@property (weak, nonatomic) IBOutlet UIView *under;
-@property (weak, nonatomic) IBOutlet UIView *upper;
 
 /* 日期 */
 @property (weak, nonatomic) IBOutlet UILabel *dateLabel;
 /* 星期 */
 @property (weak, nonatomic) IBOutlet UILabel *weekLabel;
 /* 年月 */
-@property (weak, nonatomic) IBOutlet UILabel *monthAndYear;
-/* 内容 */
-@property (weak, nonatomic) IBOutlet UILabel *contentLabel;
+//@property (weak, nonatomic) IBOutlet UILabel *monthAndYear;
 /* 时间 */
 @property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 
@@ -35,18 +29,53 @@
     _model = model;
     
     self.contentLabel.text = model.content;
-    self.monthAndYear.text = model.monthAndYear;
+//    self.monthAndYear.text = model.monthAndYear;
     self.timeLabel.text = model.time;
     self.dateLabel.text = model.dates;
     self.weekLabel.text = model.weekLabel;
     
-    // 设置时间轴中圆圈半径
-    self.under.layer.cornerRadius = self.under.frame.size.height/2;
-    self.upper.layer.cornerRadius = self.upper.frame.size.height/2;
-    [self layoutIfNeeded];
-    [self setNeedsLayout];
     
+    
+    // 计算：1 获取要计算的字符串
+    NSString *temp = model.content;
+    // 计算：2 准备工作
+    // 宽度和label的宽度一样，高度给一个巨大的值
+    CGSize size = CGSizeMake(CGRectGetWidth([UIScreen mainScreen].bounds) - 20, 2000);
+    // 这里要和上面label指定的字体一样
+    NSDictionary *dic = @{NSFontAttributeName:[UIFont systemFontOfSize:17]};
+    // 计算：3 调用方法，获得rect
+    CGRect rect = [temp boundingRectWithSize:size options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin attributes:dic context:nil];
+    // 计算：4 获取当前的label的frame，并将新的frame重新设置上去
+    CGRect frame = self.contentLabel.frame;
+    frame.size.height = rect.size.height;
+    self.contentLabel.frame = frame;
+
 }
 
+- (CGFloat)heightForCell:(NSString *)text {
+    // 计算：1 准备工作
+    CGSize size = CGSizeMake(CGRectGetWidth([UIScreen mainScreen].bounds) - 20, 2000);
+    NSDictionary *dic = @{NSFontAttributeName:[UIFont systemFontOfSize:17]};
+    // 计算：2 通过字符串获得rect
+    CGRect rect = [text boundingRectWithSize:size options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin attributes:dic context:nil];
+    
+    CGFloat height = 20.287109;
+    
+    if (!self.noteImage.image) {
+        if (rect.size.height < 3*height) {
+            
+            return height + 28 + 35;
+        } else {
+            return 3*height + 28 + 35;
+        }
+    } else {
+        return rect.size.height + self.timeView.frame.size.height + self.noteImage.frame.size.height;
+    }
+}
+
+- (void)layoutSubviews {
+//    [self layoutIfNeeded];
+//    [self layoutSubviews];
+}
 
 @end

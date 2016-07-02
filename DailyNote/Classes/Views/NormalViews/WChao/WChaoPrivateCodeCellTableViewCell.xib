@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="65" id="KGk-i7-Jjw" customClass="WChaoPrivateCodeCellTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="65"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="64.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <switch opaque="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="right" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="vp5-al-jNz">
+                        <rect key="frame" x="258" y="17" width="51" height="31"/>
+                    </switch>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="voc-3A-5mb">
+                        <rect key="frame" x="10" y="5" width="42" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1OY-M0-cEr">
+                        <rect key="frame" x="10" y="31" width="31" height="14.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="voc-3A-5mb" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="2Dr-p6-F2w"/>
+                    <constraint firstItem="1OY-M0-cEr" firstAttribute="leading" secondItem="voc-3A-5mb" secondAttribute="leading" id="9ZA-OZ-z8q"/>
+                    <constraint firstItem="voc-3A-5mb" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="5" id="Ges-k5-MyB"/>
+                    <constraint firstItem="vp5-al-jNz" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="PaW-dN-z5H"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="vp5-al-jNz" secondAttribute="trailing" constant="5" id="dyy-F2-0Ap"/>
+                    <constraint firstItem="1OY-M0-cEr" firstAttribute="top" secondItem="voc-3A-5mb" secondAttribute="bottom" constant="5" id="p1t-07-CUK"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="instructionLabel" destination="1OY-M0-cEr" id="WFC-Od-Wx3"/>
+                <outlet property="privateCodeSwith" destination="vp5-al-jNz" id="6LO-rW-Lcy"/>
+                <outlet property="titleLabel" destination="voc-3A-5mb" id="GHM-PR-UFj"/>
+            </connections>
+            <point key="canvasLocation" x="-79" y="221.5"/>
+        </tableViewCell>
+    </objects>
+</document>

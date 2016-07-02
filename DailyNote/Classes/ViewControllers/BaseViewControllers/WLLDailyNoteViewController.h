@@ -6,6 +6,10 @@
 //  Copyright © 2016年 Messi. All rights reserved.
 //
 
+/**
+ *  日记页面
+ */
+
 #import <UIKit/UIKit.h>
 
 @interface WLLDailyNoteViewController : UIViewController

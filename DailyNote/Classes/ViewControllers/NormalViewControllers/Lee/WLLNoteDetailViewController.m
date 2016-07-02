@@ -8,166 +8,163 @@
 
 #import "WLLNoteDetailViewController.h"
 #import "EditNoteViewController.h"
-#import "NoteDetail.h"
 #import "WLLDailyNoteDataManager.h"
 #import "WLLSharedView.h"
 
-#define ScreenHeight CGRectGetHeight([UIScreen mainScreen].bounds)
-#define ScreenWidth  CGRectGetWidth([UIScreen mainScreen].bounds)
-
-@interface WLLNoteDetailViewController ()<UIScrollViewDelegate>
-
-@property (weak, nonatomic) IBOutlet UIScrollView *aScrollView;
-@property (weak, nonatomic) IBOutlet UIView *theContentView;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *headImageViewTopConstrain;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *nickNameLabelTopConstrain;
-@property (weak, nonatomic) IBOutlet UIImageView *backgroundImageView;
-@property (weak, nonatomic) IBOutlet UIImageView *headImageView;
-@property (weak, nonatomic) IBOutlet UILabel *nickNameLabel;
-@property (weak, nonatomic) IBOutlet UIImageView *starImageView;
-@property (weak, nonatomic) IBOutlet UILabel *starNumberLabel;
-@property (weak, nonatomic) IBOutlet UILabel *signatureLabel;
-@property (weak, nonatomic) IBOutlet UIView *toolBarView;
-@property (weak, nonatomic) IBOutlet UILabel *dateLabel;
-@property (weak, nonatomic) IBOutlet UIImageView *secondStarImageView;
-@property (weak, nonatomic) IBOutlet UILabel *secondStarNumbelLabel;
-@property (weak, nonatomic) IBOutlet UIImageView *readedImageView;
-@property (weak, nonatomic) IBOutlet UILabel *readNumberLabel;
+@interface WLLNoteDetailViewController ()
+/* 日记-年月标签 */
+@property (weak, nonatomic) IBOutlet UILabel *monthAndYearLabel;
+/* 日记-礼拜标签 */
+@property (weak, nonatomic) IBOutlet UILabel *weekDayLabel;
+/* 日记-时间标签 */
+@property (weak, nonatomic) IBOutlet UILabel *timeLabel;
+/* 日记-内容标签 */
 @property (weak, nonatomic) IBOutlet UILabel *contentLabel;
+/* 日记-控制翻页 */
+@property (nonatomic, assign) NSInteger indexs;
+/* 编辑页面 */
+@property (nonatomic, strong) EditNoteViewController *EditVC;
+/* 背景 */
+@property (weak, nonatomic) IBOutlet UIView *contentView;
+@property (weak, nonatomic) IBOutlet UIImageView *noteImage;
+
+@property (nonatomic, strong) NoteDetail *model;
 
 @end
 
 @implementation WLLNoteDetailViewController
 
+@dynamic title;
+
+#pragma mark - View Load
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.aScrollView.delegate = self;
-
-    self.navigationItem.title = @"全部";
     
-    [self autoLayout];
-    
-    [self addToolBarButtons];
-    
-    self.navigationController.navigationBar.hidden = YES;
-    
-    [self parsePersonnalInfo];
+    // 从Xib获取编辑页面
+    self.EditVC = [[EditNoteViewController alloc] initWithNibName:@"EditNoteViewController"
+                                                           bundle:[NSBundle mainBundle]];
+    // 标题
+    self.navigationItem.title = @"Time Line";
 }
 
-#pragma mark - scrollViewDelegate方法
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    CGFloat contentOffset = scrollView.contentOffset.y;
-    if (contentOffset < 0) {
-        CGFloat heightAfterScroll = ScreenHeight / 3 - contentOffset;
-        CGFloat kScale = heightAfterScroll / ScreenHeight * 3;
-        self.backgroundImageView.frame = CGRectMake(- ScreenWidth * (kScale - 1) / 2, contentOffset, ScreenWidth * kScale, heightAfterScroll);
-    }
+// view将要出现时加载左右按键
+- (void)viewWillAppear:(BOOL)animated {
+    
+    [super viewWillAppear:YES];
+
+    // 左边按钮
+    UIBarButtonItem *left = [[UIBarButtonItem alloc] initWithTitle:@"返回"
+                                                             style:UIBarButtonItemStylePlain
+                                                            target:self
+                                                            action:@selector(backToFront)];
+    
+    self.navigationItem.leftBarButtonItem = left;
+    
+    // 右边
+    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"newNote"]
+                                                                  style:UIBarButtonItemStylePlain
+                                                                 target:self
+                                                                 action:@selector(editDaily:)];
+    self.navigationItem.rightBarButtonItem = rightItem;
+    
+    self.navigationItem.rightBarButtonItem.tintColor = [UIColor grayColor];
+    
+    // 将日志页面cell下标赋给控制详情页面翻页
+    self.indexs = self.index.row;
+    
+    // 本页数据加载自日志页面
+    [self dataFromNoteDaily];
+    
 }
 
-//解析签名等数据
-- (void)parsePersonnalInfo {
-    //获取leancloud的Pointer类型的“一”的一方的方法
-    NSArray *keys = [NSArray arrayWithObjects:@"belong", nil];
-    [self.passedObject fetchInBackgroundWithKeys:keys block:^(AVObject *object, NSError *error) {
-        AVUser *user = [object objectForKey:@"belong"];
-        self.nickNameLabel.text = [user objectForKey:@"nickName"];
-        self.signatureLabel.text = [user objectForKey:@"signature"];
-        self.starNumberLabel.text = [user objectForKey:@"starNumber"];
-        self.contentLabel.text = [object objectForKey:@"content"];
-        
-        //获取日期
-        NSDate *createdDate = [object objectForKey:@"createdAt"];
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:@"yyyy年MM月dd日EEEE"];
-        self.dateLabel.text = [dateFormatter stringFromDate:createdDate];
-        
-        self.secondStarImageView.image = [UIImage imageNamed:@"star"];
-        self.readedImageView.image = [UIImage imageNamed:@"eye2"];
-        
-        AVFile *backgroundImageFile = [user objectForKey:@"theBackgroundImage"];
-        [backgroundImageFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.backgroundImageView.image = [UIImage imageWithData:data];
-            });
-        }];
-        
-        AVFile *headImageFile = [user objectForKey:@"headImage"];
-        [headImageFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.headImageView.image = [UIImage imageWithData:data];
-            });
-        }];
-        
-        
-    }];
+// 将日志页面的值赋给详情页面
+- (void)dataFromNoteDaily {
+
+    self.model = self.noteDetail;
+    
+    self.contentLabel.text = self.model.content;
+    
+    self.monthAndYearLabel.text = [NSString stringWithFormat:@"%@.%@", self.model.monthAndYear, self.model.dates];
+    self.weekDayLabel.text = self.model.weekLabel;
+    self.timeLabel.text = self.model.time;
+    self.contentView.backgroundColor = self.model.backColor;
+    
+    // 富文本
+//    NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:self.model.content];
+//    [attrStr addAttribute:NSForegroundColorAttributeName
+//                    value:self.model.fontColor
+//                    range:NSMakeRange(0, self.model.content.length)];
+//    
+//    [attrStr addAttribute:NSFontAttributeName
+//                    value:self.model.contentFont
+//                    range:NSMakeRange(0, self.model.content.length)];
+    
+//    self.contentLabel.attributedText = attrStr;
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
-    self.navigationController.navigationBar.hidden = NO;
-}
-
-//代码约束
-- (void)autoLayout {
+#pragma mark - 导航栏左右键响应
+- (void)backToFront {
     
-    self.headImageView.layer.cornerRadius = ScreenHeight / 18;
-    self.headImageView.layer.masksToBounds = YES;
-    
-    self.backgroundImageView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.headImageView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.nickNameLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    self.theContentView.translatesAutoresizingMaskIntoConstraints = NO;
-    
-    self.headImageViewTopConstrain = [NSLayoutConstraint constraintWithItem:self.headImageView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.backgroundImageView attribute:NSLayoutAttributeTop multiplier:1 constant:self.headImageView.frame.size.height / 2];
-    
-    self.nickNameLabelTopConstrain = [NSLayoutConstraint constraintWithItem:self.nickNameLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.headImageView attribute:NSLayoutAttributeBottom multiplier:1 constant:ScreenHeight / 36];
-}
-
-//添加底部栏按钮
-- (void)addToolBarButtons {
-    CGRect backButtonRect = CGRectMake(ScreenWidth / 10 - 20, 10, 40, 40);
-    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    backButton.frame = backButtonRect;
-    [backButton setImage:[UIImage imageNamed:@"backImage2"] forState:UIControlStateNormal];
-    [backButton addTarget:self action:@selector(backAction:) forControlEvents:UIControlEventTouchUpInside];
-    
-    CGRect starButtonRect = CGRectMake(ScreenWidth / 10 - 20  + ScreenWidth / 5, 10, 40, 40);
-    UIButton *starButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    starButton.frame = starButtonRect;
-    [starButton setImage:[UIImage imageNamed:@"starImage2"] forState:UIControlStateNormal];
-    [starButton addTarget:self action:@selector(starAction:) forControlEvents:UIControlEventTouchUpInside];
-    
-    CGRect collectionButtoonRect = CGRectMake(ScreenWidth / 10 - 20 + 2 * ScreenWidth / 5, 10, 40, 40);
-    UIButton *collectionButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    collectionButton.frame = collectionButtoonRect;
-    [collectionButton setImage:[UIImage imageNamed:@"collectionImage2"] forState:UIControlStateNormal];
-    
-    CGRect shareButtonRect = CGRectMake(ScreenWidth / 10 - 20 + 3 * ScreenWidth / 5, 10, 40, 40);
-    UIButton *shareButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    shareButton.frame = shareButtonRect;
-    [shareButton setImage:[UIImage imageNamed:@"shareImage2"] forState:UIControlStateNormal];
-    
-    CGRect reportButtonRect = CGRectMake(ScreenWidth / 10 - 20 + 4 * ScreenWidth / 5, 10, 40, 40);
-    UIButton *reportButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    reportButton.frame = reportButtonRect;
-    [reportButton setImage:[UIImage imageNamed:@"reportImage2"] forState:UIControlStateNormal];
-    
-    [self.toolBarView addSubview:backButton];
-    [self.toolBarView addSubview:starButton];
-    [self.toolBarView addSubview:collectionButton];
-    [self.toolBarView addSubview:shareButton];
-    [self.toolBarView addSubview:reportButton];
-}
-
-//返回操作
-- (void)backAction:(UIButton *)sender {
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-//点赞操作
-- (void)starAction:(UIButton *)sender {
-    
+- (void)editDaily:(UIBarButtonItem *)button {
+    self.EditVC.indexPath = self.index;
+    [self.navigationController pushViewController:self.EditVC animated:YES];
 }
+
+//#pragma mark - 翻页响应
+//// 向后翻页
+//- (IBAction)clickToForward:(UIButton *)sender {
+//    //
+//    self.indexs++;
+//    
+//    NSInteger count = [[WLLDailyNoteDataManager sharedInstance] countOfNoteArray];
+//    if (self.indexs > count - 1) {  // 如果indexs 大于日志数组下标 弹出提示
+//        UIAlertController *tip = [UIAlertController alertControllerWithTitle:nil message:@"已经是最后一篇日记了~~~" preferredStyle:UIAlertControllerStyleAlert];
+//        
+//        [self presentViewController:tip animated:YES completion:^{
+//            
+//            [self dismissViewControllerAnimated:YES completion:nil];
+//    
+//        }];
+//        // 每超出数组下标一次, 减回一次
+//        self.indexs--;
+//        
+//    } else {    // 从日志页面加载数据
+//        [self dataFromNoteDaily];
+//    }
+//}
+//
+//// 向前翻页
+//- (IBAction)clickToBackward:(UIButton *)sender {
+//    
+//    self.indexs--;
+//    if (self.indexs < 0) {  // 如果indexs小于下标
+//        UIAlertController *tip = [UIAlertController alertControllerWithTitle:nil message:@"没有上篇日记了~~~" preferredStyle:UIAlertControllerStyleAlert];
+//        
+//        [self presentViewController:tip animated:YES completion:^{
+//            
+//            [self dismissViewControllerAnimated:YES completion:nil];
+//            
+//        }];
+//        // 每向前多翻一次, 加回一次
+//        self.indexs++;
+//        
+//    } else {    // 从日志页面加载数据
+//        //[self.EditVC.indexPath setValue:@(self.indexs) forKey:@"row"];
+//        [self dataFromNoteDaily];
+//    }
+//}
+
+
+
+#pragma mark - 分享到三方
+- (IBAction)sharedToThirdParty:(UIButton *)sender {
+
+}
+
 
 @end

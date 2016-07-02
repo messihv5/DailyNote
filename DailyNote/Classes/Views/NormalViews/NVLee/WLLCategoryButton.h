@@ -7,7 +7,9 @@
 //
 
 
-// 重写button 
+/**
+ *  重写button 调整文字位置
+ */
 
 #import <UIKit/UIKit.h>
 

@@ -6,16 +6,18 @@
 //  Copyright © 2016年 Messi. All rights reserved.
 //
 
+/// DailyNote详情页面
+
 #import <UIKit/UIKit.h>
 
 @class NoteDetail;
 
 @interface WLLNoteDetailViewController : UIViewController
-
+/* NoteDetail 模型 */
 @property (nonatomic, strong) NoteDetail *noteDetail;
+/* 将cell下标传给Edit页面 */
 @property (nonatomic, assign) NSIndexPath *index;
 
-//接受从shareViewController传过来的日记
-@property (strong, nonatomic) AVObject *passedObject;
+@property (nonatomic, copy) NSString *title;
 
 @end
