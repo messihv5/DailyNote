@@ -55,8 +55,6 @@
     //得到当前用户
     self.theCurrentUser = [AVUser currentUser];
     
-    
-    
     [self settingTableViewHeaderView];
     
     self.userTableView.delegate = self;
@@ -119,10 +117,9 @@
     NSLog(@"%@", nickName);
     
     AVFile *theBackgroundImageFile = [self.theCurrentUser objectForKey:@"theBackgroundImage"];
-    [theBackgroundImageFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.theBackgroundImageView.image = [UIImage imageWithData:data];
-        });
+    [AVFile getFileWithObjectId:theBackgroundImageFile.objectId withBlock:^(AVFile *file, NSError *error) {
+        NSData *theBackgroundImageData = [file getData];
+        self.theBackgroundImageView.image = [UIImage imageWithData:theBackgroundImageData];
     }];
     
     UITapGestureRecognizer *tapGestureRecognizer;
@@ -138,12 +135,10 @@
     self.headImageView.backgroundColor = [UIColor cyanColor];
     
     AVFile *headImageFile = [self.theCurrentUser objectForKey:@"headImage"];
-    [headImageFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.headImageView.image = [UIImage imageWithData:data];
-        });
+    [AVFile getFileWithObjectId:headImageFile.objectId withBlock:^(AVFile *file, NSError *error) {
+        NSData *headImageFileData = [file getData];
+        self.headImageView.image = [UIImage imageWithData:headImageFileData];
     }];
-    
     self.headImageView.layer.cornerRadius = UIScreenHeight / 18;
     self.headImageView.layer.masksToBounds = YES;
     
@@ -236,6 +231,8 @@
         //进入收藏页面
         WLLShareViewController *shareController = [[WLLShareViewController alloc] initWithNibName:@"WLLShareViewController" bundle:[NSBundle mainBundle]];
         
+        //传入indexpath作为从这个页面推过去的标记，而不是分享页面
+        shareController.passedIndexPath = indexPath;
         [self.navigationController pushViewController:shareController animated:YES];
     } else if (indexPath.section == 1 && indexPath.row == 0) {
         
@@ -439,7 +436,7 @@
                                                                              message:@""
                                                                       preferredStyle:UIAlertControllerStyleActionSheet];
     
-    UIAlertAction *cameroAction = [UIAlertAction actionWithTitle:@"相机" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertAction *cameroAction = [UIAlertAction actionWithTitle:@"相机拍摄" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
         imagePicker.delegate = self;
         imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
@@ -447,7 +444,7 @@
         [self.navigationController presentViewController:imagePicker animated:YES completion:nil];
     }];
     
-    UIAlertAction *albumAction = [UIAlertAction actionWithTitle:@"从相册选取" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertAction *albumAction = [UIAlertAction actionWithTitle:@"相册选取" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
         imagePicker.delegate = self;
         imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
@@ -471,15 +468,16 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker
 didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
+    
     //判断是点击背景图片还是图像图片
     if (self.isTheBackgroundImageView == YES) {
-        self.theBackgroundImageView.image = info[@"UIImagePickerControllerOriginalImage"];
+        self.theBackgroundImageView.image = info[UIImagePickerControllerOriginalImage];
         NSData *data = UIImagePNGRepresentation(self.theBackgroundImageView.image);
         AVFile *file = [AVFile fileWithData:data];
         [self.theCurrentUser setObject:file forKey:@"theBackgroundImage"];
         self.isTheBackgroundImageView = NO;
     } else if (self.isHeadImageView == YES) {
-        self.headImageView.image = info[@"UIImagePickerControllerOriginalImage"];
+        self.headImageView.image = info[UIImagePickerControllerOriginalImage];
         NSData *data = UIImagePNGRepresentation(self.headImageView.image);
         AVFile *file = [AVFile fileWithData:data];
         [self.theCurrentUser setObject:file forKey:@"headImage"];

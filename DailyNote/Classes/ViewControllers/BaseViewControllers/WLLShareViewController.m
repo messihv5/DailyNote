@@ -36,6 +36,18 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
+    if (self.passedIndexPath) {
+        
+        //从用户界面，收藏cell，push过来的controller
+        self.navigationItem.title = @"我的收藏";
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeDiaryAndReloadTableView:) name:@"deleteThisDiariyCollection" object:nil];
+    } else {
+        
+        //嵌套在tabbarController里面的controller
+        self.parentViewController.navigationItem.title = @"日记分享";
+    }
+    
     self.currentUser = [AVUser currentUser];
     
     self.shareTableView.delegate = self;
@@ -92,47 +104,106 @@
     //刷新数据，加载最新的数据，当数组存储了数据，查询的新数据插到数组的最前面
     if (self.data.count != 0) {
         AVObject *firstObject = self.data[0];
-        NSDate *firstDate = firstObject.createdAt ;
-        AVQuery *query = [AVQuery queryWithClassName:@"Dairy"];
-        [query whereKey:@"createdAt" greaterThan:firstDate];
-        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            if (error == nil) {
-                if (objects.count != 0) {
-                    NSInteger number = objects.count;
-                    NSRange range = NSMakeRange(0, number);
-                    NSIndexSet *set = [NSIndexSet indexSetWithIndexesInRange:range];
-                    [self.data insertObjects:objects atIndexes:set];
-                    [self.shareTableView reloadData];
-                    [refreshControl endRefreshing];
+        
+        NSDate *firstDate = firstObject.createdAt;
+        
+        if (self.passedIndexPath) {
+            
+            //点击收藏加载数据
+            AVRelation *collectionRelation = [self.currentUser relationForKey:@"collectionDiaries"];
+            
+            AVQuery *collectionQuery = [collectionRelation query];
+            [collectionQuery whereKey:@"createdAt" greaterThan:firstDate];
+            
+            [collectionQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                if (error == nil) {
+                    if (objects.count != 0) {
+                        NSInteger number = objects.count;
+                        NSRange range = NSMakeRange(0, number);
+                        NSIndexSet *set = [NSIndexSet indexSetWithIndexesInRange:range];
+                        [self.data insertObjects:objects atIndexes:set];
+                        [self.shareTableView reloadData];
+                        [refreshControl endRefreshing];
+                    } else {
+                        [refreshControl endRefreshing];
+                        return;
+                    }
+                    
                 } else {
                     [refreshControl endRefreshing];
                     return;
                 }
-                
-            } else {
-                [refreshControl endRefreshing];
-                return;
-            }
-        }];
+
+            }];
+        } else {
+            
+            //嵌套在tabbar中的Viewcontroller加载数据
+            AVQuery *query = [AVQuery queryWithClassName:@"Dairy"];
+            [query whereKey:@"createdAt" greaterThan:firstDate];
+            [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                if (error == nil) {
+                    if (objects.count != 0) {
+                        NSInteger number = objects.count;
+                        NSRange range = NSMakeRange(0, number);
+                        NSIndexSet *set = [NSIndexSet indexSetWithIndexesInRange:range];
+                        [self.data insertObjects:objects atIndexes:set];
+                        [self.shareTableView reloadData];
+                        [refreshControl endRefreshing];
+                    } else {
+                        [refreshControl endRefreshing];
+                        return;
+                    }
+                    
+                } else {
+                    [refreshControl endRefreshing];
+                    return;
+                }
+            }];
+        }
     } else {
         
         //数组没有数据时，直接数组添加数据
-        AVQuery *query = [AVQuery queryWithClassName:@"Dairy"];
-        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            if (error == nil) {
-                if (objects.count != 0) {
-                    [self.data addObjectsFromArray:objects];
-                    [self.shareTableView reloadData];
-                    [refreshControl endRefreshing];
+        
+        //点击收藏按钮加载的数据
+        if (self.passedIndexPath) {
+            AVRelation *collectionRelation = [self.currentUser relationForKey:@"collectionDiaries"];
+            
+            AVQuery *collectionQuery = [collectionRelation query];
+            [collectionQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                if (error == nil) {
+                    if (objects.count != 0) {
+                        [self.data addObjectsFromArray:objects];
+                        [self.shareTableView reloadData];
+                        [refreshControl endRefreshing];
+                    } else {
+                        [refreshControl endRefreshing];
+                        return;
+                    }
                 } else {
                     [refreshControl endRefreshing];
                     return;
                 }
-            } else {
-                [refreshControl endRefreshing];
-                return;
-            }
-        }];
+            }];
+        } else {
+            
+            //嵌套在tabbar中的Viewcontroller加载数据
+            AVQuery *query = [AVQuery queryWithClassName:@"Dairy"];
+            [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                if (error == nil) {
+                    if (objects.count != 0) {
+                        [self.data addObjectsFromArray:objects];
+                        [self.shareTableView reloadData];
+                        [refreshControl endRefreshing];
+                    } else {
+                        [refreshControl endRefreshing];
+                        return;
+                    }
+                } else {
+                    [refreshControl endRefreshing];
+                    return;
+                }
+            }];
+        }
     }
 }
 
@@ -222,25 +293,43 @@
 
 //进入页面加载10篇日记
 - (void)loadTenDairies {
-    self.userDefaults = [NSUserDefaults standardUserDefaults];
     
     //查询数据库中的日记，并保存在数组中，然后刷新tableView
     
-    AVQuery *categoryQuery = [AVQuery queryWithClassName:@"Dairy"];
-    
+    //获取当前时间
     NSDate *todayDate = [NSDate date];
     NSDate *myDate = [NSDate dateWithTimeInterval:8 * 60 * 60 sinceDate:todayDate];
     
-    [categoryQuery orderByDescending:@"createdAt"];
-    [categoryQuery whereKey:@"createdAt" lessThan:myDate];
-    categoryQuery.limit = 10;
+    if (self.passedIndexPath) {
+        
+        //从收藏页面过来的
+        AVRelation *collectionRelation = [self.currentUser relationForKey:@"collectionDiaries"];
+        
+        AVQuery *collectionQuery = [collectionRelation query];
+        
+        collectionQuery.limit = 10;
+        [collectionQuery orderByDescending:@"createdAt"];
+        [collectionQuery whereKey:@"createdAt" lessThan:myDate];
+        
+        [collectionQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            [self.data addObjectsFromArray:objects];
+            [self.shareTableView reloadData];
+        }];
+    } else {
+        
+        //嵌套在tabbar中的viewController加载数据
+        AVQuery *categoryQuery = [AVQuery queryWithClassName:@"Dairy"];
     
-    [categoryQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        //这里可以先把objects数据解析到model里面，再把model存到数组里面
-        [self.data addObjectsFromArray:objects];
-        [self.shareTableView reloadData];
-    }];;
-
+        [categoryQuery orderByDescending:@"createdAt"];
+        [categoryQuery whereKey:@"createdAt" lessThan:myDate];
+        categoryQuery.limit = 10;
+        
+        [categoryQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            //这里可以先把objects数据解析到model里面，再把model存到数组里面
+            [self.data addObjectsFromArray:objects];
+            [self.shareTableView reloadData];
+        }];;
+    }
 }
 
 #pragma mark - tableView代理方法
@@ -277,7 +366,7 @@
         string = [NSString stringWithFormat:@"%ld秒前", (NSInteger)timeInterval];
     }
     
-    //获取用户的图像，然后把所有的数据一起给cell赋值
+    //获取用户的图像,这种方法比较好，然后把所有的数据一起给cell赋值
     AVFile *file = [[AVUser currentUser] objectForKey:@"headImage"];
     
     [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
@@ -285,16 +374,15 @@
         
         UIImage *image = [UIImage imageWithData:data];
         
-        dispatch_async(dispatch_get_main_queue(), ^{
             cell.headImageView.image = image;
-            
+            cell.theTextLable.text = [object objectForKey:@"content"];
+
             NSArray *keys = [NSArray arrayWithObjects:@"belong", nil];
             [object fetchInBackgroundWithKeys:keys block:^(AVObject *object, NSError *error) {
                 AVUser *relatedUser = [object objectForKey:@"belong"];
                 cell.nickNameLabel.text = [relatedUser objectForKey:@"nickName"];
             }];
             
-            cell.theTextLable.text = [object objectForKey:@"content"];
             cell.starNumberLabel.text = [object objectForKey:@"starNumber"];
             cell.timeLabel.text = string;
             
@@ -306,7 +394,6 @@
             }
             
             [cell.starButton addTarget:self action:@selector(starAction:) forControlEvents:UIControlEventTouchUpInside];
-        });
     }];
     
     return cell;
@@ -325,6 +412,12 @@
         WChaoShareCellTableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
         cell.starNumberLabel.text = string;
     };
+    
+    //如果是从收藏页面过去的,传个indexpath作为标记
+    if (self.passedIndexPath) {
+        detailController.passedIndexPath = indexPath;
+    }
+    
     [self.navigationController pushViewController:detailController animated:YES];
 }
 
@@ -372,6 +465,13 @@
     [dairy saveInBackground];
 }
 
+
+//移除取消收藏的日记
+- (void)removeDiaryAndReloadTableView:(NSNotification *)notification {
+    AVObject *object = notification.userInfo[@"passedObject"];
+    [self.data removeObject:object];
+    [self.shareTableView reloadData];
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
