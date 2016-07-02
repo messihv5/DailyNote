@@ -1341,7 +1341,7 @@
 					"$(PROJECT_DIR)/ShareSDK/Support/Required",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = /Users/messi/Documents/Developer/DailyNote2/DailyNote/Classes/Headers/PrefixHeader.pch;
+				GCC_PREFIX_HEADER = /Users/messi/Documents/Developer/DailyNote/DailyNote/Classes/Headers/PrefixHeader.pch;
 				INFOPLIST_FILE = DailyNote/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -1367,7 +1367,7 @@
 					"$(PROJECT_DIR)/ShareSDK/Support/Required",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = /Users/messi/Documents/Developer/DailyNote2/DailyNote/Classes/Headers/PrefixHeader.pch;
+				GCC_PREFIX_HEADER = /Users/messi/Documents/Developer/DailyNote/DailyNote/Classes/Headers/PrefixHeader.pch;
 				INFOPLIST_FILE = DailyNote/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
