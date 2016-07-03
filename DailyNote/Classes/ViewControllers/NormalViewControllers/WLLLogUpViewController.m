@@ -75,6 +75,12 @@
             NSError *error = nil;
             [context save:&error];//无论是否有改动都存储*/
             
+            //生成一篇样板日记
+            AVObject *diary = [AVObject objectWithClassName:@"Diary"];
+            [diary setObject:user forKey:@"belong"];
+            [diary setObject:@"今天注册了DailyNote" forKey:@"content"];
+            [diary saveInBackground];
+            
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"注册成功,请到邮箱激活账号"
                                                                            message:@""
                                                                     preferredStyle:UIAlertControllerStyleAlert];

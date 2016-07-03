@@ -13,6 +13,7 @@
 #import "WLLCategoryButton.h"
 #import "WLLNotesCategoryView.h"
 #import "WLLDailyNoteDataManager.h"
+#import "WLLLogInViewController.h"
 
 @interface WLLDailyNoteViewController ()<UITableViewDelegate, UITableViewDataSource>
 
@@ -31,6 +32,7 @@
 
 @property (nonatomic, strong) NoteDetail *model;
 @property (strong, nonatomic) NSMutableArray *data;
+@property (strong, nonatomic) NSUserDefaults *userDefaults;
 
 
 @end
@@ -41,7 +43,8 @@ static NSString  *const reuseIdentifier = @"note_cell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
+    self.userDefaults = [NSUserDefaults standardUserDefaults];
     // notesTableView 代理设置
     self.notesTableView.delegate = self;
     self.notesTableView.dataSource = self;
@@ -61,7 +64,6 @@ static NSString  *const reuseIdentifier = @"note_cell";
     
     self.parentViewController.navigationItem.title = @"Time Line";
 
-    [self loadTenDiaries];
 
     
 }
@@ -77,7 +79,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
 //加载10篇日记
 - (void)loadTenDiaries {
     AVQuery *query = [AVQuery queryWithClassName:@"Diary"];
-    [query whereKey:@"belong" equalTo:[AVUser currentUser]];
+//    [query whereKey:@"belong" equalTo:[AVUser currentUser]];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         for (AVObject *object in objects) {
             NoteDetail *model = [[NoteDetail alloc] init];
@@ -125,6 +127,102 @@ static NSString  *const reuseIdentifier = @"note_cell";
                                                                  action:@selector(newDaily:)];
     self.parentViewController.navigationItem.rightBarButtonItem = rightItem;
     self.parentViewController.navigationItem.rightBarButtonItem.tintColor = [UIColor grayColor];
+    
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    //进入app时，弹出登录界面，如果用户没有退出系统，再进入时不用弹出登录界面
+    if (![AVUser currentUser]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            WLLLogInViewController *logController;
+            logController = [[WLLLogInViewController alloc] initWithNibName:@"WLLLogInViewController"
+                                                                     bundle:[NSBundle mainBundle]];
+            UINavigationController *naviController;
+            naviController= [[UINavigationController alloc] initWithRootViewController:logController];
+            [self.parentViewController.navigationController presentViewController:naviController animated:NO completion:nil];
+        });
+    }
+    
+    if (self.data.count == 0) {
+        [self loadTenDiaries];
+    }
+    
+    //获取当前的导航栏和tab栏
+    UITabBar *tabbar = self.tabBarController.tabBar;
+    UINavigationBar *bar = self.tabBarController.navigationController.navigationBar;
+    
+    //第一次进入页面时，获取四种颜色的image
+    NSData *imageData = [self.userDefaults objectForKey:@"navigationImagesAndTabbarImages"];
+    if (imageData == nil) {
+        NSMutableData *navigationImagesAndTabbarImages = [[NSMutableData alloc] init];
+        
+        NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:navigationImagesAndTabbarImages];
+        
+        [tabbar setTintColor:[UIColor lightGrayColor]];
+        [bar setBarTintColor:[UIColor lightGrayColor]];
+        UIImage *tabbarImage4 = [self imageWithView:tabbar];
+        UIImage *navigationImage4 = [self imageWithView:bar];
+        
+        [tabbar setTintColor:[UIColor darkTextColor]];
+        [bar setBarTintColor:[UIColor darkTextColor]];
+        UIImage *tabbarImage2 = [self imageWithView:tabbar];
+        UIImage *navigationImage2 = [self imageWithView:bar];
+        
+        [tabbar setTintColor:[UIColor redColor]];
+        [bar setBarTintColor:[UIColor redColor]];
+        UIImage *tabbarImage3 = [self imageWithView:tabbar];
+        UIImage *navigationImage3 = [self imageWithView:bar];
+        
+        [tabbar setTintColor:[UIColor blueColor]];
+        [bar setBarTintColor:[UIColor blueColor]];
+        UIImage *tabbarImage1 = [self imageWithView:tabbar];
+        UIImage *navigationImage1 = [self imageWithView:bar];
+        
+        [archiver encodeObject:tabbarImage1 forKey:@"tabbarImage1"];
+        [archiver encodeObject:navigationImage1 forKey:@"navigationImage1"];
+        [archiver encodeObject:tabbarImage2 forKey:@"tabbarImage2"];
+        [archiver encodeObject:navigationImage2 forKey:@"navigationImage2"];
+        [archiver encodeObject:tabbarImage3 forKey:@"tabbarImage3"];
+        [archiver encodeObject:navigationImage3 forKey:@"navigationImage3"];
+        [archiver encodeObject:tabbarImage4 forKey:@"tabbarImage4"];
+        [archiver encodeObject:navigationImage4 forKey:@"navigationImage4"];
+        [archiver finishEncoding];
+        
+        //保存在NSUserDefaults里面，使得在同一手机登录的用户主题相同
+        [self.userDefaults setObject:navigationImagesAndTabbarImages forKey:@"navigationImagesAndTabbarImages"];
+        [self.userDefaults synchronize];
+    }
+    
+    //从currentUser的navigationColor字段获取颜色
+    NSString *colorString = [[AVUser currentUser] objectForKey:@"navigationColor"];
+    if (colorString == nil) {
+        [tabbar setTintColor:[UIColor blueColor]];
+        [bar setBarTintColor:[UIColor blueColor]];
+    } else if ([colorString isEqualToString:@"blue"]){
+        [tabbar setTintColor:[UIColor blueColor]];
+        [bar setBarTintColor:[UIColor blueColor]];
+    } else if ([colorString isEqualToString:@"black"]) {
+        [tabbar setTintColor:[UIColor darkTextColor]];
+        [bar setBarTintColor:[UIColor darkTextColor]];
+    } else if ([colorString isEqualToString:@"red"]) {
+        [tabbar setTintColor:[UIColor redColor]];
+        [bar setBarTintColor:[UIColor redColor]];
+    } else if ([colorString isEqualToString:@"gray"]) {
+        [tabbar setTintColor:[UIColor lightGrayColor]];
+        [bar setBarTintColor:[UIColor lightGrayColor]];
+    }
+
+}
+
+//渲染view.layer获取image
+- (UIImage *)imageWithView:(UIView *)view {
+    
+    //获取view的image
+    UIGraphicsBeginImageContextWithOptions(view.bounds.size, NO, 0.0);
+    [view.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
 }
 
 
@@ -166,14 +264,6 @@ static NSString  *const reuseIdentifier = @"note_cell";
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-//    
-//    NoteDetail *model = [[WLLDailyNoteDataManager sharedInstance] getModelWithIndex:indexPath.row];
-//    
-//    DailyNoteCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
-//    
-//    CGFloat h = [cell heightForCell:model.content];
-    
-    
     return 80;
 }
 

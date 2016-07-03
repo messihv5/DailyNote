@@ -182,59 +182,6 @@
     self.coverView = [UIView cs_viewCoverMainSreen];
 }
 
-#pragma mark - 初始化分类页面按钮
-//// 初始化分类页面按钮
-//- (void)initNaviButton {
-//    WLLCategoryButton *titleButton = [WLLCategoryButton buttonWithType:UIButtonTypeSystem];
-//    titleButton.frame = CGRectMake(0, 0, kWidth*0.2, kWidth*0.0725);
-//    [titleButton setImage:[UIImage imageNamed:@"down"] forState:UIControlStateNormal];
-//    [titleButton setTitle:@"全部" forState:UIControlStateNormal];
-//    [titleButton addTarget:self action:@selector(notesCategory:) forControlEvents:UIControlEventTouchUpInside];
-//    
-//    self.navigationItem.titleView = titleButton;
-//    self.button = titleButton;
-//}
-
-//// 分类按钮响应
-//- (void)notesCategory:(UIButton *)button {
-//
-//    // 如果分类页面隐藏, 则显示
-//    if (self.hidden == YES) {
-//        // 为其高度赋值即可
-//        [self showCategoryView];
-//
-//        // 将分类页面置为显示
-//        self.hidden = NO;
-//    }
-//    // 如果分类页面显示, 则隐藏
-//    else if (self.hidden == NO) {
-//        // 将其高度更改为0
-//        [self hideCategoryView];
-//    }
-//}
-//
-//// 显示选择分类页面
-//- (void)showCategoryView {
-//    
-//    [UIView animateWithDuration:0.25 animations:^{
-//        
-//        CGRect frame = CGRectMake((kWidth-kWidth*0.4831)/2, 64,
-//                                  kWidth*0.4831, kHeight*0.45);
-//        self.notesCategoryView.frame = frame;
-//        [self.button setImage:[UIImage imageNamed:@"up"] forState:UIControlStateNormal];
-//    }];
-//}
-//// 隐藏选择分类页面
-//- (void)hideCategoryView {
-//    [UIView animateWithDuration:0.25 animations:^{
-//        CGRect frame = CGRectMake((kWidth-kWidth*0.4831)/2, 64,
-//                                  kWidth*0.4831, 0);
-//        self.notesCategoryView.frame = frame;
-//        [self.button setImage:[UIImage imageNamed:@"down"] forState:UIControlStateNormal];
-//    }];
-//    self.hidden = YES;
-//}
-
 #pragma mark - UITextView Delegate
 // textView开始编辑时 将判断键盘隐藏置为NO
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
@@ -363,6 +310,9 @@
         //保存背景颜色
         NSData *colorData = [NSKeyedArchiver archivedDataWithRootObject:self.backColor];
         [diary setObject:colorData forKey:@"backColor"];
+        
+        //保存字体大小
+        
         
         //保存日记的作者为当前用户
         [diary setObject:[AVUser currentUser] forKey:@"belong"];

@@ -106,19 +106,6 @@
     self.window.rootViewController = nvController;
     nvController .delegate = self;
     
-    //如果用户没有退出系统，再进入时不用弹出登录界面进入App推出登录页面
-//    if (![AVUser currentUser]) {
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            WLLLogInViewController *logController;
-//            logController = [[WLLLogInViewController alloc] initWithNibName:@"WLLLogInViewController"
-//                                                                     bundle:[NSBundle mainBundle]];
-//            UINavigationController *naviController;
-//            naviController= [[UINavigationController alloc] initWithRootViewController:logController];
-//            [self.window.rootViewController presentViewController:naviController animated:NO completion:nil];
-//        });
-//    }
-
-    
     //leancloud消息推送
     if ([[UIDevice currentDevice].systemVersion floatValue] < 8.0) {
         UIRemoteNotificationType remoteTypes = UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound;
