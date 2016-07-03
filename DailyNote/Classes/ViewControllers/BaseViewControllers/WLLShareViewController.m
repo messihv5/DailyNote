@@ -77,26 +77,6 @@
     return _data;
 }
 
-//给tableView添加一个alertView
-- (void)addAlertView {
-    
-    CGRect alertViewRect = CGRectMake(ScreenWidth / 2 - 100, ScreenHeight / 2 - 20, 200, 40);
-    self.alertView = [[UIView alloc] initWithFrame:alertViewRect];
-    
-    self.upLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
-    self.upLabel.text = @"日记已经加载完";
-    self.upLabel.textColor = [UIColor whiteColor];
-    self.upLabel.alpha = 0.5;
-    self.upLabel.textAlignment = NSTextAlignmentCenter;
-    self.upLabel.backgroundColor = [UIColor blackColor];
-    
-    [self.alertView addSubview:self.upLabel];
-    
-    [self.view addSubview:self.alertView];
-    
-    self.upLabel.hidden = YES;
-}
-
 //下拉刷新方法，加载最新的日记
 - (void)refreshAction:(UIRefreshControl *)refreshControl {
     [refreshControl beginRefreshing];
@@ -128,12 +108,10 @@
                         [refreshControl endRefreshing];
                         return;
                     }
-                    
                 } else {
                     [refreshControl endRefreshing];
                     return;
                 }
-
             }];
         } else {
             
@@ -206,6 +184,27 @@
         }
     }
 }
+
+//给tableView添加一个alertView
+- (void)addAlertView {
+    
+    CGRect alertViewRect = CGRectMake(ScreenWidth / 2 - 100, ScreenHeight / 2 - 20, 200, 40);
+    self.alertView = [[UIView alloc] initWithFrame:alertViewRect];
+    
+    self.upLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
+    self.upLabel.text = @"日记已经加载完";
+    self.upLabel.textColor = [UIColor whiteColor];
+    self.upLabel.alpha = 0.5;
+    self.upLabel.textAlignment = NSTextAlignmentCenter;
+    self.upLabel.backgroundColor = [UIColor blackColor];
+    
+    [self.alertView addSubview:self.upLabel];
+    
+    [self.view addSubview:self.alertView];
+    
+    self.upLabel.hidden = YES;
+}
+
 
 //给tableViewFooterView添加刷新的view
 - (void)addViewToFooterView {

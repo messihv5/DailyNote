@@ -91,17 +91,24 @@
     self.timeLabel.text = self.model.time;
     self.contentView.backgroundColor = self.model.backColor;
     
-    // 富文本
-//    NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:self.model.content];
-//    [attrStr addAttribute:NSForegroundColorAttributeName
-//                    value:self.model.fontColor
-//                    range:NSMakeRange(0, self.model.content.length)];
-//    
-//    [attrStr addAttribute:NSFontAttributeName
-//                    value:self.model.contentFont
-//                    range:NSMakeRange(0, self.model.content.length)];
+    if (self.model.fontColor == nil) {
+        self.model.fontColor = [UIColor blackColor];
+    }
     
-//    self.contentLabel.attributedText = attrStr;
+    if (self.model.contentFont ==  nil) {
+        self.model.contentFont = [UIFont systemFontOfSize:15];
+    }
+    // 富文本
+    NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:self.model.content];
+    [attrStr addAttribute:NSForegroundColorAttributeName
+                    value:self.model.fontColor
+                    range:NSMakeRange(0, self.model.content.length)];
+    
+    [attrStr addAttribute:NSFontAttributeName
+                    value:self.model.contentFont
+                    range:NSMakeRange(0, self.model.content.length)];
+    
+    self.contentLabel.attributedText = attrStr;
 }
 
 #pragma mark - 导航栏左右键响应

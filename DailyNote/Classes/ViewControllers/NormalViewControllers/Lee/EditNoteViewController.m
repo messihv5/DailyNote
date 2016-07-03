@@ -48,12 +48,13 @@
 @property (nonatomic, weak) UIColor *fontColor;
 @property (nonatomic, weak) UIFont *contentFont;
 /* 遮盖view */
+
+//Wangchao
 @property (nonatomic, strong) UIView *coverView;
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) CLGeocoder *geoCoder;
 @property (strong, nonatomic) NSString *theString;
-
-
+@property (assign, nonatomic) NSString *fontNumber;
 
 @end
 
@@ -308,11 +309,25 @@
         [diary setObject:self.contentText.text forKey:@"content"];
         
         //保存背景颜色
-        NSData *colorData = [NSKeyedArchiver archivedDataWithRootObject:self.backColor];
-        [diary setObject:colorData forKey:@"backColor"];
+        NSMutableData *data = [[NSMutableData alloc] init];
+        
+        NSKeyedArchiver *archiverBackColor = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
+        [archiverBackColor encodeObject:self.contentText.backgroundColor forKey:@"backColor"];
+        [archiverBackColor finishEncoding];
+        
+        [diary setObject:data forKey:@"backColor"];
         
         //保存字体大小
+        [diary setObject:self.fontNumber forKey:@"fontNumber"];
         
+        //保存字体的颜色
+        NSMutableData *fontColor = [[NSMutableData alloc] init];
+        
+        NSKeyedArchiver *archiverFontColor = [[NSKeyedArchiver alloc] initForWritingWithMutableData:fontColor];
+        [archiverFontColor encodeObject:self.contentText.textColor forKey:@"fontColor"];
+        [archiverFontColor finishEncoding];
+        
+        [diary setObject:fontColor forKey:@"fontColor"];
         
         //保存日记的作者为当前用户
         [diary setObject:[AVUser currentUser] forKey:@"belong"];
@@ -387,6 +402,9 @@
 
 // 更改当前页面字体大小
 - (void)changeFontWithSlider:(UISlider *)slider {
+    
+    //获取slider的大小
+    self.fontNumber = [NSString stringWithFormat:@"%f", slider.value];
 
     // 将滑条变化值赋给model
     self.model.contentFont = [UIFont systemFontOfSize:slider.value];
@@ -540,33 +558,33 @@
             
             string1 = [string1 stringByAppendingString:sublocality];
             
-            AVUser *currentUser = [AVUser currentUser];//不加这句，日记就没有关联到指定的用户，相当于分享的日记
-            AVObject *dairy = [AVObject objectWithClassName:@"Dairy"];
-            NSString *contentOfDaily = @"今天是2016.5.29，星日，我还得继续努力啊man";
-            
-            [dairy setObject:contentOfDaily forKey:@"content"];
-            [dairy setObject:@"第一类" forKey:@"Category"];
-            [dairy setObject:@"public" forKey:@"isPrivate"];
-            [dairy setObject:currentUser forKey:@"belong"];//日记没有指定用户，分享的日记
-            [dairy setObject:[NSMutableArray array] forKey:@"staredUser"];//存储点赞的用户
-            [dairy setObject:@"0" forKey:@"starNumber"];//存储点赞数
-            [dairy setObject:string1 forKey:@"myLocation"];
-            [dairy setObject:@"0" forKey:@"readTime"];
-            
-            UIImage *theImage = [UIImage imageNamed:@"star.png"];
-            NSData *data = UIImagePNGRepresentation(theImage);
-            AVFile *file = [AVFile fileWithName:@"head.png" data:data];
-            
-            UIImage *secondImage = [UIImage imageNamed:@"share.png"];
-            NSData *secondData = UIImagePNGRepresentation(secondImage);
-            AVFile *secondFile = [AVFile fileWithData:secondData];
-            
-            NSArray *array = [NSArray arrayWithObjects:file, secondFile, nil];
-            [dairy addUniqueObjectsFromArray:array forKey:@"picture"];
-            
-            //保持网络和本地的日记同步
-            dairy.fetchWhenSave = YES;
-            [dairy saveInBackground];
+//            AVUser *currentUser = [AVUser currentUser];//不加这句，日记就没有关联到指定的用户，相当于分享的日记
+//            AVObject *dairy = [AVObject objectWithClassName:@"Dairy"];
+//            NSString *contentOfDaily = @"今天是2016.5.29，星日，我还得继续努力啊man";
+//            
+//            [dairy setObject:contentOfDaily forKey:@"content"];
+//            [dairy setObject:@"第一类" forKey:@"Category"];
+//            [dairy setObject:@"public" forKey:@"isPrivate"];
+//            [dairy setObject:currentUser forKey:@"belong"];//日记没有指定用户，分享的日记
+//            [dairy setObject:[NSMutableArray array] forKey:@"staredUser"];//存储点赞的用户
+//            [dairy setObject:@"0" forKey:@"starNumber"];//存储点赞数
+//            [dairy setObject:string1 forKey:@"myLocation"];
+//            [dairy setObject:@"0" forKey:@"readTime"];
+//            
+//            UIImage *theImage = [UIImage imageNamed:@"star.png"];
+//            NSData *data = UIImagePNGRepresentation(theImage);
+//            AVFile *file = [AVFile fileWithName:@"head.png" data:data];
+//            
+//            UIImage *secondImage = [UIImage imageNamed:@"share.png"];
+//            NSData *secondData = UIImagePNGRepresentation(secondImage);
+//            AVFile *secondFile = [AVFile fileWithData:secondData];
+//            
+//            NSArray *array = [NSArray arrayWithObjects:file, secondFile, nil];
+//            [dairy addUniqueObjectsFromArray:array forKey:@"picture"];
+//            
+//            //保持网络和本地的日记同步
+//            dairy.fetchWhenSave = YES;
+//            [dairy saveInBackground];
             
             [self.locationManager stopUpdatingLocation];
             

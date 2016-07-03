@@ -15,7 +15,7 @@
 #import "WLLDailyNoteDataManager.h"
 #import "WLLLogInViewController.h"
 
-@interface WLLDailyNoteViewController ()<UITableViewDelegate, UITableViewDataSource>
+@interface WLLDailyNoteViewController ()<UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate>
 
 /* 日记页面 */
 @property (weak, nonatomic) IBOutlet UITableView *notesTableView;
@@ -33,7 +33,6 @@
 @property (nonatomic, strong) NoteDetail *model;
 @property (strong, nonatomic) NSMutableArray *data;
 @property (strong, nonatomic) NSUserDefaults *userDefaults;
-
 
 @end
 
@@ -57,15 +56,13 @@ static NSString  *const reuseIdentifier = @"note_cell";
     [self.notesTableView registerNib:[UINib nibWithNibName:@"DailyNoteCell" bundle:nil]
               forCellReuseIdentifier:reuseIdentifier];
     
-//    // 请求数据
-//    [[WLLDailyNoteDataManager sharedInstance] requestDataAndFinished:^{
-//        [self.notesTableView reloadData];
-//    }];
-    
     self.parentViewController.navigationItem.title = @"Time Line";
-
-
     
+    //添加下拉刷新
+    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+    [refreshControl addTarget:self action:@selector(refreshAction:) forControlEvents:UIControlEventValueChanged];
+    refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"努力刷新中"];
+    [self.notesTableView addSubview:refreshControl];
 }
 
 //数据数组懒加载
@@ -79,6 +76,8 @@ static NSString  *const reuseIdentifier = @"note_cell";
 //加载10篇日记
 - (void)loadTenDiaries {
     AVQuery *query = [AVQuery queryWithClassName:@"Diary"];
+    query.limit = 10;
+    [query orderByDescending:@"createdAt"];
     [query whereKey:@"belong" equalTo:[AVUser currentUser]];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         for (AVObject *object in objects) {
@@ -97,12 +96,179 @@ static NSString  *const reuseIdentifier = @"note_cell";
             
             model.weekLabel = dateString;
             
+            //解析日记背景颜色
+            NSData *colorData = [object objectForKey:@"backColor"];
+            
+            NSKeyedUnarchiver *unarchiverBackColor = [[NSKeyedUnarchiver alloc] initForReadingWithData:colorData];
+            
+            UIColor *backColor = [unarchiverBackColor decodeObjectForKey:@"backColor"];
+            
+            model.backColor = backColor;
+            
+            //解析日记的字体大小
+            NSString *fontNumberString = [object objectForKey:@"fontNumber"];
+            float fontNumber = [fontNumberString floatValue];
+            model.contentFont = [UIFont systemFontOfSize:fontNumber];
+            
+            //解析日记的字体颜色
+            NSData *fontColorData = [object objectForKey:@"fontColor"];
+            NSKeyedUnarchiver *unarchiverFontColor = [[NSKeyedUnarchiver alloc] initForReadingWithData:fontColorData];
+            UIColor *fontColor = [unarchiverFontColor decodeObjectForKey:@"fontColor"];
+            
+            model.fontColor = fontColor;
+            
+            //解析日记日期
+            model.date = object.createdAt;
+            
             //添加到数组里面
             [self.data addObject:model];
         }
         [self.notesTableView reloadData];
     }];
 }
+
+//下拉刷新方法，加载最新的日记
+- (void)refreshAction:(UIRefreshControl *)refreshControl {
+    [refreshControl beginRefreshing];
+    
+    //刷新数据，加载最新的数据，当数组存储了数据，查询的新数据插到数组的最前面
+    if (self.data.count != 0) {
+        NoteDetail *firstObject = self.data[0];
+        
+        NSDate *firstDate = firstObject.date;
+        
+            AVQuery *query = [AVQuery queryWithClassName:@"Diary"];
+            [query whereKey:@"createdAt" greaterThan:firstDate];
+            [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                if (error == nil) {
+                    if (objects.count != 0) {
+                        
+                        NSMutableArray *array = [NSMutableArray array];
+                        for (AVObject *object in objects) {
+                            NoteDetail *model = [[NoteDetail alloc] init];
+                            
+                            //解析日记内容
+                            model.content = [object objectForKey:@"content"];
+                            
+                            //解析日记写作时间
+                            NSDate *createdAt = [object objectForKey:@"createdAt"];
+                            
+                            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+                            [formatter setDateFormat:@"MM月dd日 H:mm"];
+                            
+                            NSString *dateString = [formatter stringFromDate:createdAt];
+                            
+                            model.weekLabel = dateString;
+                            
+                            //解析日记背景颜色
+                            NSData *colorData = [object objectForKey:@"backColor"];
+                            
+                            NSKeyedUnarchiver *unarchiverBackColor = [[NSKeyedUnarchiver alloc] initForReadingWithData:colorData];
+                            
+                            UIColor *backColor = [unarchiverBackColor decodeObjectForKey:@"backColor"];
+                            
+                            model.backColor = backColor;
+                            
+                            //解析日记的字体大小
+                            NSString *fontNumberString = [object objectForKey:@"fontNumber"];
+                            float fontNumber = [fontNumberString floatValue];
+                            model.contentFont = [UIFont systemFontOfSize:fontNumber];
+                            
+                            //解析日记的字体颜色
+                            NSData *fontColorData = [object objectForKey:@"fontColor"];
+                            NSKeyedUnarchiver *unarchiverFontColor = [[NSKeyedUnarchiver alloc] initForReadingWithData:fontColorData];
+                            UIColor *fontColor = [unarchiverFontColor decodeObjectForKey:@"fontColor"];
+                            
+                            model.fontColor = fontColor;
+                            
+                            //解析日记日期
+                            model.date = object.createdAt;
+                            
+                            [array addObject:model];
+                        }
+                        NSInteger number = objects.count;
+                        NSRange range = NSMakeRange(0, number);
+                        NSIndexSet *set = [NSIndexSet indexSetWithIndexesInRange:range];
+                        [self.data insertObjects:array atIndexes:set];
+                        [self.notesTableView reloadData];
+                        [refreshControl endRefreshing];
+                    } else {
+                        [refreshControl endRefreshing];
+                        return;
+                    }
+                    
+                } else {
+                    [refreshControl endRefreshing];
+                    return;
+                }
+            }];
+        } else {
+            //嵌套在tabbar中的Viewcontroller加载数据
+            AVQuery *query = [AVQuery queryWithClassName:@"Diary"];
+            [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                if (error == nil) {
+                    if (objects.count != 0) {
+                        NSMutableArray *array = [NSMutableArray array];
+                        
+                        for (AVObject *object in objects) {
+                            NoteDetail *model = [[NoteDetail alloc] init];
+                            
+                            //解析日记内容
+                            model.content = [object objectForKey:@"content"];
+                            
+                            //解析日记写作时间
+                            NSDate *createdAt = [object objectForKey:@"createdAt"];
+                            
+                            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+                            [formatter setDateFormat:@"MM月dd日 H:mm"];
+                            
+                            NSString *dateString = [formatter stringFromDate:createdAt];
+                            
+                            model.weekLabel = dateString;
+                            
+                            //解析日记背景颜色
+                            NSData *colorData = [object objectForKey:@"backColor"];
+                            
+                            NSKeyedUnarchiver *unarchiverBackColor = [[NSKeyedUnarchiver alloc] initForReadingWithData:colorData];
+                            
+                            UIColor *backColor = [unarchiverBackColor decodeObjectForKey:@"backColor"];
+                            
+                            model.backColor = backColor;
+                            
+                            //解析日记的字体大小
+                            NSString *fontNumberString = [object objectForKey:@"fontNumber"];
+                            float fontNumber = [fontNumberString floatValue];
+                            model.contentFont = [UIFont systemFontOfSize:fontNumber];
+                            
+                            //解析日记的字体颜色
+                            NSData *fontColorData = [object objectForKey:@"fontColor"];
+                            NSKeyedUnarchiver *unarchiverFontColor = [[NSKeyedUnarchiver alloc] initForReadingWithData:fontColorData];
+                            UIColor *fontColor = [unarchiverFontColor decodeObjectForKey:@"fontColor"];
+                            
+                            model.fontColor = fontColor;
+                            
+                            //解析日记日期
+                            model.date = object.createdAt;
+                            
+                            [array addObject:model];
+                        }
+                        
+                        [self.data addObjectsFromArray:array];
+                        [self.notesTableView reloadData];
+                        [refreshControl endRefreshing];
+                    } else {
+                        [refreshControl endRefreshing];
+                        return;
+                    }
+                } else {
+                    [refreshControl endRefreshing];
+                    return;
+                }
+            }];
+        }
+}
+
+
 
 // 加载 barButton Item
 - (void)viewWillAppear:(BOOL)animated {
