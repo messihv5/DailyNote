@@ -79,7 +79,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
 //加载10篇日记
 - (void)loadTenDiaries {
     AVQuery *query = [AVQuery queryWithClassName:@"Diary"];
-//    [query whereKey:@"belong" equalTo:[AVUser currentUser]];
+    [query whereKey:@"belong" equalTo:[AVUser currentUser]];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         for (AVObject *object in objects) {
             NoteDetail *model = [[NoteDetail alloc] init];
@@ -143,8 +143,11 @@ static NSString  *const reuseIdentifier = @"note_cell";
         });
     }
     
-    if (self.data.count == 0) {
-        [self loadTenDiaries];
+    //如果用户登录，加载一次日记（后面视图再次出现不重复执行，而是进行刷星操作）
+    if ([AVUser currentUser]) {
+        if (self.data.count == 0) {
+            [self loadTenDiaries];
+        }
     }
     
     //获取当前的导航栏和tab栏
