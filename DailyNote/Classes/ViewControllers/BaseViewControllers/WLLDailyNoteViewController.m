@@ -77,25 +77,28 @@ static NSString  *const reuseIdentifier = @"note_cell";
 //加载10篇日记
 - (void)loadTenDiaries {
     AVQuery *query = [AVQuery queryWithClassName:@"Diary"];
-//    [query whereKey:@"belong" equalTo:[AVUser currentUser]];
+    [query whereKey:@"belong" equalTo:[AVUser currentUser]];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         for (AVObject *object in objects) {
             NoteDetail *model = [[NoteDetail alloc] init];
+            
+            //解析日记内容
             model.content = [object objectForKey:@"content"];
             
-            NSLog(@"%@", model.content);
+            //解析日记写作时间
+            NSDate *createdAt = [object objectForKey:@"createdAt"];
             
-            NSData *data = [object objectForKey:@"font"];
-            NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
-            UIFont *font = [unarchiver decodeObjectForKey:@"font"];
-            NSLog(@"font  %@", font);
-            model.contentFont = font;
+            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+            [formatter setDateFormat:@"MM月dd日 H:mm"];
             
+            NSString *dateString = [formatter stringFromDate:createdAt];
+            
+            model.weekLabel = dateString;
+            
+            //添加到数组里面
             [self.data addObject:model];
-            
         }
         [self.notesTableView reloadData];
-        
     }];
 }
 

@@ -355,19 +355,19 @@
         }
         
         //保存日记到网络
-        AVObject *dairy = [AVObject objectWithClassName:@"Diary"];
-        [dairy setObject:self.contentText.text forKey:@"content"];
-//        NSMutableData *data = [NSMutableData data];
-//        NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
-//        [archiver encodeObject:self.contentFont forKey:@"font"];
-//        [archiver finishEncoding];
-//        
-//        [dairy setObject:data forKey:@"font"];
-//        [dairy setObject:self.backColor forKey:@"backgroundColor"];
-        [dairy setObject:[AVUser currentUser] forKey:@"belong"];
-        [dairy saveInBackground];
+        AVObject *diary = [AVObject objectWithClassName:@"Diary"];
         
+        //保存日记内容
+        [diary setObject:self.contentText.text forKey:@"content"];
         
+        //保存背景颜色
+        NSData *colorData = [NSKeyedArchiver archivedDataWithRootObject:self.backColor];
+        [diary setObject:colorData forKey:@"backColor"];
+        
+        //保存日记的作者为当前用户
+        [diary setObject:[AVUser currentUser] forKey:@"belong"];
+        
+        [diary saveInBackground];
     }
     
     [self.navigationController popViewControllerAnimated:YES];
