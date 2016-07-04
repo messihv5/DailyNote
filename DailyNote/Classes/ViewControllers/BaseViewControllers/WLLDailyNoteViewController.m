@@ -14,6 +14,7 @@
 #import "WLLNotesCategoryView.h"
 #import "WLLDailyNoteDataManager.h"
 #import "WLLLogInViewController.h"
+#import "WLLCalendarViewController.h"
 
 @interface WLLDailyNoteViewController ()<UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate>
 
@@ -180,6 +181,8 @@ static NSString  *const reuseIdentifier = @"note_cell";
     self.upLabel.alpha = 0.5;
     self.upLabel.textAlignment = NSTextAlignmentCenter;
     self.upLabel.backgroundColor = [UIColor blackColor];
+    self.upLabel.layer.masksToBounds = YES;
+    self.upLabel.layer.cornerRadius = 5;
     
     [self.alertView addSubview:self.upLabel];
     
@@ -383,7 +386,8 @@ static NSString  *const reuseIdentifier = @"note_cell";
 
 // 查看以前日志
 - (void)checkPastNotes:(UIBarButtonItem *)button {
-    
+    WLLCalendarViewController *calendarVC = [[WLLCalendarViewController alloc] initWithNibName:@"WLLCalendarViewController" bundle:nil];
+    [self.navigationController pushViewController:calendarVC animated:YES];
 }
 
 // 写新日记
