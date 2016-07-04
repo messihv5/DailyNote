@@ -21,19 +21,19 @@
                                 <rect key="frame" x="0.0" y="0.0" width="362" height="28"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1DS-32-q0S" userLabel="周">
-                                        <rect key="frame" x="5" y="5" width="37.5" height="18"/>
+                                        <rect key="frame" x="10" y="5" width="37.5" height="18"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fl7-h4-G8P" userLabel="时间">
-                                        <rect key="frame" x="52" y="8" width="31" height="14.5"/>
+                                        <rect key="frame" x="57" y="8" width="31" height="14.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H7s-7a-0hq" userLabel="日月">
-                                        <rect key="frame" x="326" y="8" width="31" height="14.5"/>
+                                        <rect key="frame" x="321" y="8" width="31" height="14.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
@@ -41,8 +41,8 @@
                                 </subviews>
                                 <color key="backgroundColor" red="0.91040269750000002" green="0.85401440169999998" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstItem="1DS-32-q0S" firstAttribute="leading" secondItem="SUS-zw-iwc" secondAttribute="leading" constant="5" id="4Kr-MX-Yn4"/>
-                                    <constraint firstAttribute="trailing" secondItem="H7s-7a-0hq" secondAttribute="trailing" constant="5" id="4qR-BN-U5y"/>
+                                    <constraint firstItem="1DS-32-q0S" firstAttribute="leading" secondItem="SUS-zw-iwc" secondAttribute="leading" constant="10" id="4Kr-MX-Yn4"/>
+                                    <constraint firstAttribute="trailing" secondItem="H7s-7a-0hq" secondAttribute="trailing" constant="10" id="4qR-BN-U5y"/>
                                     <constraint firstAttribute="height" constant="28" id="Hg2-oS-1Wo"/>
                                     <constraint firstItem="Fl7-h4-G8P" firstAttribute="leading" secondItem="1DS-32-q0S" secondAttribute="trailing" constant="10" id="aF7-b7-le0"/>
                                     <constraint firstItem="Fl7-h4-G8P" firstAttribute="bottom" secondItem="1DS-32-q0S" secondAttribute="bottom" id="u4c-d0-2dV"/>
@@ -57,13 +57,13 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="600-ei-8xc">
-                                <rect key="frame" x="5" y="59" width="352" height="179"/>
+                                <rect key="frame" x="5" y="64" width="352" height="174"/>
                                 <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="600-ei-8xc" firstAttribute="top" secondItem="VXg-t3-ugL" secondAttribute="bottom" constant="5" id="367-TE-Fcg"/>
+                            <constraint firstItem="600-ei-8xc" firstAttribute="top" secondItem="VXg-t3-ugL" secondAttribute="bottom" constant="10" id="367-TE-Fcg"/>
                             <constraint firstItem="SUS-zw-iwc" firstAttribute="top" secondItem="rtM-i0-AGf" secondAttribute="top" id="DMU-Mb-kBh"/>
                             <constraint firstItem="VXg-t3-ugL" firstAttribute="top" secondItem="SUS-zw-iwc" secondAttribute="bottom" constant="5" id="FfB-3N-s8c"/>
                             <constraint firstItem="VXg-t3-ugL" firstAttribute="leading" secondItem="rtM-i0-AGf" secondAttribute="leading" constant="5" id="Iqa-zB-bJ4"/>

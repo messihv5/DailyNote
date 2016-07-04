@@ -126,8 +126,6 @@
 		4DD5197B1D27747F00745AA1 /* WLLNoteBackgroundColorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DD519661D27747F00745AA1 /* WLLNoteBackgroundColorView.m */; };
 		4DD5197C1D27747F00745AA1 /* WLLNoteBackgroundColorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4DD519671D27747F00745AA1 /* WLLNoteBackgroundColorView.xib */; };
 		4DD5197D1D27747F00745AA1 /* WLLCategoryButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DD519691D27747F00745AA1 /* WLLCategoryButton.m */; };
-		4DD5197E1D27747F00745AA1 /* WLLCategoryEditCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DD5196B1D27747F00745AA1 /* WLLCategoryEditCell.m */; };
-		4DD5197F1D27747F00745AA1 /* WLLCategoryEditCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4DD5196C1D27747F00745AA1 /* WLLCategoryEditCell.xib */; };
 		4DD519801D27747F00745AA1 /* WLLNotesCategoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DD5196E1D27747F00745AA1 /* WLLNotesCategoryView.m */; };
 		4DD519811D27747F00745AA1 /* WLLNotesCategoryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4DD5196F1D27747F00745AA1 /* WLLNotesCategoryView.xib */; };
 		4DD519821D27747F00745AA1 /* WLLSharedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DD519711D27747F00745AA1 /* WLLSharedView.m */; };
@@ -329,9 +327,6 @@
 		4DD519671D27747F00745AA1 /* WLLNoteBackgroundColorView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WLLNoteBackgroundColorView.xib; sourceTree = "<group>"; };
 		4DD519681D27747F00745AA1 /* WLLCategoryButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLCategoryButton.h; sourceTree = "<group>"; };
 		4DD519691D27747F00745AA1 /* WLLCategoryButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLCategoryButton.m; sourceTree = "<group>"; };
-		4DD5196A1D27747F00745AA1 /* WLLCategoryEditCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLCategoryEditCell.h; sourceTree = "<group>"; };
-		4DD5196B1D27747F00745AA1 /* WLLCategoryEditCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLCategoryEditCell.m; sourceTree = "<group>"; };
-		4DD5196C1D27747F00745AA1 /* WLLCategoryEditCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WLLCategoryEditCell.xib; sourceTree = "<group>"; };
 		4DD5196D1D27747F00745AA1 /* WLLNotesCategoryView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLNotesCategoryView.h; sourceTree = "<group>"; };
 		4DD5196E1D27747F00745AA1 /* WLLNotesCategoryView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLNotesCategoryView.m; sourceTree = "<group>"; };
 		4DD5196F1D27747F00745AA1 /* WLLNotesCategoryView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WLLNotesCategoryView.xib; sourceTree = "<group>"; };
@@ -845,9 +840,6 @@
 				4DD5195B1D27747F00745AA1 /* ToolViewSubViews */,
 				4DD519681D27747F00745AA1 /* WLLCategoryButton.h */,
 				4DD519691D27747F00745AA1 /* WLLCategoryButton.m */,
-				4DD5196A1D27747F00745AA1 /* WLLCategoryEditCell.h */,
-				4DD5196B1D27747F00745AA1 /* WLLCategoryEditCell.m */,
-				4DD5196C1D27747F00745AA1 /* WLLCategoryEditCell.xib */,
 				4DD5196D1D27747F00745AA1 /* WLLNotesCategoryView.h */,
 				4DD5196E1D27747F00745AA1 /* WLLNotesCategoryView.m */,
 				4DD5196F1D27747F00745AA1 /* WLLNotesCategoryView.xib */,
@@ -1044,7 +1036,6 @@
 				4D8A3F481CF423F1000C2D42 /* WLLLogInViewController.xib in Resources */,
 				4D1C30FC1CF88B8600C675D7 /* setting.png in Resources */,
 				4D1C30E01CF85E9900C675D7 /* star.png in Resources */,
-				4DD5197F1D27747F00745AA1 /* WLLCategoryEditCell.xib in Resources */,
 				4D8A3F4C1CF442E9000C2D42 /* email.png in Resources */,
 				4D20101E1D1A3A5800CE8EC9 /* eye15X15.png in Resources */,
 				4DA9CD641D0CF3190075D1B3 /* red_selectedButton.png in Resources */,
@@ -1176,7 +1167,6 @@
 				4D1550D21CFD8B79001CF139 /* WLLModifyInfomationViewController.m in Sources */,
 				4DD519831D27747F00745AA1 /* WLLToolView.m in Sources */,
 				4D8A3F471CF423F1000C2D42 /* WLLLogInViewController.m in Sources */,
-				4DD5197E1D27747F00745AA1 /* WLLCategoryEditCell.m in Sources */,
 				4DD519771D27747F00745AA1 /* WLLMoodView.m in Sources */,
 				4DD519751D27747F00745AA1 /* WLLFontView.m in Sources */,
 				4DD519531D2773B400745AA1 /* UIFont+ScreenFont.m in Sources */,
@@ -1341,7 +1331,7 @@
 					"$(PROJECT_DIR)/ShareSDK/Support/Required",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "~/Documents/Developer/DailyNote/DailyNote/PrefixHeader.pch";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/DailyNote/PrefixHeader.pch";
 				INFOPLIST_FILE = DailyNote/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -1367,7 +1357,7 @@
 					"$(PROJECT_DIR)/ShareSDK/Support/Required",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "~/Documents/Developer/DailyNote/DailyNote/PrefixHeader.pch";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/DailyNote/PrefixHeader.pch";
 				INFOPLIST_FILE = DailyNote/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (

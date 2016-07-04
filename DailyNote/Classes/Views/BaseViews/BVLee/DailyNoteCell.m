@@ -29,19 +29,14 @@
     _model = model;
     
     self.contentLabel.text = [model objectForKey:@"content"];
-//    self.monthAndYear.text = model.monthAndYear;
-//    self.timeLabel.text = model.time;
-//    self.dateLabel.text = model.dates;
+    
     NSDate *createdDate = [model objectForKey:@"createdAt"];
     
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    self.weekLabel.text = [NSString wd_weekDayFromDate:createdDate];
     
-    [formatter setDateFormat:@"MM月dd日 H:mm"];
+    self.timeLabel.text = [NSString nt_timeFromDate:createdDate];
     
-    NSString *dateString = [formatter stringFromDate:createdDate];
-    
-    self.weekLabel.text = dateString;
-    
+    self.dateLabel.text = [NSString nt_monthAndYearFromDate:createdDate];
     
     
     // 计算：1 获取要计算的字符串
@@ -70,19 +65,20 @@
     CGFloat height = 20.287109;
     
     if (!self.noteImage.image) {
-        if (rect.size.height < 3 * height) {
-            return rect.size.height + 28 + 35;
+        if (rect.size.height <= 3 * height) {
+            return rect.size.height + self.timeView.frame.size.height + 35;
         } else {
-            return 3 * height + 28 + 35;
+            return 3 * height + self.timeView.frame.size.height + 35;
         }
     } else {
-        return rect.size.height + self.timeView.frame.size.height + self.noteImage.frame.size.height;
+        if (rect.size.height <= 3*height) {
+            return rect.size.height + self.timeView.frame.size.height + self.noteImage.frame.size.height;
+        } else {
+            return 3*height + self.timeView.frame.size.height + self.noteImage.frame.size.height;
+        }
+        
     }
 }
 
-- (void)layoutSubviews {
-//    [self layoutIfNeeded];
-//    [self layoutSubviews];
-}
 
 @end

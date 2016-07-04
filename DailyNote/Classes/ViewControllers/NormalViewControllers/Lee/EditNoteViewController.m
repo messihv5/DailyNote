@@ -351,10 +351,10 @@
     if (self.model.contentFont == nil) self.model.contentFont = [UIFont sf_adapterScreenWithFont];
     
     self.model.date = [NSDate date];
-    self.model.time = [NSString nt_time];
-    self.model.weekLabel = [NSString wd_weekDayfromDate:_model.date];
-    self.model.monthAndYear = [NSString nt_monthAndYear];
-    self.model.dates = [NSString nt_nowDate];
+    self.model.time = [NSString nt_timeFromDate:_model.date];
+    self.model.weekLabel = [NSString wd_weekDayFromDate:_model.date];
+    self.model.monthAndYear = [NSString nt_monthAndYearFromDate:_model.date];
+    self.model.dates = [NSString nt_nowDateFromDate:_model.date];
     
     [[WLLDailyNoteDataManager sharedInstance] addDailyNoteWithNote:self.model];
 }

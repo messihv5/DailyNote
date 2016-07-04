@@ -254,7 +254,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
     
     self.EditVC = [[EditNoteViewController alloc] initWithNibName:@"EditNoteViewController"
                                                            bundle:[NSBundle mainBundle]];
-//    self.EditVC.modelDelegate = self;
+
     
     // 左侧barbutton
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"calendarNotes"]

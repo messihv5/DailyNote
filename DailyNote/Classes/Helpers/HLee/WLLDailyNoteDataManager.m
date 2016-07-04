@@ -51,10 +51,10 @@ static WLLDailyNoteDataManager *manager = nil;
         // 日记内容初始值
         model.content = @"今天下载了随手记~~~今天下载了随手记~~~今天下载了随手记~~~rect.size.height/self.contentLabel.numberOfLinesrect.size.height/self.contentLabel.numberOfLines";
         model.date = [[NSDate alloc] init];
-        model.dates = [NSString nt_nowDate];
-        model.monthAndYear = [NSString nt_monthAndYear];
-        model.time = [NSString nt_time];
-        model.weekLabel = [NSString wd_weekDayfromDate:model.date];
+        model.dates = [NSString nt_nowDateFromDate:model.date];
+        model.monthAndYear = [NSString nt_monthAndYearFromDate:model.date];
+        model.time = [NSString nt_timeFromDate:model.date];
+        model.weekLabel = [NSString wd_weekDayFromDate:model.date];
         
         // 背景色, 字体颜色, 字体大小初始值
         model.backColor = [UIColor whiteColor];
