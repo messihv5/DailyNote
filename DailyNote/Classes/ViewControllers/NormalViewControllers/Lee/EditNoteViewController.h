@@ -24,6 +24,8 @@
 
 @end
 
+typedef void (^Block)(BOOL isRefreshing);
+
 @interface EditNoteViewController : UIViewController
 /* 传入detail页面cell下标 */
 @property (nonatomic, strong) NSIndexPath *indexPath;
@@ -31,5 +33,10 @@
 @property (nonatomic, copy) NSString *eTitle;
 
 @property (nonatomic, assign) id <SendEditModelDelegate> modelDelegate;
+
+//传给第一页面判断是否进行刷新
+@property (assign, nonatomic) BOOL isRefreshing;
+//传值
+@property (copy, nonatomic) Block block;
 
 @end

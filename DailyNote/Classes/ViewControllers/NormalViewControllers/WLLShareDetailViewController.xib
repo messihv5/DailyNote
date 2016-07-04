@@ -13,8 +13,8 @@
                 <outlet property="backgroundImageView" destination="13F-on-1fL" id="adq-Vn-x0y"/>
                 <outlet property="containerView" destination="RL6-MT-eDf" id="y2e-mP-HyW"/>
                 <outlet property="contentLabel" destination="38p-9T-HNj" id="Nuf-yM-tEA"/>
-                <outlet property="currentDairyStarImageView" destination="vSR-hT-kxG" id="bMH-Ow-FMP"/>
-                <outlet property="currentDairyStarNumberLabel" destination="vIc-RJ-cGk" id="XyE-73-e7M"/>
+                <outlet property="currentDiaryStarImageView" destination="vSR-hT-kxG" id="nDX-3C-9O1"/>
+                <outlet property="currentDiaryStarNumberLabel" destination="vIc-RJ-cGk" id="ilc-Xo-wBm"/>
                 <outlet property="dateLabel" destination="I6Y-UR-eFP" id="PbN-SZ-nGm"/>
                 <outlet property="headImageView" destination="LFa-he-lMv" id="LCm-QY-9sU"/>
                 <outlet property="headImageViewTopConstraint" destination="LCa-lw-euP" id="TNN-Ii-Awo"/>

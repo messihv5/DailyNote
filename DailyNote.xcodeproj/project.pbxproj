@@ -192,7 +192,6 @@
 		4D48D1C51CF56CDA00D9E4F1 /* WLLResetPasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLResetPasswordViewController.m; sourceTree = "<group>"; };
 		4D48D1C61CF56CDA00D9E4F1 /* WLLResetPasswordViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WLLResetPasswordViewController.xib; sourceTree = "<group>"; };
 		4D48D1C91CF59B9400D9E4F1 /* NickName.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = NickName.png; sourceTree = "<group>"; };
-		4D48D1CD1CF5F68200D9E4F1 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		4D649B781D1131290005276B /* ShareSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ShareSDK.framework; sourceTree = "<group>"; };
 		4D649B7B1D1131290005276B /* ShareSDKExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ShareSDKExtension.framework; sourceTree = "<group>"; };
 		4D649B7C1D1131290005276B /* ShareSDKUI.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ShareSDKUI.bundle; sourceTree = "<group>"; };
@@ -351,6 +350,7 @@
 		4DDB2AF41CFEDB96002D7784 /* WChaoShareCellTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WChaoShareCellTableViewCell.m; sourceTree = "<group>"; };
 		4DDB2AF51CFEDB96002D7784 /* WChaoShareCellTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WChaoShareCellTableViewCell.xib; sourceTree = "<group>"; };
 		4DDB2AF81CFF1732002D7784 /* smallStar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = smallStar.png; sourceTree = "<group>"; };
+		4DF09D511D291218003015D8 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		AA9803D23890D8C5859509F5 /* Pods-DailyNote.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DailyNote.release.xcconfig"; path = "Pods/Target Support Files/Pods-DailyNote/Pods-DailyNote.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -589,8 +589,8 @@
 		4D8A3EEF1CF3D14D000C2D42 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				4DF09D511D291218003015D8 /* PrefixHeader.pch */,
 				4D8A3EF01CF3D14D000C2D42 /* main.m */,
-				4D48D1CD1CF5F68200D9E4F1 /* PrefixHeader.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -1341,7 +1341,7 @@
 					"$(PROJECT_DIR)/ShareSDK/Support/Required",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = /Users/messi/Documents/Developer/DailyNote/DailyNote/Classes/Headers/PrefixHeader.pch;
+				GCC_PREFIX_HEADER = "~/Documents/Developer/DailyNote/DailyNote/PrefixHeader.pch";
 				INFOPLIST_FILE = DailyNote/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -1367,7 +1367,7 @@
 					"$(PROJECT_DIR)/ShareSDK/Support/Required",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = /Users/messi/Documents/Developer/DailyNote/DailyNote/Classes/Headers/PrefixHeader.pch;
+				GCC_PREFIX_HEADER = "~/Documents/Developer/DailyNote/DailyNote/PrefixHeader.pch";
 				INFOPLIST_FILE = DailyNote/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (

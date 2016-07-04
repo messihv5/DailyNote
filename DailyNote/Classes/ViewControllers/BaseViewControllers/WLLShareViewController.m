@@ -11,8 +11,7 @@
 #import "WLLNoteDetailViewController.h"
 #import "WLLShareDetailViewController.h"
 
-#define ScreenWidth CGRectGetWidth([UIScreen mainScreen].bounds)
-#define ScreenHeight CGRectGetHeight([UIScreen mainScreen].bounds)
+
 
 @interface WLLShareViewController ()<UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate>
 
@@ -116,7 +115,7 @@
         } else {
             
             //嵌套在tabbar中的Viewcontroller加载数据
-            AVQuery *query = [AVQuery queryWithClassName:@"Dairy"];
+            AVQuery *query = [AVQuery queryWithClassName:@"Diary"];
             [query whereKey:@"createdAt" greaterThan:firstDate];
             [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
                 if (error == nil) {
@@ -165,7 +164,7 @@
         } else {
             
             //嵌套在tabbar中的Viewcontroller加载数据
-            AVQuery *query = [AVQuery queryWithClassName:@"Dairy"];
+            AVQuery *query = [AVQuery queryWithClassName:@"Diary"];
             [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
                 if (error == nil) {
                     if (objects.count != 0) {
@@ -188,7 +187,7 @@
 //给tableView添加一个alertView
 - (void)addAlertView {
     
-    CGRect alertViewRect = CGRectMake(ScreenWidth / 2 - 100, ScreenHeight / 2 - 20, 200, 40);
+    CGRect alertViewRect = CGRectMake(kWidth / 2 - 100, kHeight / 2 - 20, 200, 40);
     self.alertView = [[UIView alloc] initWithFrame:alertViewRect];
     
     self.upLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
@@ -208,10 +207,10 @@
 
 //给tableViewFooterView添加刷新的view
 - (void)addViewToFooterView {
-    CGRect footerViewRect = CGRectMake(0, 0, ScreenWidth, 100);
+    CGRect footerViewRect = CGRectMake(0, 0, kWidth, 100);
     UIView *footerView = [[UIView alloc] initWithFrame:footerViewRect];
     
-    CGRect downLoadLabelRect = CGRectMake(0, 0, ScreenWidth, 40);
+    CGRect downLoadLabelRect = CGRectMake(0, 0, kWidth, 40);
     self.downLoadLabel = [[UILabel alloc] initWithFrame:downLoadLabelRect];
     self.downLoadLabel.text = @"上拉加载更多";
     self.downLoadLabel.textAlignment = NSTextAlignmentCenter;
@@ -248,20 +247,20 @@
         self.upLabel.hidden = NO;
         
         //调用加载方法
-        [self loadTenMoreDairy];
+        [self loadTenMorediary];
     }else {
         self.upLabel.hidden = YES;
     }
 }
 
 //每次上拉最多加载10篇日记
-- (void)loadTenMoreDairy {
+- (void)loadTenMorediary {
     
     AVObject *object = [self.data lastObject];
     
     NSDate *date = object.createdAt;
     
-    AVQuery *query = [AVQuery queryWithClassName:@"Dairy"];
+    AVQuery *query = [AVQuery queryWithClassName:@"Diary"];
     [query whereKey:@"createdAt" lessThan:date];
     [query orderByDescending:@"createdAt"];
      query.limit = 10;
@@ -317,7 +316,7 @@
     } else {
         
         //嵌套在tabbar中的viewController加载数据
-        AVQuery *categoryQuery = [AVQuery queryWithClassName:@"Dairy"];
+        AVQuery *categoryQuery = [AVQuery queryWithClassName:@"Diary"];
     
         [categoryQuery orderByDescending:@"createdAt"];
         [categoryQuery whereKey:@"createdAt" lessThan:myDate];
@@ -429,11 +428,11 @@
     //通过cell上的按钮获取点击的cell的indexPath
     NSIndexPath *indexPath = [self.shareTableView indexPathForCell:(WChaoShareCellTableViewCell *)[[sender superview] superview]];
     
-    //检查dairy数组，如果含有该用户，就return，不能进行点赞
+    //检查diary数组，如果含有该用户，就return，不能进行点赞
     
-    AVObject *dairy = self.data[indexPath.row];
+    AVObject *diary = self.data[indexPath.row];
 
-    NSMutableArray *array = [dairy objectForKey:@"staredUser"];
+    NSMutableArray *array = [diary objectForKey:@"staredUser"];
     if ([array containsObject:[AVUser currentUser]]) {
         return;
     }
@@ -449,19 +448,19 @@
     }
     
     //日记里面保存的点赞数字也加1
-    NSString *num = [dairy objectForKey:@"starNumber"];
+    NSString *num = [diary objectForKey:@"starNumber"];
     num = [NSString stringWithFormat:@"%ld", [num integerValue] + 1];
-    [dairy setObject:num forKey:@"starNumber"];
+    [diary setObject:num forKey:@"starNumber"];
     
     //把点赞的用户添加到数组中，以便下次点赞时进行判断
     AVUser *user = [AVUser currentUser];
     
-    //把点赞的用户添加到dairy的数组中保存
+    //把点赞的用户添加到diary的数组中保存
     [array addObject:user];
     
-    dairy.fetchWhenSave = YES;
-    [dairy setObject:array forKey:@"staredUser"];
-    [dairy saveInBackground];
+    diary.fetchWhenSave = YES;
+    [diary setObject:array forKey:@"staredUser"];
+    [diary saveInBackground];
 }
 
 

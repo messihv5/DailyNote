@@ -56,7 +56,7 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" image="fonts" translatesAutoresizingMaskIntoConstraints="NO" id="600-ei-8xc">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="600-ei-8xc">
                                 <rect key="frame" x="5" y="59" width="352" height="179"/>
                                 <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             </imageView>
@@ -108,7 +108,4 @@
             <point key="canvasLocation" x="133" y="31.5"/>
         </tableViewCell>
     </objects>
-    <resources>
-        <image name="fonts" width="43" height="43"/>
-    </resources>
 </document>

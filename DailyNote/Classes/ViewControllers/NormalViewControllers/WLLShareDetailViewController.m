@@ -25,8 +25,8 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *nickNameLabelTopConstraint;
 @property (weak, nonatomic) IBOutlet UIView *toolBarView;
 @property (weak, nonatomic) IBOutlet UILabel *dateLabel;
-@property (weak, nonatomic) IBOutlet UIImageView *currentDairyStarImageView;
-@property (weak, nonatomic) IBOutlet UILabel *currentDairyStarNumberLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *currentDiaryStarImageView;
+@property (weak, nonatomic) IBOutlet UILabel *currentDiaryStarNumberLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *readImageView;
 @property (weak, nonatomic) IBOutlet UILabel *readNumberLabel;
 @property (weak, nonatomic) IBOutlet UILabel *contentLabel;
@@ -112,7 +112,7 @@
         self.signatureLabel.text = [relatedUser objectForKey:@"signature"];
         self.starNumberLabel.text = [relatedUser objectForKey:@"starNumber"];
         self.contentLabel.text = [object objectForKey:@"content"];
-        self.currentDairyStarNumberLabel.text = [object objectForKey:@"starNumber"];
+        self.currentDiaryStarNumberLabel.text = [object objectForKey:@"starNumber"];
         
         //处理该日记的被阅读次数
         NSString *readTime = [object objectForKey:@"readTime"];
@@ -148,7 +148,7 @@
     
     //设置图片
     self.starImageView.image = [UIImage imageNamed:@"heart40X40"];
-    self.currentDairyStarImageView.image = [UIImage imageNamed:@"heartSelected15X15"];
+    self.currentDiaryStarImageView.image = [UIImage imageNamed:@"heartSelected15X15"];
     self.readImageView.image = [UIImage imageNamed:@"eye15X15"];
     
     self.headImageViewTopConstraint.constant = ScreenHeight / 18;
@@ -217,12 +217,12 @@
         [self.starButton setImage:[UIImage imageNamed:@"heartSelected40X40"] forState:UIControlStateNormal];
         
         //如果该用户没有点赞，执行点赞，点赞数加1
-        NSInteger numberOfStar = [self.currentDairyStarNumberLabel.text integerValue];
-        self.currentDairyStarNumberLabel.text = [NSString stringWithFormat:@"%ld", numberOfStar + 1];
+        NSInteger numberOfStar = [self.currentDiaryStarNumberLabel.text integerValue];
+        self.currentDiaryStarNumberLabel.text = [NSString stringWithFormat:@"%ld", numberOfStar + 1];
         
         //同时，数据库中的点赞数也加1
-        NSInteger numberOfStarInDairy = [[object objectForKey:@"starNumber"] integerValue] +1;
-        NSString *starNumber = [NSString stringWithFormat:@"%ld", numberOfStarInDairy];
+        NSInteger numberOfStarInDiary = [[object objectForKey:@"starNumber"] integerValue] +1;
+        NSString *starNumber = [NSString stringWithFormat:@"%ld", numberOfStarInDiary];
         self.block(starNumber);
         
         //把当前用户添加到点赞用户数组里面

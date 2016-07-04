@@ -333,6 +333,10 @@
         [diary setObject:[AVUser currentUser] forKey:@"belong"];
         
         [diary saveInBackground];
+        
+        //传值给dailyNoteViewcontroller让其进行刷新日记
+        self.isRefreshing = YES;
+        self.block(self.isRefreshing);
     }
     
     [self.navigationController popViewControllerAnimated:YES];

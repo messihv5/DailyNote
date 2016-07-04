@@ -81,32 +81,55 @@
 
 // 将日志页面的值赋给详情页面
 - (void)dataFromNoteDaily {
-
-    self.model = self.noteDetail;
     
-    self.contentLabel.text = self.model.content;
+    //日记内容赋值
+    self.contentLabel.text = [self.noteDetail objectForKey:@"content"];
     
-    self.monthAndYearLabel.text = [NSString stringWithFormat:@"%@.%@", self.model.monthAndYear, self.model.dates];
+    //日记日期赋值
+    NSDate *createdAt = [self.noteDetail objectForKey:@"createdAt"];
+    
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"MM月dd日 H:mm"];
+    
+    NSString *dateString = [formatter stringFromDate:createdAt];
+    
+    self.monthAndYearLabel.text = dateString;
+    
     self.weekDayLabel.text = self.model.weekLabel;
     self.timeLabel.text = self.model.time;
-    self.contentView.backgroundColor = self.model.backColor;
     
-    if (self.model.fontColor == nil) {
-        self.model.fontColor = [UIColor blackColor];
+    //背景颜色赋值
+    NSData *colorData = [self.noteDetail objectForKey:@"backColor"];
+    NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:colorData];
+    UIColor *backColor = [unarchiver decodeObjectForKey:@"backColor"];
+    self.contentView.backgroundColor = backColor;
+    
+    //字体颜色解析
+    NSData *fontColorData = [self.noteDetail objectForKey:@"fontColor"];
+    NSKeyedUnarchiver *fontColorUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:fontColorData];
+    UIColor *fontColor = [fontColorUnarchiver decodeObjectForKey:@"fontColor"];
+    
+    //字体解析
+    NSString *fontString = [self.noteDetail objectForKey:@"fontNumber"];
+    float fontNumber = [fontString floatValue];
+    UIFont *font = [UIFont systemFontOfSize:fontNumber];
+    
+    if (fontColor == nil) {
+        fontColor = [UIColor blackColor];
     }
     
-    if (self.model.contentFont ==  nil) {
-        self.model.contentFont = [UIFont systemFontOfSize:15];
+    if (fontNumber ==  0) {
+        font = [UIFont systemFontOfSize:15];
     }
     // 富文本
-    NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:self.model.content];
+    NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:self.contentLabel.text];
     [attrStr addAttribute:NSForegroundColorAttributeName
-                    value:self.model.fontColor
-                    range:NSMakeRange(0, self.model.content.length)];
+                    value:fontColor
+                    range:NSMakeRange(0, self.contentLabel.text.length)];
     
     [attrStr addAttribute:NSFontAttributeName
-                    value:self.model.contentFont
-                    range:NSMakeRange(0, self.model.content.length)];
+                    value:font
+                    range:NSMakeRange(0, self.contentLabel.text.length)];
     
     self.contentLabel.attributedText = attrStr;
 }

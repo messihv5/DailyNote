@@ -24,20 +24,28 @@
 
 @implementation DailyNoteCell
 
-- (void)setModel:(NoteDetail *)model {
+- (void)setModel:(AVObject *)model {
     
     _model = model;
     
-    self.contentLabel.text = model.content;
+    self.contentLabel.text = [model objectForKey:@"content"];
 //    self.monthAndYear.text = model.monthAndYear;
-    self.timeLabel.text = model.time;
-    self.dateLabel.text = model.dates;
-    self.weekLabel.text = model.weekLabel;
+//    self.timeLabel.text = model.time;
+//    self.dateLabel.text = model.dates;
+    NSDate *createdDate = [model objectForKey:@"createdAt"];
+    
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    
+    [formatter setDateFormat:@"MM月dd日 H:mm"];
+    
+    NSString *dateString = [formatter stringFromDate:createdDate];
+    
+    self.weekLabel.text = dateString;
     
     
     
     // 计算：1 获取要计算的字符串
-    NSString *temp = model.content;
+    NSString *temp = self.contentLabel.text;
     // 计算：2 准备工作
     // 宽度和label的宽度一样，高度给一个巨大的值
     CGSize size = CGSizeMake(CGRectGetWidth([UIScreen mainScreen].bounds) - 20, 2000);
@@ -62,11 +70,10 @@
     CGFloat height = 20.287109;
     
     if (!self.noteImage.image) {
-        if (rect.size.height < 3*height) {
-            
-            return height + 28 + 35;
+        if (rect.size.height < 3 * height) {
+            return rect.size.height + 28 + 35;
         } else {
-            return 3*height + 28 + 35;
+            return 3 * height + 28 + 35;
         }
     } else {
         return rect.size.height + self.timeView.frame.size.height + self.noteImage.frame.size.height;

@@ -99,7 +99,7 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xWk-hu-IuB">
                     <rect key="frame" x="0.0" y="550" width="600" height="30"/>
                     <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dXO-kY-z5a">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dXO-kY-z5a">
                             <rect key="frame" x="167" y="4" width="22" height="22"/>
                             <state key="normal" image="left"/>
                             <connections>
