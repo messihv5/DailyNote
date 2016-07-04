@@ -126,8 +126,6 @@
 		4DD5197B1D27747F00745AA1 /* WLLNoteBackgroundColorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DD519661D27747F00745AA1 /* WLLNoteBackgroundColorView.m */; };
 		4DD5197C1D27747F00745AA1 /* WLLNoteBackgroundColorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4DD519671D27747F00745AA1 /* WLLNoteBackgroundColorView.xib */; };
 		4DD5197D1D27747F00745AA1 /* WLLCategoryButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DD519691D27747F00745AA1 /* WLLCategoryButton.m */; };
-		4DD5197E1D27747F00745AA1 /* WLLCategoryEditCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DD5196B1D27747F00745AA1 /* WLLCategoryEditCell.m */; };
-		4DD5197F1D27747F00745AA1 /* WLLCategoryEditCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4DD5196C1D27747F00745AA1 /* WLLCategoryEditCell.xib */; };
 		4DD519801D27747F00745AA1 /* WLLNotesCategoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DD5196E1D27747F00745AA1 /* WLLNotesCategoryView.m */; };
 		4DD519811D27747F00745AA1 /* WLLNotesCategoryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4DD5196F1D27747F00745AA1 /* WLLNotesCategoryView.xib */; };
 		4DD519821D27747F00745AA1 /* WLLSharedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DD519711D27747F00745AA1 /* WLLSharedView.m */; };
@@ -141,6 +139,11 @@
 		4DDB2AF71CFEDB96002D7784 /* WChaoShareCellTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4DDB2AF51CFEDB96002D7784 /* WChaoShareCellTableViewCell.xib */; };
 		4DDB2AF91CFF1732002D7784 /* smallStar.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DDB2AF81CFF1732002D7784 /* smallStar.png */; };
 		688F9BB8C948A1B2594BF8DD /* libPods-DailyNote.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A274DBB65D8CD8315FA844C /* libPods-DailyNote.a */; };
+		F309D9751D2A550D00E9D18A /* WLLCalendarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F309D9731D2A550D00E9D18A /* WLLCalendarViewController.m */; };
+		F309D9761D2A550D00E9D18A /* WLLCalendarViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F309D9741D2A550D00E9D18A /* WLLCalendarViewController.xib */; };
+		F309D97C1D2A554400E9D18A /* WLLCalendarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F309D9781D2A554400E9D18A /* WLLCalendarCell.m */; };
+		F309D97D1D2A554400E9D18A /* WLLCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = F309D97A1D2A554400E9D18A /* WLLCalendarView.m */; };
+		F309D97E1D2A554400E9D18A /* WLLCalendarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F309D97B1D2A554400E9D18A /* WLLCalendarView.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -329,9 +332,6 @@
 		4DD519671D27747F00745AA1 /* WLLNoteBackgroundColorView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WLLNoteBackgroundColorView.xib; sourceTree = "<group>"; };
 		4DD519681D27747F00745AA1 /* WLLCategoryButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLCategoryButton.h; sourceTree = "<group>"; };
 		4DD519691D27747F00745AA1 /* WLLCategoryButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLCategoryButton.m; sourceTree = "<group>"; };
-		4DD5196A1D27747F00745AA1 /* WLLCategoryEditCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLCategoryEditCell.h; sourceTree = "<group>"; };
-		4DD5196B1D27747F00745AA1 /* WLLCategoryEditCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLCategoryEditCell.m; sourceTree = "<group>"; };
-		4DD5196C1D27747F00745AA1 /* WLLCategoryEditCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WLLCategoryEditCell.xib; sourceTree = "<group>"; };
 		4DD5196D1D27747F00745AA1 /* WLLNotesCategoryView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLNotesCategoryView.h; sourceTree = "<group>"; };
 		4DD5196E1D27747F00745AA1 /* WLLNotesCategoryView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLNotesCategoryView.m; sourceTree = "<group>"; };
 		4DD5196F1D27747F00745AA1 /* WLLNotesCategoryView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WLLNotesCategoryView.xib; sourceTree = "<group>"; };
@@ -352,6 +352,14 @@
 		4DDB2AF81CFF1732002D7784 /* smallStar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = smallStar.png; sourceTree = "<group>"; };
 		4DF09D511D291218003015D8 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		AA9803D23890D8C5859509F5 /* Pods-DailyNote.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DailyNote.release.xcconfig"; path = "Pods/Target Support Files/Pods-DailyNote/Pods-DailyNote.release.xcconfig"; sourceTree = "<group>"; };
+		F309D9721D2A550D00E9D18A /* WLLCalendarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLCalendarViewController.h; sourceTree = "<group>"; };
+		F309D9731D2A550D00E9D18A /* WLLCalendarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLCalendarViewController.m; sourceTree = "<group>"; };
+		F309D9741D2A550D00E9D18A /* WLLCalendarViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WLLCalendarViewController.xib; sourceTree = "<group>"; };
+		F309D9771D2A554400E9D18A /* WLLCalendarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLCalendarCell.h; sourceTree = "<group>"; };
+		F309D9781D2A554400E9D18A /* WLLCalendarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLCalendarCell.m; sourceTree = "<group>"; };
+		F309D9791D2A554400E9D18A /* WLLCalendarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLCalendarView.h; sourceTree = "<group>"; };
+		F309D97A1D2A554400E9D18A /* WLLCalendarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLCalendarView.m; sourceTree = "<group>"; };
+		F309D97B1D2A554400E9D18A /* WLLCalendarView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WLLCalendarView.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -783,6 +791,9 @@
 				4DD5198B1D27778800745AA1 /* WLLNoteDetailViewController.h */,
 				4DD5198C1D27778800745AA1 /* WLLNoteDetailViewController.m */,
 				4DD5198D1D27778800745AA1 /* WLLNoteDetailViewController.xib */,
+				F309D9721D2A550D00E9D18A /* WLLCalendarViewController.h */,
+				F309D9731D2A550D00E9D18A /* WLLCalendarViewController.m */,
+				F309D9741D2A550D00E9D18A /* WLLCalendarViewController.xib */,
 			);
 			path = Lee;
 			sourceTree = "<group>";
@@ -845,9 +856,6 @@
 				4DD5195B1D27747F00745AA1 /* ToolViewSubViews */,
 				4DD519681D27747F00745AA1 /* WLLCategoryButton.h */,
 				4DD519691D27747F00745AA1 /* WLLCategoryButton.m */,
-				4DD5196A1D27747F00745AA1 /* WLLCategoryEditCell.h */,
-				4DD5196B1D27747F00745AA1 /* WLLCategoryEditCell.m */,
-				4DD5196C1D27747F00745AA1 /* WLLCategoryEditCell.xib */,
 				4DD5196D1D27747F00745AA1 /* WLLNotesCategoryView.h */,
 				4DD5196E1D27747F00745AA1 /* WLLNotesCategoryView.m */,
 				4DD5196F1D27747F00745AA1 /* WLLNotesCategoryView.xib */,
@@ -856,6 +864,11 @@
 				4DD519721D27747F00745AA1 /* WLLToolView.h */,
 				4DD519731D27747F00745AA1 /* WLLToolView.m */,
 				4DD519741D27747F00745AA1 /* WLLToolView.xib */,
+				F309D9771D2A554400E9D18A /* WLLCalendarCell.h */,
+				F309D9781D2A554400E9D18A /* WLLCalendarCell.m */,
+				F309D9791D2A554400E9D18A /* WLLCalendarView.h */,
+				F309D97A1D2A554400E9D18A /* WLLCalendarView.m */,
+				F309D97B1D2A554400E9D18A /* WLLCalendarView.xib */,
 			);
 			path = NVLee;
 			sourceTree = "<group>";
@@ -1011,6 +1024,7 @@
 				4DD5193D1D2771DF00745AA1 /* WLLDailyNoteViewController.xib in Resources */,
 				4D6E2D951D0E9CCE00AB8271 /* WLLAboutDailyNoteViewController.xib in Resources */,
 				4D7AD7BD1D18CBD2005237DC /* shareImage2.png in Resources */,
+				F309D9761D2A550D00E9D18A /* WLLCalendarViewController.xib in Resources */,
 				4DD519841D27747F00745AA1 /* WLLToolView.xib in Resources */,
 				4D96D6AD1D0FCB0300AC23FD /* WChaoReminderCellTableViewCell.xib in Resources */,
 				4D7AD7C11D18CBDC005237DC /* reportImage2.png in Resources */,
@@ -1019,6 +1033,7 @@
 				4DD5197C1D27747F00745AA1 /* WLLNoteBackgroundColorView.xib in Resources */,
 				4D888AC11D0819B600545F7D /* WChaoPrivateCodeCellTableViewCell.xib in Resources */,
 				4D7AD7B91D18C917005237DC /* backImage2.png in Resources */,
+				F309D97E1D2A554400E9D18A /* WLLCalendarView.xib in Resources */,
 				4D7AD7C81D1918EF005237DC /* WLLShareDetailViewController.xib in Resources */,
 				4DDB2AF71CFEDB96002D7784 /* WChaoShareCellTableViewCell.xib in Resources */,
 				4D48D1CA1CF59B9400D9E4F1 /* NickName.png in Resources */,
@@ -1044,7 +1059,6 @@
 				4D8A3F481CF423F1000C2D42 /* WLLLogInViewController.xib in Resources */,
 				4D1C30FC1CF88B8600C675D7 /* setting.png in Resources */,
 				4D1C30E01CF85E9900C675D7 /* star.png in Resources */,
-				4DD5197F1D27747F00745AA1 /* WLLCategoryEditCell.xib in Resources */,
 				4D8A3F4C1CF442E9000C2D42 /* email.png in Resources */,
 				4D20101E1D1A3A5800CE8EC9 /* eye15X15.png in Resources */,
 				4DA9CD641D0CF3190075D1B3 /* red_selectedButton.png in Resources */,
@@ -1151,6 +1165,7 @@
 				4D7AD7C71D1918EF005237DC /* WLLShareDetailViewController.m in Sources */,
 				4DD5197B1D27747F00745AA1 /* WLLNoteBackgroundColorView.m in Sources */,
 				4D888AB71D07EB0E00545F7D /* WLLLockViewController.m in Sources */,
+				F309D97C1D2A554400E9D18A /* WLLCalendarCell.m in Sources */,
 				4D8A3EF11CF3D14D000C2D42 /* main.m in Sources */,
 				4DD519591D27744100745AA1 /* DailyNoteCell.m in Sources */,
 				4DD519541D2773B400745AA1 /* UIView+WLLExtension.m in Sources */,
@@ -1176,8 +1191,9 @@
 				4D1550D21CFD8B79001CF139 /* WLLModifyInfomationViewController.m in Sources */,
 				4DD519831D27747F00745AA1 /* WLLToolView.m in Sources */,
 				4D8A3F471CF423F1000C2D42 /* WLLLogInViewController.m in Sources */,
-				4DD5197E1D27747F00745AA1 /* WLLCategoryEditCell.m in Sources */,
+				F309D97D1D2A554400E9D18A /* WLLCalendarView.m in Sources */,
 				4DD519771D27747F00745AA1 /* WLLMoodView.m in Sources */,
+				F309D9751D2A550D00E9D18A /* WLLCalendarViewController.m in Sources */,
 				4DD519751D27747F00745AA1 /* WLLFontView.m in Sources */,
 				4DD519531D2773B400745AA1 /* UIFont+ScreenFont.m in Sources */,
 				4D8A3F3D1CF3D7A1000C2D42 /* WLLShareViewController.m in Sources */,
@@ -1341,7 +1357,7 @@
 					"$(PROJECT_DIR)/ShareSDK/Support/Required",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "~/Documents/Developer/DailyNote/DailyNote/PrefixHeader.pch";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/DailyNote/PrefixHeader.pch";
 				INFOPLIST_FILE = DailyNote/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -1367,7 +1383,7 @@
 					"$(PROJECT_DIR)/ShareSDK/Support/Required",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "~/Documents/Developer/DailyNote/DailyNote/PrefixHeader.pch";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/DailyNote/PrefixHeader.pch";
 				INFOPLIST_FILE = DailyNote/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (

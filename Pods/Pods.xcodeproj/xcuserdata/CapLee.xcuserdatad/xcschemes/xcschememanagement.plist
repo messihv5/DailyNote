@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>LeanCloudFeedback.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>3</integer>
+		</dict>
 		<key>Pods-DailyNote.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -17,12 +22,27 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>02D6A6D148B8FA69B80C391DC7A32C17</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>5C2D749641C7E21C97A009132BCBFD1D</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>5CDA6EA192E52CDC50FA2BF0F88F1F2B</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>B4842C9F816E7938F8A039AD023BEE3D</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FF5918DAB298B27BC610DEFC3F149866</key>
 		<dict>
 			<key>primary</key>
 			<true/>

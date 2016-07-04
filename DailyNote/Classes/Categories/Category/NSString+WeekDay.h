@@ -16,21 +16,21 @@
  *
  *  @return 返回String格式日期
  */
-+ (NSString *)nt_nowDate;
++ (NSString *)nt_nowDateFromDate:(NSDate *)date;
 
 /**
  *  计算当前年月
  *
  *  @return 返回String格式年月
  */
-+ (NSString *)nt_monthAndYear;
++ (NSString *)nt_monthAndYearFromDate:(NSDate *)date;
 
 /**
  *  计算当前时间
  *
  *  @return 返回String格式时间
  */
-+ (NSString *)nt_time;
++ (NSString *)nt_timeFromDate:(NSDate *)date;
 
 /**
  *  计算周几
@@ -39,6 +39,6 @@
  *
  *  @return 返回String格式周几
  */
-+ (NSString *)wd_weekDayfromDate:(NSDate *)date;
++ (NSString *)wd_weekDayFromDate:(NSDate *)date;
 
 @end
