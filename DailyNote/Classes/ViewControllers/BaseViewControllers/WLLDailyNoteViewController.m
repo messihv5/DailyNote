@@ -156,8 +156,9 @@ static NSString  *const reuseIdentifier = @"note_cell";
 
 //给tableViewFooterView添加刷新的view
 - (void)addViewToFooterView {
-    CGRect footerViewRect = CGRectMake(0, 0, kWidth, 100);
+    CGRect footerViewRect = CGRectMake(0, 0, kWidth, 60);
     UIView *footerView = [[UIView alloc] initWithFrame:footerViewRect];
+    footerView.backgroundColor = [UIColor whiteColor];
     
     CGRect downLoadLabelRect = CGRectMake(0, 0, kWidth, 40);
     self.downLoadLabel = [[UILabel alloc] initWithFrame:downLoadLabelRect];

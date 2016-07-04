@@ -140,7 +140,7 @@
         self.contentText.backgroundColor = self.model.backColor;
         self.contentText.textColor = self.model.fontColor;
         
-    } else {    // 否则为编辑页面打开, 弹出键盘
+    } else {    // 否则为创建新日记, 弹出键盘
         
         [self getModelWithoutIndexPth];
         
@@ -260,7 +260,7 @@
 #pragma mark - 导航栏左右键响应
 // 保存
 - (void)saveNote:(UIBarButtonItem *)button {
-    if (_indexPath) {   // 如果是由点击DailyNote页面cell 进入
+    if (_indexPath) {   // 如果是由点击DailyNote页面cell 进入，就是编辑
         
         // 移除遮盖view
         [self.coverView removeFromSuperview];
@@ -281,7 +281,7 @@
         // 收回心情视图
         self.mood.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.3);
         
-    } else {    // 如果是由DailyNote页面直接点击添加进入
+    } else {    // 如果是由DailyNote页面直接点击添加进入，就是添加
         // 移除遮盖view
         [self.coverView removeFromSuperview];
       

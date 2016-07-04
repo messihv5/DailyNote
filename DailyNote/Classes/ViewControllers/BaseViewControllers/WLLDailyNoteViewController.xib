@@ -28,7 +28,6 @@
                 <constraint firstItem="U6u-bx-rvM" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="nt8-Ct-0sf"/>
                 <constraint firstAttribute="bottom" secondItem="U6u-bx-rvM" secondAttribute="bottom" constant="44" id="ybe-Gk-fJk"/>
             </constraints>
-            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="422" y="-152"/>
         </view>
     </objects>
