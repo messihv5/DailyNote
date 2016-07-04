@@ -305,38 +305,57 @@
         //保存日记到网络
         AVObject *diary = [AVObject objectWithClassName:@"Diary"];
         
-        //保存日记内容
-        [diary setObject:self.contentText.text forKey:@"content"];
+        //保存日记内容,确保作者的内容不为空
         
-        //保存背景颜色
-        NSMutableData *data = [[NSMutableData alloc] init];
+        NSCharacterSet *set = [NSCharacterSet whitespaceAndNewlineCharacterSet];
         
-        NSKeyedArchiver *archiverBackColor = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
-        [archiverBackColor encodeObject:self.contentText.backgroundColor forKey:@"backColor"];
-        [archiverBackColor finishEncoding];
+        NSString *string = [self.contentText.text stringByTrimmingCharactersInSet:set];
         
-        [diary setObject:data forKey:@"backColor"];
-        
-        //保存字体大小
-        [diary setObject:self.fontNumber forKey:@"fontNumber"];
-        
-        //保存字体的颜色
-        NSMutableData *fontColor = [[NSMutableData alloc] init];
-        
-        NSKeyedArchiver *archiverFontColor = [[NSKeyedArchiver alloc] initForWritingWithMutableData:fontColor];
-        [archiverFontColor encodeObject:self.contentText.textColor forKey:@"fontColor"];
-        [archiverFontColor finishEncoding];
-        
-        [diary setObject:fontColor forKey:@"fontColor"];
-        
-        //保存日记的作者为当前用户
-        [diary setObject:[AVUser currentUser] forKey:@"belong"];
-        
-        [diary saveInBackground];
-        
-        //传值给dailyNoteViewcontroller让其进行刷新日记
-        self.isRefreshing = YES;
-        self.block(self.isRefreshing);
+        if (self.contentText.text == nil || string.length == 0) {
+            
+            //日记内容为空，弹出提示框
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"请输入内容" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+            
+            UIAlertAction *executeAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                
+            }];
+            
+            [alertController addAction:executeAction];
+            [self.navigationController presentViewController:alertController animated:YES completion:nil];
+        } else {
+            
+            //日记内容不为空，保存日记
+            [diary setObject:self.contentText.text forKey:@"content"];
+            //保存背景颜色
+            NSMutableData *data = [[NSMutableData alloc] init];
+            
+            NSKeyedArchiver *archiverBackColor = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
+            [archiverBackColor encodeObject:self.contentText.backgroundColor forKey:@"backColor"];
+            [archiverBackColor finishEncoding];
+            
+            [diary setObject:data forKey:@"backColor"];
+            
+            //保存字体大小
+            [diary setObject:self.fontNumber forKey:@"fontNumber"];
+            
+            //保存字体的颜色
+            NSMutableData *fontColor = [[NSMutableData alloc] init];
+            
+            NSKeyedArchiver *archiverFontColor = [[NSKeyedArchiver alloc] initForWritingWithMutableData:fontColor];
+            [archiverFontColor encodeObject:self.contentText.textColor forKey:@"fontColor"];
+            [archiverFontColor finishEncoding];
+            
+            [diary setObject:fontColor forKey:@"fontColor"];
+            
+            //保存日记的作者为当前用户
+            [diary setObject:[AVUser currentUser] forKey:@"belong"];
+            
+            [diary saveInBackground];
+            
+            //传值给dailyNoteViewcontroller让其进行刷新日记
+            self.isRefreshing = YES;
+            self.block(self.isRefreshing);
+        }
     }
     
     [self.navigationController popViewControllerAnimated:YES];

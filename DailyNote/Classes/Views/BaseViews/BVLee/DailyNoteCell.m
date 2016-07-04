@@ -71,10 +71,10 @@
             return 3 * height + self.timeView.frame.size.height + 35;
         }
     } else {
-        if (rect.size.height <= 3*height) {
+        if (rect.size.height <= 3 * height) {
             return rect.size.height + self.timeView.frame.size.height + self.noteImage.frame.size.height;
         } else {
-            return 3*height + self.timeView.frame.size.height + self.noteImage.frame.size.height;
+            return 3 * height + self.timeView.frame.size.height + self.noteImage.frame.size.height;
         }
         
     }
