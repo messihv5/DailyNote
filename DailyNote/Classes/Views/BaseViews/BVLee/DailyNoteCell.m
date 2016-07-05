@@ -66,9 +66,9 @@
     
     if (!self.noteImage.image) {
         if (rect.size.height <= 3 * height) {
-            return rect.size.height + self.timeView.frame.size.height + 35;
+            return rect.size.height + 28 + 40;
         } else {
-            return 3 * height + self.timeView.frame.size.height + 35;
+            return 3 * height + 28 + 40;
         }
     } else {
         if (rect.size.height <= 3 * height) {
