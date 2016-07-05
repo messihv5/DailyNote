@@ -26,6 +26,7 @@
 @property (strong, nonatomic) AVUser *currentUser;
 @property (strong, nonatomic) UIView *alertView;
 @property (strong, nonatomic) UILabel *upLabel;
+@property (strong, nonatomic) NSMutableArray *staredUserArray;
 
 @end
 
@@ -38,15 +39,10 @@
     if (self.passedIndexPath) {
         
         //从用户界面，收藏cell，push过来的controller
-        self.navigationItem.title = @"我的收藏";
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeDiaryAndReloadTableView:) name:@"deleteThisDiariyCollection" object:nil];
-    } else {
-        
-        //嵌套在tabbarController里面的controller
-        self.parentViewController.navigationItem.title = @"日记分享";
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(removeDiaryAndReloadTableView:) name:@"deleteThisDiariyCollection"
+                                                   object:nil];
     }
-    
     self.currentUser = [AVUser currentUser];
     
     self.shareTableView.delegate = self;
@@ -66,6 +62,19 @@
     [self addViewToFooterView];
     
     [self addAlertView];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    if (self.passedIndexPath) {
+        
+        //从用户界面，收藏cell，push过来的controller
+        self.navigationItem.title = @"我的收藏";
+    } else {
+        
+        //嵌套在tabbarController里面的controller
+        self.parentViewController.navigationItem.title = @"日记分享";
+    }
+
 }
 
 //懒加载
@@ -380,9 +389,13 @@
                 AVUser *relatedUser = [object objectForKey:@"belong"];
                 cell.nickNameLabel.text = [relatedUser objectForKey:@"nickName"];
             }];
-            
-            cell.starNumberLabel.text = [object objectForKey:@"starNumber"];
-            cell.timeLabel.text = string;
+        
+        cell.starNumberLabel.text = [object objectForKey:@"starNumber"];
+        if (cell.starNumberLabel.text == nil) {
+            cell.starNumberLabel.text = @"0";
+        }
+        
+        cell.timeLabel.text = string;
             
             //判断当前用户是否已经点赞
             if ([staredUserArray containsObject:self.currentUser]) {
@@ -425,6 +438,7 @@
     
     //点击之后让button换个image
     [sender setImage:[UIImage imageNamed:@"heartSelected15X15"] forState:UIControlStateNormal];
+    
     //通过cell上的按钮获取点击的cell的indexPath
     NSIndexPath *indexPath = [self.shareTableView indexPathForCell:(WChaoShareCellTableViewCell *)[[sender superview] superview]];
     
@@ -433,8 +447,51 @@
     AVObject *diary = self.data[indexPath.row];
 
     NSMutableArray *array = [diary objectForKey:@"staredUser"];
-    if ([array containsObject:[AVUser currentUser]]) {
-        return;
+    
+    if (array == nil) {
+        
+        //第一次查询时点赞用户数组为空
+        self.staredUserArray = [NSMutableArray arrayWithCapacity:10];
+        
+        //日记里面保存的点赞数字也加1
+        NSString *num = [diary objectForKey:@"starNumber"];
+        num = [NSString stringWithFormat:@"%ld", [num integerValue] + 1];
+        [diary setObject:num forKey:@"starNumber"];
+        
+        //把点赞的用户添加到数组中，以便下次点赞时进行判断
+        AVUser *user = [AVUser currentUser];
+        
+        //把点赞的用户添加到diary的数组中保存
+        [self.staredUserArray addObject:user];
+        
+        diary.fetchWhenSave = YES;
+        [diary setObject:self.staredUserArray forKey:@"staredUser"];
+        [diary saveInBackground];
+
+    } else {
+        
+        //如果该用户已经点赞
+        if ([array containsObject:[AVUser currentUser]]) {
+            return;
+        } else {
+            
+            //该用户没有点赞
+            
+            //日记里面保存的点赞数字也加1
+            NSString *num = [diary objectForKey:@"starNumber"];
+            num = [NSString stringWithFormat:@"%ld", [num integerValue] + 1];
+            [diary setObject:num forKey:@"starNumber"];
+            
+            //把点赞的用户添加到数组中，以便下次点赞时进行判断
+            AVUser *user = [AVUser currentUser];
+            
+            //把点赞的用户添加到diary的数组中保存
+            [array addObject:user];
+            
+            diary.fetchWhenSave = YES;
+            [diary setObject:array forKey:@"staredUser"];
+            [diary saveInBackground];
+        }
     }
     
     //点赞后点赞数字加1
@@ -446,21 +503,6 @@
             label.text = [NSString stringWithFormat:@"%ld", [label.text integerValue] + 1];
         }
     }
-    
-    //日记里面保存的点赞数字也加1
-    NSString *num = [diary objectForKey:@"starNumber"];
-    num = [NSString stringWithFormat:@"%ld", [num integerValue] + 1];
-    [diary setObject:num forKey:@"starNumber"];
-    
-    //把点赞的用户添加到数组中，以便下次点赞时进行判断
-    AVUser *user = [AVUser currentUser];
-    
-    //把点赞的用户添加到diary的数组中保存
-    [array addObject:user];
-    
-    diary.fetchWhenSave = YES;
-    [diary setObject:array forKey:@"staredUser"];
-    [diary saveInBackground];
 }
 
 

@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+typedef void(^Block)(BOOL isBackFromLoginController);
+
 @interface WLLLogInViewController : UIViewController
+
+@property (copy, nonatomic) Block block;
 
 @end

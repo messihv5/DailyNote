@@ -8,12 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-typedef void (^Block)(NSString *nickName, NSString *signature);
+typedef void (^Block1)(NSString *nickName, NSString *signature);
 
 @interface WLLModifyInfomationViewController : UIViewController
 
 @property (copy, nonatomic) NSString *nickNameString;
 @property (copy, nonatomic) NSString *signatureString;
-@property (copy, nonatomic) Block block;
+@property (copy, nonatomic) Block1 block;
 
 @end

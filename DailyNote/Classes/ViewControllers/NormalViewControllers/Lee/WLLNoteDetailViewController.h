@@ -14,9 +14,9 @@
 
 @interface WLLNoteDetailViewController : UIViewController
 /* NoteDetail 模型 */
-@property (nonatomic, strong) AVObject *noteDetail;
+@property (nonatomic, strong) AVObject *passedObject;
 /* 将cell下标传给Edit页面 */
-@property (nonatomic, assign) NSIndexPath *index;
+@property (nonatomic, assign) NSIndexPath *indexPath;
 
 @property (nonatomic, copy) NSString *title;
 

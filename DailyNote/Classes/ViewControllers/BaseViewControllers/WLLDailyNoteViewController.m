@@ -39,6 +39,7 @@
 @property (strong, nonatomic) UILabel *upLabel;
 @property (assign, nonatomic) BOOL isLoading;
 @property (assign, nonatomic) BOOL isRefreshing;
+@property (assign, nonatomic) BOOL isBackFromLoginController;
 
 @end
 
@@ -50,6 +51,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
     [super viewDidLoad];
 
     self.userDefaults = [NSUserDefaults standardUserDefaults];
+    
     // notesTableView 代理设置
     self.notesTableView.delegate = self;
     self.notesTableView.dataSource = self;
@@ -62,7 +64,6 @@ static NSString  *const reuseIdentifier = @"note_cell";
     [self.notesTableView registerNib:[UINib nibWithNibName:@"DailyNoteCell" bundle:nil]
               forCellReuseIdentifier:reuseIdentifier];
     
-    self.parentViewController.navigationItem.title = @"Time Line";
     
     //添加下拉刷新
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
@@ -92,6 +93,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
     [query orderByDescending:@"createdAt"];
     [query whereKey:@"belong" equalTo:[AVUser currentUser]];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        [self.data removeAllObjects];
         [self.data addObjectsFromArray:objects];
         [self.notesTableView reloadData];
     }];
@@ -109,6 +111,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
         
         AVQuery *query = [AVQuery queryWithClassName:@"Diary"];
         
+        [query orderByDescending:@"createdAt"];
         [query whereKey:@"belong" equalTo:[AVUser currentUser]];
         [query whereKey:@"createdAt" greaterThan:firstDate];
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -136,6 +139,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
     } else {
             //数据数组中没有数据时，数据数组直接添加数据
         AVQuery *query = [AVQuery queryWithClassName:@"Diary"];
+        [query orderByDescending:@"createdAt"];
         [query whereKey:@"belong" equalTo:[AVUser currentUser]];
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (error == nil) {
@@ -256,6 +260,8 @@ static NSString  *const reuseIdentifier = @"note_cell";
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:YES];
     
+    self.parentViewController.navigationItem.title = @"Time Line";
+    
     self.EditVC = [[EditNoteViewController alloc] initWithNibName:@"EditNoteViewController"
                                                            bundle:[NSBundle mainBundle]];
 
@@ -279,6 +285,11 @@ static NSString  *const reuseIdentifier = @"note_cell";
    
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    self.parentViewController.navigationItem.leftBarButtonItem = nil;
+    self.parentViewController.navigationItem.rightBarButtonItem = nil;
+}
+
 - (void)viewDidAppear:(BOOL)animated {
     //进入app时，弹出登录界面，如果用户没有退出系统，再进入时不用弹出登录界面
     if (![AVUser currentUser]) {
@@ -286,6 +297,9 @@ static NSString  *const reuseIdentifier = @"note_cell";
             WLLLogInViewController *logController;
             logController = [[WLLLogInViewController alloc] initWithNibName:@"WLLLogInViewController"
                                                                      bundle:[NSBundle mainBundle]];
+            logController.block = ^ (BOOL isBackFromLoginController) {
+                self.isBackFromLoginController = isBackFromLoginController;
+            };
             UINavigationController *naviController;
             naviController= [[UINavigationController alloc] initWithRootViewController:logController];
             [self.parentViewController.navigationController presentViewController:naviController animated:NO completion:nil];
@@ -293,10 +307,8 @@ static NSString  *const reuseIdentifier = @"note_cell";
     }
     
     //如果用户登录，加载一次日记（后面视图再次出现不重复执行，而是进行刷星操作）
-    if ([AVUser currentUser]) {
-        if (self.data.count == 0) {
-            [self loadTenDiaries];
-        }
+    if (self.isBackFromLoginController == NO && [AVUser currentUser]) {
+        [self loadTenDiaries];
     }
     
     //获取当前的导航栏和tab栏
@@ -364,13 +376,6 @@ static NSString  *const reuseIdentifier = @"note_cell";
         [bar setBarTintColor:[UIColor lightGrayColor]];
     }
     
-    //每次进入页面都刷新最新的日记
-    if (self.isRefreshing == NO) {
-        return;
-    } else {
-        [self refreshAction:nil];
-    }
-
 }
 
 //渲染view.layer获取image
@@ -394,10 +399,6 @@ static NSString  *const reuseIdentifier = @"note_cell";
 // 写新日记
 - (void)newDaily:(UIBarButtonItem *)button {
     
-    __weak WLLDailyNoteViewController *weakSelf = self;
-    self.EditVC.block = ^ (BOOL isRefreshing) {
-        weakSelf.isRefreshing = isRefreshing;
-    };
     [self.navigationController pushViewController:self.EditVC animated:YES];
 }
 
@@ -421,7 +422,8 @@ static NSString  *const reuseIdentifier = @"note_cell";
 
 #pragma mark - cell 点击事件响应
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    self.NoteDetailVC.noteDetail = self.data[indexPath.row];
+    self.NoteDetailVC.passedObject = self.data[indexPath.row];
+    self.NoteDetailVC.indexPath = indexPath;
     [self.navigationController pushViewController:self.NoteDetailVC animated:YES];
 }
 

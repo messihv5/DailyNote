@@ -72,8 +72,7 @@
     self.navigationItem.rightBarButtonItem.tintColor = [UIColor grayColor];
     
     // 将日志页面cell下标赋给控制详情页面翻页
-    self.indexs = self.index.row;
-    
+    self.indexs = self.indexPath.row;
     // 本页数据加载自日志页面
     [self dataFromNoteDaily];
     
@@ -83,10 +82,10 @@
 - (void)dataFromNoteDaily {
     
     //日记内容赋值
-    self.contentLabel.text = [self.noteDetail objectForKey:@"content"];
+    self.contentLabel.text = [self.passedObject objectForKey:@"content"];
     
     //日记日期赋值
-    NSDate *createdAt = [self.noteDetail objectForKey:@"createdAt"];
+    NSDate *createdAt = [self.passedObject objectForKey:@"createdAt"];
     
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"MM月dd日 H:mm"];
@@ -99,18 +98,18 @@
     self.timeLabel.text = self.model.time;
     
     //背景颜色赋值
-    NSData *colorData = [self.noteDetail objectForKey:@"backColor"];
+    NSData *colorData = [self.passedObject objectForKey:@"backColor"];
     NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:colorData];
     UIColor *backColor = [unarchiver decodeObjectForKey:@"backColor"];
     self.contentView.backgroundColor = backColor;
     
     //字体颜色解析
-    NSData *fontColorData = [self.noteDetail objectForKey:@"fontColor"];
+    NSData *fontColorData = [self.passedObject objectForKey:@"fontColor"];
     NSKeyedUnarchiver *fontColorUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:fontColorData];
     UIColor *fontColor = [fontColorUnarchiver decodeObjectForKey:@"fontColor"];
     
     //字体解析
-    NSString *fontString = [self.noteDetail objectForKey:@"fontNumber"];
+    NSString *fontString = [self.passedObject objectForKey:@"fontNumber"];
     float fontNumber = [fontString floatValue];
     UIFont *font = [UIFont systemFontOfSize:fontNumber];
     
@@ -141,7 +140,8 @@
 }
 
 - (void)editDaily:(UIBarButtonItem *)button {
-    self.EditVC.indexPath = self.index;
+    self.EditVC.indexPath = self.indexPath;
+    self.EditVC.passedObject = self.passedObject;
     [self.navigationController pushViewController:self.EditVC animated:YES];
 }
 

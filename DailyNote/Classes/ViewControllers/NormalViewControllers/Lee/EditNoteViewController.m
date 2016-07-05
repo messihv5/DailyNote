@@ -50,7 +50,7 @@
 /* 遮盖view */
 
 //Wangchao
-@property (nonatomic, strong) UIView *coverView;
+@property (strong, nonatomic) UIView *coverView;
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) CLGeocoder *geoCoder;
 @property (strong, nonatomic) NSString *theString;
@@ -130,15 +130,49 @@
 
 // 数据加载自上一页面
 - (void)dataFromDetail {
-    if (_indexPath) {   // 如果传过来NSIdexPath不为空, 即从详情页面打开, 加载content
+    if (_indexPath) {   // 如果传过来NSIdexPath不为空, 即从详情页面打开, 为编辑页面，加载数据
         
-        [self getModelWithIndexPath];
+//        [self getModelWithIndexPath];
         
-        self.contentText.text = self.model.content;
+        //内容
+        self.contentText.text = [self.passedObject objectForKey:@"content"];
         self.countLabel.text = [NSString stringWithFormat:@"%ld", self.contentText.text.length];
-        self.contentText.font = self.model.contentFont;
-        self.contentText.backgroundColor = self.model.backColor;
-        self.contentText.textColor = self.model.fontColor;
+        
+        //字体
+        NSString *fontNumberString = [self.passedObject objectForKey:@"fontNumber"];
+        if (fontNumberString == nil) {
+            UIFont *font = [UIFont systemFontOfSize:15];
+            self.contentText.font = font;
+        } else {
+            float fontNumber = [fontNumberString floatValue];
+            self.contentText.font = [UIFont systemFontOfSize:fontNumber];
+        }
+        
+        //背景颜色
+        NSData *backColorData = [self.passedObject objectForKey:@"backColor"];
+        
+        NSKeyedUnarchiver *backColorUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:backColorData];
+        
+        UIColor *backColor = [backColorUnarchiver decodeObjectForKey:@"backColor"];
+        
+        if (backColorData == nil) {
+            self.contentText.backgroundColor = [UIColor whiteColor];
+        } else {
+            self.contentText.backgroundColor = backColor;
+        }
+        
+        //字体颜色
+        NSData *fontColorData = [self.passedObject objectForKey:@"fontColor"];
+        
+        NSKeyedUnarchiver *fontColorUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:fontColorData];
+        
+        UIColor *fontColor = [fontColorUnarchiver decodeObjectForKey:@"fontColor"];
+        
+        if (fontColorData == nil) {
+            self.contentText.textColor = [UIColor darkTextColor];
+        } else {
+            self.contentText.textColor = fontColor;
+        }
         
     } else {    // 否则为创建新日记, 弹出键盘
         
@@ -266,7 +300,7 @@
         [self.coverView removeFromSuperview];
         
         // 将改变后的文本赋值给model
-        self.model.content = self.contentText.text;
+//        self.model.content = self.contentText.text;
         
         // 注销第一响应
         [self.contentText resignFirstResponder];
@@ -281,6 +315,54 @@
         // 收回心情视图
         self.mood.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.3);
         
+        //修改传过来的日记，并保存在网络
+        //保存日记内容,确保作者的内容不为空
+        
+        NSCharacterSet *set = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+        
+        NSString *string = [self.contentText.text stringByTrimmingCharactersInSet:set];
+        
+        if (self.contentText.text == nil || string.length == 0) {
+            
+            //日记内容为空，弹出提示框
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"请输入内容" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+            
+            UIAlertAction *executeAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                
+            }];
+            
+            [alertController addAction:executeAction];
+            [self.navigationController presentViewController:alertController animated:YES completion:nil];
+        } else {
+            
+            //日记内容不为空，保存日记
+            [self.passedObject setObject:self.contentText.text forKey:@"content"];
+            //保存背景颜色
+            NSMutableData *data = [[NSMutableData alloc] init];
+            
+            NSKeyedArchiver *archiverBackColor = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
+            [archiverBackColor encodeObject:self.contentText.backgroundColor forKey:@"backColor"];
+            [archiverBackColor finishEncoding];
+            
+            [self.passedObject setObject:data forKey:@"backColor"];
+            
+            //保存字体大小
+            [self.passedObject setObject:self.fontNumber forKey:@"fontNumber"];
+            
+            //保存字体的颜色
+            NSMutableData *fontColor = [[NSMutableData alloc] init];
+            
+            NSKeyedArchiver *archiverFontColor = [[NSKeyedArchiver alloc] initForWritingWithMutableData:fontColor];
+            [archiverFontColor encodeObject:self.contentText.textColor forKey:@"fontColor"];
+            [archiverFontColor finishEncoding];
+            
+            [self.passedObject setObject:fontColor forKey:@"fontColor"];
+            
+            //保存日记的作者为当前用户
+            [self.passedObject setObject:[AVUser currentUser] forKey:@"belong"];
+            
+            [self.passedObject saveInBackground];
+        }
     } else {    // 如果是由DailyNote页面直接点击添加进入，就是添加
         // 移除遮盖view
         [self.coverView removeFromSuperview];
@@ -351,10 +433,6 @@
             [diary setObject:[AVUser currentUser] forKey:@"belong"];
             
             [diary saveInBackground];
-            
-            //传值给dailyNoteViewcontroller让其进行刷新日记
-            self.isRefreshing = YES;
-            self.block(self.isRefreshing);
         }
     }
     
@@ -430,18 +508,12 @@
     self.fontNumber = [NSString stringWithFormat:@"%f", slider.value];
 
     // 将滑条变化值赋给model
-    self.model.contentFont = [UIFont systemFontOfSize:slider.value];
-    
-    // 字体随滑条变化
-    self.contentText.font = self.model.contentFont;
-    
+    self.contentText.font = [UIFont systemFontOfSize:slider.value];
 }
 // 改变字体颜色
 - (void)changeFontColor:(UIColor *)fontColor {
 
-    self.model.fontColor = fontColor;
-    
-    self.contentText.textColor = self.model.fontColor;
+    self.contentText.textColor = fontColor;
 }
 
 // 显示/隐藏更换日记背景色视图
@@ -501,9 +573,7 @@
 // 更改日记背景色协议方法
 - (void)changeNoteBackgroundColor:(UIColor *)color {
 
-    self.model.backColor = color;
-    
-    self.contentText.backgroundColor = self.model.backColor;
+    self.contentText.backgroundColor = color;
 }
 
 #pragma mark - 日志中图片来源方法

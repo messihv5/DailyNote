@@ -80,7 +80,7 @@
                 <outlet property="theTextLable" destination="8BH-eQ-Hsq" id="3A5-wD-Zv7"/>
                 <outlet property="timeLabel" destination="mc8-o9-QVp" id="p0z-oE-3wz"/>
             </connections>
-            <point key="canvasLocation" x="105" y="300"/>
+            <point key="canvasLocation" x="-6" y="322"/>
         </tableViewCell>
     </objects>
 </document>

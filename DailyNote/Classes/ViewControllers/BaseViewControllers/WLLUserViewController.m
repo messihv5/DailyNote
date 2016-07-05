@@ -222,9 +222,9 @@
         modifyVC.signatureString = self.signatureLabel.text;
         
         //block反向传值实现
-        modifyVC.block = ^ (NSString *nickNameString, NSString *signatureString) {
-            self.nickNameLabel.text = nickNameString;
-            self.signatureLabel.text = signatureString;
+        modifyVC.block = ^ (NSString *nickName, NSString *signature) {
+            self.nickNameLabel.text = nickName;
+            self.signatureLabel.text = signature;
         };
     } else if (indexPath.section == 0 && indexPath.row == 1) {
         

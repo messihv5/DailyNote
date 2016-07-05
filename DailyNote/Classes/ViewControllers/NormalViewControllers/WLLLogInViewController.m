@@ -16,6 +16,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *emailTextField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordTextField;
 @property (weak, nonatomic) IBOutlet UIButton *logInButton;
+@property (assign, nonatomic) BOOL isBackFromLoginController;
 
 @end
 
@@ -56,6 +57,8 @@
                                  password:self.passwordTextField.text
                                     block:^(AVUser *user, NSError *error) {
         if (user != nil) {
+            self.isBackFromLoginController = YES;
+            self.block(self.isBackFromLoginController);
             [self dismissViewControllerAnimated:YES completion:nil];
         } else {
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"邮箱或密码有误"
