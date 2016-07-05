@@ -132,9 +132,8 @@
 - (void)dataFromDetail {
     if (_indexPath) {   // 如果传过来NSIdexPath不为空, 即从详情页面打开, 为编辑页面，加载数据
         
-//        [self getModelWithIndexPath];
-        
         //内容
+        // MARK: 没网没内容?!
         self.contentText.text = [self.passedObject objectForKey:@"content"];
         self.countLabel.text = [NSString stringWithFormat:@"%ld", self.contentText.text.length];
         
@@ -185,15 +184,15 @@
     }
 }
 
-- (void)getModelWithIndexPath {
-    
-    self.model = [[WLLDailyNoteDataManager sharedInstance] getModelWithIndex:self.indexPath.row];
-    
-    // 取model时将model原始值赋给属性
-    self.backColor = self.model.backColor;
-    self.fontColor = self.model.fontColor;
-    self.contentFont = self.model.contentFont;
-}
+//- (void)getModelWithIndexPath {
+//    
+//    self.model = [[WLLDailyNoteDataManager sharedInstance] getModelWithIndex:self.indexPath.row];
+//    
+//    // 取model时将model原始值赋给属性
+//    self.backColor = self.model.backColor;
+//    self.fontColor = self.model.fontColor;
+//    self.contentFont = self.model.contentFont;
+//}
 - (void)getModelWithoutIndexPth {
     self.model = [[NoteDetail alloc] init];
     self.backColor = self.model.backColor;

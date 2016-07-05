@@ -434,6 +434,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
     DailyNoteCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
     
     CGFloat height = [cell heightForCell:[object objectForKey:@"content"]];
+    
     return height;
 }
 
