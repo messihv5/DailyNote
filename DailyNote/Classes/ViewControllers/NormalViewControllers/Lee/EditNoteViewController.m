@@ -347,7 +347,13 @@
             [self.passedObject setObject:data forKey:@"backColor"];
             
             //保存字体大小
-            [self.passedObject setObject:self.fontNumber forKey:@"fontNumber"];
+            //从详情页面传过来的object中解析的字体
+            NSString *passedFontNumber = [self.passedObject objectForKey:@"fontNumber"];
+            if (self.fontNumber != nil) {
+                [self.passedObject setObject:self.fontNumber forKey:@"fontNumber"];
+            } else {
+                [self.passedObject setObject:passedFontNumber forKey:@"fontNumber"];
+            }
             
             //保存字体的颜色
             NSMutableData *fontColor = [[NSMutableData alloc] init];
@@ -418,7 +424,11 @@
             [diary setObject:data forKey:@"backColor"];
             
             //保存字体大小
-            [diary setObject:self.fontNumber forKey:@"fontNumber"];
+            if (self.fontNumber != nil) {
+                [diary setObject:self.fontNumber forKey:@"fontNumber"];
+            } else {
+                [diary setObject:@"15" forKey:@"fontNumber"];
+            }
             
             //保存字体的颜色
             NSMutableData *fontColor = [[NSMutableData alloc] init];
