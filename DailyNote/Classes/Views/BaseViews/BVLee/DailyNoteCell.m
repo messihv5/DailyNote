@@ -38,7 +38,6 @@
     
     self.dateLabel.text = [NSString nt_monthAndYearFromDate:createdDate];
     
-    
     // 计算：1 获取要计算的字符串
     NSString *temp = self.contentLabel.text;
     // 计算：2 准备工作
@@ -65,10 +64,11 @@
     CGFloat height = 20.287109;
     
     if (!self.noteImage.image) {
+        
         if (rect.size.height <= 3 * height) {
-            return rect.size.height + 28 + 40;
+            return rect.size.height + self.timeView.height + 40;
         } else {
-            return 3 * height + 28 + 40;
+            return 3*height + self.timeView.height + 40;
         }
     } else {
         if (rect.size.height <= 3 * height) {

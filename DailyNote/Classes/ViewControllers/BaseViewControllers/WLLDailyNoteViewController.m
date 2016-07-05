@@ -177,8 +177,9 @@ static NSString  *const reuseIdentifier = @"note_cell";
 
 //给tableView添加一个alertView
 - (void)addAlertView {
-    CGRect alertViewRect = CGRectMake(kWidth / 2 - 100, kHeight / 2 - 20, 200, 40);
-    self.alertView = [[UIView alloc] initWithFrame:alertViewRect];
+    
+    self.alertView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
+    self.alertView.center = CGPointMake(kWidth*0.5, kHeight*0.5);
     
     self.upLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
     self.upLabel.text = @"日记已经加载完";
@@ -433,6 +434,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
     DailyNoteCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
     
     CGFloat height = [cell heightForCell:[object objectForKey:@"content"]];
+    
     return height;
 }
 

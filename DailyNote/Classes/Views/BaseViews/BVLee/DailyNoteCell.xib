@@ -25,7 +25,6 @@
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="600-ei-8xc">
                                 <rect key="frame" x="5" y="64" width="352" height="174"/>
-                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SUS-zw-iwc" userLabel="timeView">
                                 <rect key="frame" x="0.0" y="0.0" width="362" height="28"/>
