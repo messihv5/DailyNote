@@ -8,9 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
+#import "WLLView.h"
+
 @interface WLLCalendarViewController : UIViewController
 
+<<<<<<< HEAD
 //点击日历获得的日期字符串
 @property (copy, nonatomic) NSString *dateString;
+=======
+@property (nonatomic, strong) WLLView *WV;
+>>>>>>> 435ea65f0c4dd78f798afe0aed010f3b874dbd59
 
 @end

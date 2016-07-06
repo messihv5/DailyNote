@@ -20,20 +20,25 @@
 
 @implementation WLLCalendarViewController
 
+- (void)loadView {
+    self.WV = [[WLLView alloc] initWithFrame:CGRectMake(0, 0, kWidth, kHeight)];
+    self.view = self.WV;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     [self presentCalendarView];
-    
-    
 }
 
 - (void)presentCalendarView {
+    
     WLLCalendarView *calendarView = [WLLCalendarView showOnView:self.view];
     calendarView.showDelegate = self;
+    // MARK: ???
     calendarView.today = [NSDate date];
     calendarView.date = calendarView.today;
-    calendarView.frame = CGRectMake(0, 100, self.view.frame.size.width, 352);
+    calendarView.frame = CGRectMake(0, 100, kWidth, kHeight*0.7);
     calendarView.calendarBlock = ^(NSInteger day, NSInteger month, NSInteger year){
         
         self.dateString = [NSString stringWithFormat:@"%li-%li-%li", year, month, day];
