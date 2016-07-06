@@ -145,6 +145,8 @@
 		F3DFB41C1D2CDB1900898765 /* WLLCalendarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F3DFB41B1D2CDB1900898765 /* WLLCalendarView.xib */; };
 		F3DFB4251D2CE24700898765 /* WLLView.m in Sources */ = {isa = PBXBuildFile; fileRef = F3DFB4241D2CE24700898765 /* WLLView.m */; };
 		F3DFB42E1D2CF4E900898765 /* NSDate+WLLDate.m in Sources */ = {isa = PBXBuildFile; fileRef = F3DFB42D1D2CF4E900898765 /* NSDate+WLLDate.m */; };
+		F3DFB4321D2D010C00898765 /* WLLAlbumController.m in Sources */ = {isa = PBXBuildFile; fileRef = F3DFB4301D2D010C00898765 /* WLLAlbumController.m */; };
+		F3DFB4331D2D010C00898765 /* WLLAlbumController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F3DFB4311D2D010C00898765 /* WLLAlbumController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -364,6 +366,9 @@
 		F3DFB4241D2CE24700898765 /* WLLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLView.m; sourceTree = "<group>"; };
 		F3DFB42C1D2CF4E900898765 /* NSDate+WLLDate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+WLLDate.h"; sourceTree = "<group>"; };
 		F3DFB42D1D2CF4E900898765 /* NSDate+WLLDate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+WLLDate.m"; sourceTree = "<group>"; };
+		F3DFB42F1D2D010C00898765 /* WLLAlbumController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLAlbumController.h; sourceTree = "<group>"; };
+		F3DFB4301D2D010C00898765 /* WLLAlbumController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLAlbumController.m; sourceTree = "<group>"; };
+		F3DFB4311D2D010C00898765 /* WLLAlbumController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WLLAlbumController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -799,6 +804,9 @@
 				F309D9731D2A550D00E9D18A /* WLLCalendarViewController.m */,
 				F3DFB4231D2CE24700898765 /* WLLView.h */,
 				F3DFB4241D2CE24700898765 /* WLLView.m */,
+				F3DFB42F1D2D010C00898765 /* WLLAlbumController.h */,
+				F3DFB4301D2D010C00898765 /* WLLAlbumController.m */,
+				F3DFB4311D2D010C00898765 /* WLLAlbumController.xib */,
 			);
 			path = Lee;
 			sourceTree = "<group>";
@@ -1057,6 +1065,7 @@
 				4D888ABC1D08191700545F7D /* WLLPrivateCodeViewController.xib in Resources */,
 				4DD519761D27747F00745AA1 /* WLLFontView.xib in Resources */,
 				4D1C31001CF88D3700C675D7 /* UpGrade.png in Resources */,
+				F3DFB4331D2D010C00898765 /* WLLAlbumController.xib in Resources */,
 				4D649B931D1131290005276B /* README.txt in Resources */,
 				4D649B911D1131290005276B /* TencentOpenApi_IOS_Bundle.bundle in Resources */,
 				4D8A3F3E1CF3D7A1000C2D42 /* WLLShareViewController.xib in Resources */,
@@ -1166,6 +1175,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4DD519421D2772A300745AA1 /* WLLDailyNoteDataManager.m in Sources */,
+				F3DFB4321D2D010C00898765 /* WLLAlbumController.m in Sources */,
 				4DD28D161D04F37500ADA78D /* WLLSettingViewController.m in Sources */,
 				4D48D1C21CF5678600D9E4F1 /* WLLLogUpViewController.m in Sources */,
 				4D7AD7C71D1918EF005237DC /* WLLShareDetailViewController.m in Sources */,
