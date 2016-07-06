@@ -93,6 +93,7 @@
 		4D992C7A1D0BF7BD00A23C46 /* blueButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D992C791D0BF7BD00A23C46 /* blueButton.png */; };
 		4D992C7C1D0BF7C200A23C46 /* blue_selectedButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D992C7B1D0BF7C200A23C46 /* blue_selectedButton.png */; };
 		4D9C36041CFD3DEC003108A4 /* scenery.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D9C36031CFD3DEC003108A4 /* scenery.png */; };
+		4D9FDEF71D2D580600051DB0 /* WLLRootNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D9FDEF61D2D580600051DB0 /* WLLRootNavigationController.m */; };
 		4DA9CD641D0CF3190075D1B3 /* red_selectedButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DA9CD631D0CF3190075D1B3 /* red_selectedButton.png */; };
 		4DA9CD661D0CF31D0075D1B3 /* grayButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DA9CD651D0CF31D0075D1B3 /* grayButton.png */; };
 		4DA9CD681D0CF3220075D1B3 /* gray_selectedButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DA9CD671D0CF3220075D1B3 /* gray_selectedButton.png */; };
@@ -284,6 +285,8 @@
 		4D992C791D0BF7BD00A23C46 /* blueButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blueButton.png; sourceTree = "<group>"; };
 		4D992C7B1D0BF7C200A23C46 /* blue_selectedButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blue_selectedButton.png; sourceTree = "<group>"; };
 		4D9C36031CFD3DEC003108A4 /* scenery.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scenery.png; sourceTree = "<group>"; };
+		4D9FDEF51D2D580600051DB0 /* WLLRootNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLRootNavigationController.h; sourceTree = "<group>"; };
+		4D9FDEF61D2D580600051DB0 /* WLLRootNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLRootNavigationController.m; sourceTree = "<group>"; };
 		4DA9CD631D0CF3190075D1B3 /* red_selectedButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = red_selectedButton.png; sourceTree = "<group>"; };
 		4DA9CD651D0CF31D0075D1B3 /* grayButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = grayButton.png; sourceTree = "<group>"; };
 		4DA9CD671D0CF3220075D1B3 /* gray_selectedButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gray_selectedButton.png; sourceTree = "<group>"; };
@@ -493,6 +496,8 @@
 				4D7AD7C41D1918EF005237DC /* WLLShareDetailViewController.h */,
 				4D7AD7C51D1918EF005237DC /* WLLShareDetailViewController.m */,
 				4D7AD7C61D1918EF005237DC /* WLLShareDetailViewController.xib */,
+				4D9FDEF51D2D580600051DB0 /* WLLRootNavigationController.h */,
+				4D9FDEF61D2D580600051DB0 /* WLLRootNavigationController.m */,
 			);
 			name = WChao;
 			sourceTree = "<group>";
@@ -1189,6 +1194,7 @@
 				4D8A3EFD1CF3D14D000C2D42 /* DailyNote.xcdatamodeld in Sources */,
 				4D6E2DB81D0EB01E00AB8271 /* WLLSetReminderTimeViewController.m in Sources */,
 				4DD519821D27747F00745AA1 /* WLLSharedView.m in Sources */,
+				4D9FDEF71D2D580600051DB0 /* WLLRootNavigationController.m in Sources */,
 				4DD519431D2772A300745AA1 /* WLLMyColor.m in Sources */,
 				4DD519791D27747F00745AA1 /* WLLNoteBackgroundChoice.m in Sources */,
 				4DD519471D27731600745AA1 /* NoteDetail.m in Sources */,
