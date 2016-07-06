@@ -13,6 +13,7 @@
 #import "WLLConst.h"
 #import "NoteDetail.h"
 #import <AVOSCloud/AVOSCloud.h>
+#import "NSDate+WLLDate.h"
 
 #ifndef PrefixHeader_pch
 #define PrefixHeader_pch

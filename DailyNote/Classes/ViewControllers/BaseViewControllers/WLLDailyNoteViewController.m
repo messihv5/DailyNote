@@ -393,7 +393,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
 
 // 查看以前日志
 - (void)checkPastNotes:(UIBarButtonItem *)button {
-    WLLCalendarViewController *calendarVC = [[WLLCalendarViewController alloc] initWithNibName:@"WLLCalendarViewController" bundle:nil];
+    WLLCalendarViewController *calendarVC = [[WLLCalendarViewController alloc] init];
     [self.navigationController pushViewController:calendarVC animated:YES];
 }
 

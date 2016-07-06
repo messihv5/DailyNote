@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+#import "WLLView.h"
+
 @interface WLLCalendarViewController : UIViewController
+
+@property (nonatomic, strong) WLLView *WV;
 
 @end

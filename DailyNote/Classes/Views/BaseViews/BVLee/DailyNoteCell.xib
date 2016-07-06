@@ -104,7 +104,7 @@
                 <outlet property="timeView" destination="SUS-zw-iwc" id="kyw-2m-moA"/>
                 <outlet property="weekLabel" destination="1DS-32-q0S" id="1z4-Yw-ARt"/>
             </connections>
-            <point key="canvasLocation" x="133" y="31.5"/>
+            <point key="canvasLocation" x="77" y="-21.5"/>
         </tableViewCell>
     </objects>
 </document>
