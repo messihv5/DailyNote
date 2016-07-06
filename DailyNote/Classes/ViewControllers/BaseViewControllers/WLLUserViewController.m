@@ -18,11 +18,6 @@
 #import <ShareSDKUI/ShareSDK+SSUI.h>
 #import "WLLShareViewController.h"
 
-
-//屏幕宽高
-#define UIScreenWidth CGRectGetWidth([UIScreen mainScreen].bounds)
-#define UIScreenHeight CGRectGetHeight([UIScreen mainScreen].bounds)
-
 @interface WLLUserViewController ()<UITableViewDelegate,
                                     UITableViewDataSource,
                                     UIScrollViewDelegate,
@@ -79,8 +74,8 @@
     self.navigationController.navigationBar.hidden = YES;
     
     //计算用户获得的总赞数
-    AVQuery *query = [AVQuery queryWithClassName:@"Dairy"];
-    [query whereKey:@"isPrivate" equalTo:@"public"];
+    AVQuery *query = [AVQuery queryWithClassName:@"Diary"];
+//    [query whereKey:@"isPrivate" equalTo:@"public"];
     [query whereKey:@"belong" equalTo:self.theCurrentUser];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         NSInteger totalStar = 0;
@@ -106,7 +101,7 @@
 - (void)settingTableViewHeaderView {
     
     //查询背景图片和
-    CGRect viewRect = CGRectMake(0, 0, UIScreenWidth, UIScreenHeight / 3);
+    CGRect viewRect = CGRectMake(0, 0, kWidth, kHeight / 3);
     UIView *view = [[UIView alloc] initWithFrame:viewRect];
     view.backgroundColor = [UIColor greenColor];
 
@@ -130,7 +125,7 @@
     [view addSubview:self.theBackgroundImageView];
     
     
-    CGRect headImageViewRect = CGRectMake(UIScreenWidth / 2 - UIScreenHeight / 18, UIScreenHeight / 18, UIScreenHeight / 9, UIScreenHeight / 9);
+    CGRect headImageViewRect = CGRectMake(kWidth / 2 - kHeight / 18, kHeight / 18, kHeight / 9, kHeight / 9);
     self.headImageView = [[UIImageView alloc] initWithFrame:headImageViewRect];
     self.headImageView.backgroundColor = [UIColor purpleColor];
     
@@ -139,7 +134,7 @@
         NSData *headImageFileData = [file getData];
         self.headImageView.image = [UIImage imageWithData:headImageFileData];
     }];
-    self.headImageView.layer.cornerRadius = UIScreenHeight / 18;
+    self.headImageView.layer.cornerRadius = kHeight / 18;
     self.headImageView.layer.masksToBounds = YES;
     
     
@@ -149,33 +144,34 @@
     
     [view addSubview:self.headImageView];
     
-    CGRect nickNameLabelRect = CGRectMake(20, CGRectGetMaxY(headImageViewRect) + UIScreenHeight / 36, UIScreenWidth - 40, UIScreenHeight * 5 / 108);
+    CGRect nickNameLabelRect = CGRectMake(20, CGRectGetMaxY(headImageViewRect) + kHeight / 36, kWidth - 40, kHeight * 5 / 108);
     self.nickNameLabel = [[UILabel alloc] initWithFrame:nickNameLabelRect];
     self.nickNameLabel.textAlignment = NSTextAlignmentCenter;
     [view addSubview:self.nickNameLabel];
     
-    CGRect starImageViewRect = CGRectMake(UIScreenWidth / 2  - 10, CGRectGetMaxY(nickNameLabelRect), 20, UIScreenHeight * 5 / 108);
+    CGRect starImageViewRect = CGRectMake(kWidth / 2  - 10, CGRectGetMaxY(nickNameLabelRect), 20, kHeight * 5 / 108);
     self.starImageView = [[UIImageView alloc] initWithFrame:starImageViewRect];
-    self.starImageView.image = [UIImage imageNamed:@"star"];
+    self.starImageView.image = [UIImage imageNamed:@"heartSelected15X15"];
+    self.starImageView.contentMode = UIViewContentModeScaleAspectFit;
     [view addSubview:self.starImageView];
     
-    CGRect starNumberLabelRect = CGRectMake(CGRectGetMaxX(starImageViewRect) + 5, starImageViewRect.origin.y, 50, UIScreenHeight * 5 / 108);
+    CGRect starNumberLabelRect = CGRectMake(CGRectGetMaxX(starImageViewRect) + 5, starImageViewRect.origin.y, 50, kHeight * 5 / 108);
     self.starNumberLabel = [[UILabel alloc] initWithFrame:starNumberLabelRect];
     self.starNumberLabel.text = @"100";
     self.starNumberLabel.textAlignment = NSTextAlignmentLeft;
     [view addSubview:self.starNumberLabel];
     
-    CGRect signatureLabelRect = CGRectMake(20, CGRectGetMaxY(starNumberLabelRect), UIScreenWidth - 40, UIScreenHeight * 5 / 108);
+    CGRect signatureLabelRect = CGRectMake(20, CGRectGetMaxY(starNumberLabelRect), kWidth - 40, kHeight * 5 / 108);
     self.signatureLabel = [[UILabel alloc] initWithFrame:signatureLabelRect];
     self.signatureLabel.text = @"Life is so hard now, but you have no choice, you have to move on, man";
     self.signatureLabel.textAlignment = NSTextAlignmentCenter;
     [view addSubview:self.signatureLabel];
     self.userTableView.tableHeaderView = view;
     
-    CGRect footViewRect = CGRectMake(0, 0, UIScreenWidth, 100);
+    CGRect footViewRect = CGRectMake(0, 0, kWidth, 100);
     UIView *footView = [[UIView alloc] initWithFrame:footViewRect];
     
-    CGRect logOutButtonRect = CGRectMake(UIScreenWidth / 2 - 100, 10, 200, 30);
+    CGRect logOutButtonRect = CGRectMake(kWidth / 2 - 100, 10, 200, 30);
     UIButton *logOutButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [logOutButton setTitle:@"退出系统" forState:UIControlStateNormal];
     logOutButton.backgroundColor = [UIColor greenColor];
@@ -364,10 +360,10 @@
     
     CGFloat offset = scrollView.contentOffset.y;
     if (offset < 0) {
-        CGFloat heightAfterScroll = UIScreenHeight / 3 - (offset);
-        CGFloat zoomingScale = heightAfterScroll / (UIScreenHeight / 3);
-        self.theBackgroundImageView.frame = CGRectMake(-(UIScreenWidth * zoomingScale - UIScreenWidth) / 2, offset,
-                                                       UIScreenWidth * zoomingScale, heightAfterScroll);
+        CGFloat heightAfterScroll = kHeight / 3 - (offset);
+        CGFloat zoomingScale = heightAfterScroll / (kHeight / 3);
+        self.theBackgroundImageView.frame = CGRectMake(-(kWidth * zoomingScale - kWidth) / 2, offset,
+                                                       kWidth * zoomingScale, heightAfterScroll);
     }
 }
 
@@ -488,6 +484,13 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
     [self.theCurrentUser saveInBackground];
     
     [picker dismissViewControllerAnimated:YES completion:nil];
+}
+
+
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    NSLog(@"hey i' here");
+    return UIStatusBarStyleLightContent;
 }
 
 #pragma mark -

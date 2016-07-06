@@ -205,6 +205,8 @@
     self.upLabel.alpha = 0.5;
     self.upLabel.textAlignment = NSTextAlignmentCenter;
     self.upLabel.backgroundColor = [UIColor blackColor];
+    self.upLabel.layer.masksToBounds = YES;
+    self.upLabel.layer.cornerRadius = 5;
     
     [self.alertView addSubview:self.upLabel];
     
