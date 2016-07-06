@@ -165,6 +165,10 @@ static NSString *const WLLCalendarCellIdentifier = @"calendar_cell";
     if (self.calendarBlock) {
         self.calendarBlock(day, [comp month], [comp year]);
     }
+    
+    if (_showDelegate && [_showDelegate respondsToSelector:@selector(pushNotePage)]) {
+        [_showDelegate pushNotePage];
+    }
 }
 
 #pragma - 前一月和下一月
