@@ -15,6 +15,8 @@
 
 @interface WLLDailyNoteDataManager : NSObject
 
+/* 存储日志 */
+@property (nonatomic, strong) NSMutableArray *noteData;
 
 
 /**
@@ -56,5 +58,8 @@
  *  @param note 日志模型
  */
 - (void)addDailyNoteWithNote:(NoteDetail *)note;
+
+//根据点击的日期加载日记
+- (void)loadTenDiariesOfDateString:(NSString *)dateString finished:(void (^)())finished;
 
 @end

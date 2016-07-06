@@ -1390,6 +1390,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/ShareSDK/Support/PlatformSDK/WeChatSDK",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.JustThree.DailyNote;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

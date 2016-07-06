@@ -10,4 +10,7 @@
 
 @interface WLLCalendarViewController : UIViewController
 
+//点击日历获得的日期字符串
+@property (copy, nonatomic) NSString *dateString;
+
 @end

@@ -8,11 +8,13 @@
 
 #import "WLLCalendarViewController.h"
 #import "WLLCalendarView.h"
-#import "WLLNoteDetailViewController.h"
+#import "WLLDailyNoteViewController.h"
 
 @interface WLLCalendarViewController ()<ShowNoteDelegate>
 
 @property (nonatomic, strong) WLLCalendarView *calendarView;
+
+@property (assign, nonatomic) BOOL isFromCalendar;
 
 @end
 
@@ -34,15 +36,21 @@
     calendarView.frame = CGRectMake(0, 100, self.view.frame.size.width, 352);
     calendarView.calendarBlock = ^(NSInteger day, NSInteger month, NSInteger year){
         
+        self.dateString = [NSString stringWithFormat:@"%li-%li-%li", year, month, day];
         NSLog(@"%li-%li-%li", year,month,day);
     };
     self.calendarView = calendarView;
 }
 
 - (void)pushNotePage {
-    WLLNoteDetailViewController *NoteDetailVC = [[WLLNoteDetailViewController alloc] initWithNibName:@"WLLNoteDetailViewController" bundle:nil];
+    WLLDailyNoteViewController *dailyNoteVC = [[WLLDailyNoteViewController alloc] initWithNibName:@"WLLDailyNoteViewController" bundle:nil];
     
-    [self.navigationController pushViewController:NoteDetailVC animated:YES];
+    //给dailyNote传个标记，判断dailyNote来自calendar的点击
+    self.isFromCalendar = YES;
+    dailyNoteVC.isFromCalendar = self.isFromCalendar;
+    dailyNoteVC.dateString = self.dateString;
+    
+    [self.navigationController pushViewController:dailyNoteVC animated:YES];
     
 }
 

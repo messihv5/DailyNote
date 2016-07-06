@@ -40,6 +40,7 @@
 @property (assign, nonatomic) BOOL isLoading;
 @property (assign, nonatomic) BOOL isRefreshing;
 @property (assign, nonatomic) BOOL isBackFromLoginController;
+@property (strong, nonatomic) NSDate *dateFromCalendar;
 
 @end
 
@@ -75,7 +76,17 @@ static NSString  *const reuseIdentifier = @"note_cell";
     //给tableFooterView添加标签
     [self addViewToFooterView];
     
+    //添加提示框
     [self addAlertView];
+    
+    if (self.isFromCalendar == YES) {
+        
+        //从calendar点击来的，加载对应的那一天的日记
+        [[WLLDailyNoteDataManager sharedInstance] loadTenDiariesOfDateString:self.dateString finished:^{
+            self.data = [WLLDailyNoteDataManager sharedInstance].noteData;
+            [self.notesTableView reloadData];
+        }];
+    }
 }
 
 //数据数组懒加载
@@ -102,60 +113,142 @@ static NSString  *const reuseIdentifier = @"note_cell";
 //下拉刷新方法，加载最新的日记
 - (void)refreshAction:(UIRefreshControl *)refreshControl {
     [refreshControl beginRefreshing];
-    
-    //刷新数据，加载最新的数据，当数组存储了数据，查询的新数据插到数组的最前面
-    if (self.data.count != 0) {
-        AVObject *firstObject = self.data[0];
+
+    if (self.isFromCalendar) {
         
-        NSDate *firstDate = firstObject.createdAt;
+        //从calender点击过来的刷新
+        NSString *zeroString = [self.dateString stringByAppendingString:@" 00:00:00"];
         
-        AVQuery *query = [AVQuery queryWithClassName:@"Diary"];
+        NSString *twentyfourString = [self.dateString stringByAppendingString:@" 23:59:59"];
         
-        [query orderByDescending:@"createdAt"];
-        [query whereKey:@"belong" equalTo:[AVUser currentUser]];
-        [query whereKey:@"createdAt" greaterThan:firstDate];
-        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            if (error == nil) {
-                if (objects.count != 0) {
-                    NSInteger number = objects.count;
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        
+        [formatter setDateFormat:@"yyy-MM-dd HH:mm:ss"];
+        
+        NSDate *zeroDate = [formatter dateFromString:zeroString];
+        
+        NSDate *twentyfourDate = [formatter dateFromString:twentyfourString];
+        
+        //刷新数据，加载最新的数据，当数组存储了数据，查询的新数据插到数组的最前面
+        if (self.data.count != 0) {
+            AVObject *firstObject = self.data[0];
+            
+            NSDate *firstDate = firstObject.createdAt;
+            
+            AVQuery *dateQuery1 = [AVQuery queryWithClassName:@"Diary"];
+            
+            [dateQuery1 whereKey:@"belong" equalTo:[AVUser currentUser]];
+            [dateQuery1 whereKey:@"createdAt" greaterThan:firstDate];
+            
+            AVQuery *dateQuery2 = [AVQuery queryWithClassName:@"Diary"];
+            [dateQuery2 whereKey:@"createdAt" lessThanOrEqualTo:twentyfourDate];
+            
+            AVQuery *query = [AVQuery andQueryWithSubqueries:@[dateQuery1,dateQuery2]];
+            
+            [query orderByDescending:@"createdAt"];
+            [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                if (error == nil) {
+                    if (objects.count != 0) {
+                        NSInteger number = objects.count;
                         
-                    NSRange range = NSMakeRange(0, number);
+                        NSRange range = NSMakeRange(0, number);
                         
-                    NSIndexSet *set = [NSIndexSet indexSetWithIndexesInRange:range];
+                        NSIndexSet *set = [NSIndexSet indexSetWithIndexesInRange:range];
                         
-                    [self.data insertObjects:objects atIndexes:set];
-                    [self.notesTableView reloadData];
-                    [refreshControl endRefreshing];
-                } else {
-                    [refreshControl endRefreshing];
-                    return;
-                }
+                        [self.data insertObjects:objects atIndexes:set];
+                        [self.notesTableView reloadData];
+                        [refreshControl endRefreshing];
+                    } else {
+                        [refreshControl endRefreshing];
+                        return;
+                    }
                     
-            } else {
-                [refreshControl endRefreshing];
-                return;
-            }
-        }];
-    } else {
-            //数据数组中没有数据时，数据数组直接添加数据
-        AVQuery *query = [AVQuery queryWithClassName:@"Diary"];
-        [query orderByDescending:@"createdAt"];
-        [query whereKey:@"belong" equalTo:[AVUser currentUser]];
-        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            if (error == nil) {
-                if (objects.count != 0) {
-                    [self.data addObjectsFromArray:objects];
-                    [self.notesTableView reloadData];
-                    [refreshControl endRefreshing];
                 } else {
                     [refreshControl endRefreshing];
                     return;
                 }
-            } else {
-                [refreshControl endRefreshing];
-                return;
-            }
-        }];
+            }];
+        } else {
+            //数据数组中没有数据时，数据数组直接添加数据
+            AVQuery *query = [AVQuery queryWithClassName:@"Diary"];
+            
+            [query whereKey:@"createdAt" lessThanOrEqualTo:twentyfourDate];
+            [query orderByDescending:@"createdAt"];
+            [query whereKey:@"belong" equalTo:[AVUser currentUser]];
+            [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                if (error == nil) {
+                    if (objects.count != 0) {
+                        [self.data addObjectsFromArray:objects];
+                        [self.notesTableView reloadData];
+                        [refreshControl endRefreshing];
+                    } else {
+                        [refreshControl endRefreshing];
+                        return;
+                    }
+                } else {
+                    [refreshControl endRefreshing];
+                    return;
+                }
+            }];
+        }
+
+    } else {
+        //不是从calendar过来的数据,加载当前用户的所有数据
+        
+        //刷新数据，加载最新的数据，当数组存储了数据，查询的新数据插到数组的最前面
+        if (self.data.count != 0) {
+            AVObject *firstObject = self.data[0];
+            
+            NSDate *firstDate = firstObject.createdAt;
+            
+            AVQuery *query = [AVQuery queryWithClassName:@"Diary"];
+            
+            [query orderByDescending:@"createdAt"];
+            [query whereKey:@"belong" equalTo:[AVUser currentUser]];
+            [query whereKey:@"createdAt" greaterThan:firstDate];
+            [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                if (error == nil) {
+                    if (objects.count != 0) {
+                        NSInteger number = objects.count;
+                        
+                        NSRange range = NSMakeRange(0, number);
+                        
+                        NSIndexSet *set = [NSIndexSet indexSetWithIndexesInRange:range];
+                        
+                        [self.data insertObjects:objects atIndexes:set];
+                        [self.notesTableView reloadData];
+                        [refreshControl endRefreshing];
+                    } else {
+                        [refreshControl endRefreshing];
+                        return;
+                    }
+                    
+                } else {
+                    [refreshControl endRefreshing];
+                    return;
+                }
+            }];
+        } else {
+            //数据数组中没有数据时，数据数组直接添加数据
+            AVQuery *query = [AVQuery queryWithClassName:@"Diary"];
+            [query orderByDescending:@"createdAt"];
+            [query whereKey:@"belong" equalTo:[AVUser currentUser]];
+            [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                if (error == nil) {
+                    if (objects.count != 0) {
+                        [self.data addObjectsFromArray:objects];
+                        [self.notesTableView reloadData];
+                        [refreshControl endRefreshing];
+                    } else {
+                        [refreshControl endRefreshing];
+                        return;
+                    }
+                } else {
+                    [refreshControl endRefreshing];
+                    return;
+                }
+            }];
+        }
     }
 }
 
@@ -231,30 +324,73 @@ static NSString  *const reuseIdentifier = @"note_cell";
 
 //每次上拉最多加载10篇日记
 - (void)loadTenMoreDairies {
-    
-    AVObject *object = [self.data lastObject];
-    
-    NSDate *date = object.createdAt;
-    
-    AVQuery *query = [AVQuery queryWithClassName:@"Diary"];
-    [query whereKey:@"belong" equalTo:[AVUser currentUser]];
-    [query whereKey:@"createdAt" lessThan:date];
-    [query orderByDescending:@"createdAt"];
-    query.limit = 10;
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (error == nil) {
-            if (objects.count != 0) {
-                [self.data addObjectsFromArray:objects];
-                [self.notesTableView reloadData];
-                self.downLoadLabel.hidden = NO;
+    if (self.isFromCalendar) {
+        NSString *zeroString = [self.dateString stringByAppendingString:@" 00:00:00"];
+        
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        
+        [formatter setDateFormat:@"yyy-MM-dd HH:mm:ss"];
+        
+        NSDate *zeroDate = [formatter dateFromString:zeroString];
+        
+        AVObject *object = [self.data lastObject];
+        
+        NSDate *date = object.createdAt;
+        
+        AVQuery *dateQuery1 = [AVQuery queryWithClassName:@"Diary"];
+        
+        [dateQuery1 whereKey:@"belong" equalTo:[AVUser currentUser]];
+        [dateQuery1 whereKey:@"createdAt" lessThan:date];
+        dateQuery1.limit = 10;
+        
+        AVQuery *dateQuery2 = [AVQuery queryWithClassName:@"Diary"];
+        
+        [dateQuery2 whereKey:@"createdAt" greaterThanOrEqualTo:zeroDate];
+        
+        AVQuery *query = [AVQuery andQueryWithSubqueries:@[dateQuery1,dateQuery2]];
+        [query orderByDescending:@"createdAt"];
+
+        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if (error == nil) {
+                if (objects.count != 0) {
+                    [self.data addObjectsFromArray:objects];
+                    [self.notesTableView reloadData];
+                    self.downLoadLabel.hidden = NO;
+                } else {
+                }
             } else {
+                self.downLoadLabel.text = @"网络错误";
+                self.downLoadLabel.hidden = NO;
             }
-        } else {
-            self.downLoadLabel.text = @"网络错误";
-            self.downLoadLabel.hidden = NO;
-        }
-        self.isLoading = NO;
-    }];
+            self.isLoading = NO;
+        }];
+
+    } else {
+        AVObject *object = [self.data lastObject];
+        
+        NSDate *date = object.createdAt;
+        
+        AVQuery *query = [AVQuery queryWithClassName:@"Diary"];
+        [query whereKey:@"belong" equalTo:[AVUser currentUser]];
+        [query whereKey:@"createdAt" lessThan:date];
+        [query orderByDescending:@"createdAt"];
+        query.limit = 10;
+        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if (error == nil) {
+                if (objects.count != 0) {
+                    [self.data addObjectsFromArray:objects];
+                    [self.notesTableView reloadData];
+                    self.downLoadLabel.hidden = NO;
+                } else {
+                }
+            } else {
+                self.downLoadLabel.text = @"网络错误";
+                self.downLoadLabel.hidden = NO;
+            }
+            self.isLoading = NO;
+        }];
+    }
+    
 }
 
 // 加载 barButton Item
@@ -308,7 +444,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
     }
     
     //如果用户登录，加载一次日记（后面视图再次出现不重复执行，而是进行刷星操作）
-    if (self.isBackFromLoginController == NO && [AVUser currentUser]) {
+    if (self.isBackFromLoginController == NO && [AVUser currentUser] && self.isFromCalendar == NO) {
         [self loadTenDiaries];
     }
     
@@ -437,6 +573,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
     
     return height;
 }
+
 
 
 

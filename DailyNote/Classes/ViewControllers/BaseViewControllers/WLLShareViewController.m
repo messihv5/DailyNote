@@ -360,7 +360,9 @@
     
     //获取日记的创建时间
     NSDate *createdDate = [object objectForKey:@"createdAt"];
+    
     NSDate *currentDate = [NSDate date];
+    
     NSTimeInterval timeInterval = [currentDate timeIntervalSinceDate:createdDate];
     
     if (timeInterval / (24 * 60 * 60) >= 1) {
