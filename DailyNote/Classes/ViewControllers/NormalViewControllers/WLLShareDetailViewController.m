@@ -77,6 +77,8 @@
     self.alreadyStaredLabel.backgroundColor = [UIColor darkTextColor];
     self.alreadyStaredLabel.alpha = 0.6;
     self.alreadyStaredLabel.hidden = YES;
+    self.alreadyStaredLabel.layer.masksToBounds = YES;
+    self.alreadyStaredLabel.layer.cornerRadius = 5;
     
     self.alreadyCollectionLabel = [[UILabel alloc] initWithFrame:alertLabelRect];
     self.alreadyCollectionLabel.textAlignment = NSTextAlignmentCenter;
@@ -84,6 +86,8 @@
     self.alreadyCollectionLabel.backgroundColor = [UIColor darkTextColor];
     self.alreadyCollectionLabel.alpha = 0.7;
     self.alreadyCollectionLabel.hidden = YES;
+    self.alreadyCollectionLabel.layer.masksToBounds = YES;
+    self.alreadyCollectionLabel.layer.cornerRadius = 5;
     
     [alertView addSubview:self.alreadyStaredLabel];
     [alertView addSubview:self.alreadyCollectionLabel];

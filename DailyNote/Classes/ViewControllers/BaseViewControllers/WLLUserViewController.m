@@ -111,7 +111,7 @@
     view.backgroundColor = [UIColor greenColor];
 
     self.theBackgroundImageView = [[UIImageView alloc] initWithFrame:viewRect];
-    self.theBackgroundImageView.backgroundColor = [UIColor colorWithRed:1 green:0.1 blue:0.1 alpha:1];
+    self.theBackgroundImageView.backgroundColor = [UIColor cyanColor];
     
     NSString *nickName = [self.theCurrentUser objectForKey:@"nickName"];
     NSLog(@"%@", nickName);
@@ -132,7 +132,7 @@
     
     CGRect headImageViewRect = CGRectMake(UIScreenWidth / 2 - UIScreenHeight / 18, UIScreenHeight / 18, UIScreenHeight / 9, UIScreenHeight / 9);
     self.headImageView = [[UIImageView alloc] initWithFrame:headImageViewRect];
-    self.headImageView.backgroundColor = [UIColor cyanColor];
+    self.headImageView.backgroundColor = [UIColor purpleColor];
     
     AVFile *headImageFile = [self.theCurrentUser objectForKey:@"headImage"];
     [AVFile getFileWithObjectId:headImageFile.objectId withBlock:^(AVFile *file, NSError *error) {
