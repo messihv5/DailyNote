@@ -126,8 +126,6 @@
 		4DD5197B1D27747F00745AA1 /* WLLNoteBackgroundColorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DD519661D27747F00745AA1 /* WLLNoteBackgroundColorView.m */; };
 		4DD5197C1D27747F00745AA1 /* WLLNoteBackgroundColorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4DD519671D27747F00745AA1 /* WLLNoteBackgroundColorView.xib */; };
 		4DD5197D1D27747F00745AA1 /* WLLCategoryButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DD519691D27747F00745AA1 /* WLLCategoryButton.m */; };
-		4DD519801D27747F00745AA1 /* WLLNotesCategoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DD5196E1D27747F00745AA1 /* WLLNotesCategoryView.m */; };
-		4DD519811D27747F00745AA1 /* WLLNotesCategoryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4DD5196F1D27747F00745AA1 /* WLLNotesCategoryView.xib */; };
 		4DD519821D27747F00745AA1 /* WLLSharedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DD519711D27747F00745AA1 /* WLLSharedView.m */; };
 		4DD519831D27747F00745AA1 /* WLLToolView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DD519731D27747F00745AA1 /* WLLToolView.m */; };
 		4DD519841D27747F00745AA1 /* WLLToolView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4DD519741D27747F00745AA1 /* WLLToolView.xib */; };
@@ -335,9 +333,6 @@
 		4DD519671D27747F00745AA1 /* WLLNoteBackgroundColorView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WLLNoteBackgroundColorView.xib; sourceTree = "<group>"; };
 		4DD519681D27747F00745AA1 /* WLLCategoryButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLCategoryButton.h; sourceTree = "<group>"; };
 		4DD519691D27747F00745AA1 /* WLLCategoryButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLCategoryButton.m; sourceTree = "<group>"; };
-		4DD5196D1D27747F00745AA1 /* WLLNotesCategoryView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLNotesCategoryView.h; sourceTree = "<group>"; };
-		4DD5196E1D27747F00745AA1 /* WLLNotesCategoryView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLNotesCategoryView.m; sourceTree = "<group>"; };
-		4DD5196F1D27747F00745AA1 /* WLLNotesCategoryView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WLLNotesCategoryView.xib; sourceTree = "<group>"; };
 		4DD519701D27747F00745AA1 /* WLLSharedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLSharedView.h; sourceTree = "<group>"; };
 		4DD519711D27747F00745AA1 /* WLLSharedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLSharedView.m; sourceTree = "<group>"; };
 		4DD519721D27747F00745AA1 /* WLLToolView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLToolView.h; sourceTree = "<group>"; };
@@ -871,9 +866,6 @@
 				4DD5195B1D27747F00745AA1 /* ToolViewSubViews */,
 				4DD519681D27747F00745AA1 /* WLLCategoryButton.h */,
 				4DD519691D27747F00745AA1 /* WLLCategoryButton.m */,
-				4DD5196D1D27747F00745AA1 /* WLLNotesCategoryView.h */,
-				4DD5196E1D27747F00745AA1 /* WLLNotesCategoryView.m */,
-				4DD5196F1D27747F00745AA1 /* WLLNotesCategoryView.xib */,
 				4DD519701D27747F00745AA1 /* WLLSharedView.h */,
 				4DD519711D27747F00745AA1 /* WLLSharedView.m */,
 				4DD519721D27747F00745AA1 /* WLLToolView.h */,
@@ -1028,7 +1020,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4DD519811D27747F00745AA1 /* WLLNotesCategoryView.xib in Resources */,
 				4D1550BC1CFD7270001CF139 /* share.png in Resources */,
 				4DDB2AF91CFF1732002D7784 /* smallStar.png in Resources */,
 				4DD5197A1D27747F00745AA1 /* WLLNoteBackgroundChoice.xib in Resources */,
@@ -1195,7 +1186,6 @@
 				4D1550CE1CFD8A11001CF139 /* UserInfo.m in Sources */,
 				4D6E2D941D0E9CCE00AB8271 /* WLLAboutDailyNoteViewController.m in Sources */,
 				4D1550CD1CFD8A11001CF139 /* UserInfo+CoreDataProperties.m in Sources */,
-				4DD519801D27747F00745AA1 /* WLLNotesCategoryView.m in Sources */,
 				4D48D1C71CF56CDA00D9E4F1 /* WLLResetPasswordViewController.m in Sources */,
 				4D1C30F01CF8856F00C675D7 /* SystemModel.m in Sources */,
 				4D96D6B61D0FF46A00AC23FD /* WLLTimePickerController.m in Sources */,

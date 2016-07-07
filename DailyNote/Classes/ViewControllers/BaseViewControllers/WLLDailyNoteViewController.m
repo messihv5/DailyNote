@@ -11,7 +11,6 @@
 #import "WLLNoteDetailViewController.h"
 #import "EditNoteViewController.h"
 #import "WLLCategoryButton.h"
-#import "WLLNotesCategoryView.h"
 #import "WLLDailyNoteDataManager.h"
 #import "WLLLogInViewController.h"
 #import "WLLCalendarViewController.h"
@@ -20,8 +19,6 @@
 
 /* 日记页面 */
 @property (weak, nonatomic) IBOutlet UITableView *notesTableView;
-/* 日记分类页面 */
-@property (nonatomic, strong) WLLNotesCategoryView *notesCategoryView;
 /* 判断日记分类页面隐藏与否 */
 @property (nonatomic, assign, getter=isHidden) BOOL hidden;
 /* 日志页面 */

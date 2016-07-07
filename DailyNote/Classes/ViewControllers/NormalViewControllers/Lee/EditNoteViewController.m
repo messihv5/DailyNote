@@ -8,7 +8,6 @@
 
 #import "EditNoteViewController.h"
 #import "WLLCategoryButton.h"
-#import "WLLNotesCategoryView.h"
 #import "WLLDailyNoteDataManager.h"
 #import "WLLToolView.h"
 #import "WLLNoteDetailViewController.h"
@@ -19,13 +18,11 @@
 #import <CoreLocation/CoreLocation.h>
 
 
-@interface EditNoteViewController ()<UITextViewDelegate, ToolViewDelegate, ChangeFontDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, ChangeNoteBackgroundColorDelegate, CancelChoiceDelegate, CategoryEditViewDelegate, CLLocationManagerDelegate>
+@interface EditNoteViewController ()<UITextViewDelegate, ToolViewDelegate, ChangeFontDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, ChangeNoteBackgroundColorDelegate, CancelChoiceDelegate, CLLocationManagerDelegate>
 /* 判断日记分类页面隐藏与否 */
 @property (nonatomic, assign, getter=isHidden) BOOL hidden;
 /* 控制键盘显示/隐藏 */
 @property (nonatomic, assign) BOOL is;
-/* 分类tableView */
-@property (nonatomic, weak) WLLNotesCategoryView *notesCategoryView;
 /* 编辑框 */
 @property (weak, nonatomic) IBOutlet UITextView *contentText;
 /* 计数标签 */
@@ -184,15 +181,6 @@
     }
 }
 
-//- (void)getModelWithIndexPath {
-//    
-//    self.model = [[WLLDailyNoteDataManager sharedInstance] getModelWithIndex:self.indexPath.row];
-//    
-//    // 取model时将model原始值赋给属性
-//    self.backColor = self.model.backColor;
-//    self.fontColor = self.model.fontColor;
-//    self.contentFont = self.model.contentFont;
-//}
 - (void)getModelWithoutIndexPth {
     self.model = [[NoteDetail alloc] init];
     self.backColor = self.model.backColor;
@@ -205,11 +193,6 @@
     
     [super viewDidAppear:YES];
     
-    // 分类页面初始
-    self.notesCategoryView = [WLLNotesCategoryView viewFromXib];
-    
-    [self.view addSubview:self.notesCategoryView];
-    self.notesCategoryView.categoryDelegate = self;
     self.hidden = YES;
     
     // 初始化遮盖view

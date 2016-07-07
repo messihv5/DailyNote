@@ -145,51 +145,6 @@
     [self.navigationController pushViewController:self.EditVC animated:YES];
 }
 
-//#pragma mark - 翻页响应
-//// 向后翻页
-//- (IBAction)clickToForward:(UIButton *)sender {
-//    //
-//    self.indexs++;
-//    
-//    NSInteger count = [[WLLDailyNoteDataManager sharedInstance] countOfNoteArray];
-//    if (self.indexs > count - 1) {  // 如果indexs 大于日志数组下标 弹出提示
-//        UIAlertController *tip = [UIAlertController alertControllerWithTitle:nil message:@"已经是最后一篇日记了~~~" preferredStyle:UIAlertControllerStyleAlert];
-//        
-//        [self presentViewController:tip animated:YES completion:^{
-//            
-//            [self dismissViewControllerAnimated:YES completion:nil];
-//    
-//        }];
-//        // 每超出数组下标一次, 减回一次
-//        self.indexs--;
-//        
-//    } else {    // 从日志页面加载数据
-//        [self dataFromNoteDaily];
-//    }
-//}
-//
-//// 向前翻页
-//- (IBAction)clickToBackward:(UIButton *)sender {
-//    
-//    self.indexs--;
-//    if (self.indexs < 0) {  // 如果indexs小于下标
-//        UIAlertController *tip = [UIAlertController alertControllerWithTitle:nil message:@"没有上篇日记了~~~" preferredStyle:UIAlertControllerStyleAlert];
-//        
-//        [self presentViewController:tip animated:YES completion:^{
-//            
-//            [self dismissViewControllerAnimated:YES completion:nil];
-//            
-//        }];
-//        // 每向前多翻一次, 加回一次
-//        self.indexs++;
-//        
-//    } else {    // 从日志页面加载数据
-//        //[self.EditVC.indexPath setValue:@(self.indexs) forKey:@"row"];
-//        [self dataFromNoteDaily];
-//    }
-//}
-
-
 
 #pragma mark - 分享到三方
 - (IBAction)sharedToThirdParty:(UIButton *)sender {
