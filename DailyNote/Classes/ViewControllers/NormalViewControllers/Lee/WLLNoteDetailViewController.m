@@ -94,8 +94,8 @@
     
     self.monthAndYearLabel.text = dateString;
     
-    self.weekDayLabel.text = self.model.weekLabel;
-    self.timeLabel.text = self.model.time;
+//    self.weekDayLabel.text = self.model.weekLabel;
+//    self.timeLabel.text = self.model.time;
     
     //背景颜色赋值
     NSData *colorData = [self.passedObject objectForKey:@"backColor"];

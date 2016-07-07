@@ -38,7 +38,7 @@
     self.backgroundImageView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.backgroundImageView];
     
-    CGRect instructionLabelRect = CGRectMake(20, ScreenHeight / 16, ScreenWidth - 40, ScreenHeight / 8);
+    CGRect instructionLabelRect = CGRectMake(20, ScreenHeight / 8, ScreenWidth - 40, ScreenHeight / 8);
     self.instructionLabel = [[UILabel alloc] initWithFrame:instructionLabelRect];
     self.instructionLabel.text = @"请输入手势";
     self.instructionLabel.textAlignment = NSTextAlignmentCenter;
@@ -139,9 +139,11 @@
             self.secondTime = codeString;
         }
         if ([self.secondTime isEqualToString:self.firstTime]) {
-            NSUserDefaults *user = [NSUserDefaults standardUserDefaults];
-            [user setObject:codeString forKey:@"lockCode"];
-            [user synchronize];
+//            NSUserDefaults *user = [NSUserDefaults standardUserDefaults];
+//            [user setObject:codeString forKey:@"lockCode"];
+//            [user synchronize];
+            [[AVUser currentUser] setObject:codeString forKey:@"lockCode"];
+            [[AVUser currentUser] saveInBackground];
             [self.navigationController popViewControllerAnimated:YES];
         } else {
             if (self.i == 1) {
@@ -151,8 +153,9 @@
             }
         }
     } else {
-        NSUserDefaults *user = [NSUserDefaults standardUserDefaults];
-        NSString *code = [user objectForKey:@"lockCode"];
+//        NSUserDefaults *user = [NSUserDefaults standardUserDefaults];
+//        NSString *code = [user objectForKey:@"lockCode"];
+        NSString *code = [[AVUser currentUser] objectForKey:@"lockCode"];
         if ([code isEqualToString:codeString]) {
             [self dismissViewControllerAnimated:YES completion:nil];
         }

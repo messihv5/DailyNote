@@ -55,6 +55,7 @@
     NSData *navigationImageData = [self.theCurrentUser objectForKey:@"navigationImage"];
     NSData *tabbarImageData = [self.theCurrentUser objectForKey:@"tabbarImage"];
     
+    //根据dailyNote页面保存的四种风格的导航栏，解档
     NSData *imageData = [self.userDefaults objectForKey:@"navigationImagesAndTabbarImages"];
     NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:imageData];
     self.tabbarImage1 = [unarchiver decodeObjectForKey:@"tabbarImage1"];
@@ -66,8 +67,7 @@
     self.tabbarImage4 = [unarchiver decodeObjectForKey:@"tabbarImage4"];
     self.navigationImage4 = [unarchiver decodeObjectForKey:@"navigationImage4"];
     
-    
-    
+    //如果用户没保存主题，就默认第一主题，保存了则用自己保存的主题
     if (navigationImageData == nil && tabbarImageData == nil) {
         self.navigationImageView.image = self.navigationImage1;
         self.tabbarImageView.image = self.tabbarImage1;
@@ -76,8 +76,6 @@
         self.tabbarImageView.image = [UIImage imageWithData:tabbarImageData];
     }
 }
-
-
 
 //配置4个改变导航栏颜色的按钮
 - (void)addFourButton {
@@ -144,8 +142,16 @@
     NSData *naviData = UIImagePNGRepresentation(self.navigationImageView.image);
     NSData *tabbarData = UIImagePNGRepresentation(self.tabbarImageView.image);
     
+    //把颜色归档
+    NSMutableData *colorData = [[NSMutableData alloc] init];
+    
+    NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:colorData];
+    [archiver encodeObject:[UIColor blueColor] forKey:@"navigationColor"];
+    [archiver finishEncoding];
+    
     //把设置的颜色、image保存在currentUser里面
-    [self.theCurrentUser setObject:@"blue" forKey:@"navigationColor"];
+//    [self.theCurrentUser setObject:@"blue" forKey:@"navigationColor"];
+    [self.theCurrentUser setObject:colorData forKey:@"navigationColor"];
     [self.theCurrentUser setObject:naviData forKey:@"navigationImage"];
     [self.theCurrentUser setObject:tabbarData forKey:@"tabbarImage"];
     self.theCurrentUser.fetchWhenSave = YES;
@@ -174,7 +180,8 @@
     [archiver finishEncoding];
     
     //把设置的颜色、image保存在currentUser里面
-    [self.theCurrentUser setObject:@"black" forKey:@"navigationColor"];
+//    [self.theCurrentUser setObject:@"black" forKey:@"navigationColor"];
+    [self.theCurrentUser setObject:colorData forKey:@"navigationColor"];
     [self.theCurrentUser setObject:naviData forKey:@"navigationImage"];
     [self.theCurrentUser setObject:tabbarData forKey:@"tabbarImage"];
     self.theCurrentUser.fetchWhenSave = YES;
@@ -204,7 +211,8 @@
     [archiver finishEncoding];
     
     //把设置的颜色、image保存在currentUser里面
-    [self.theCurrentUser setObject:@"red" forKey:@"navigationColor"];
+//    [self.theCurrentUser setObject:@"red" forKey:@"navigationColor"];
+    [self.theCurrentUser setObject:colorData forKey:@"navigationColor"];
     [self.theCurrentUser setObject:naviData forKey:@"navigationImage"];
     [self.theCurrentUser setObject:tabbarData forKey:@"tabbarImage"];
     self.theCurrentUser.fetchWhenSave = YES;
@@ -234,7 +242,8 @@
     [archiver finishEncoding];
     
     //把设置的颜色、image保存在currentUser里面
-    [self.theCurrentUser setObject:@"gray" forKey:@"navigationColor"];
+//    [self.theCurrentUser setObject:@"gray" forKey:@"navigationColor"];
+    [self.theCurrentUser setObject:colorData forKey:@"navigationColor"];
     [self.theCurrentUser setObject:naviData forKey:@"navigationImage"];
     [self.theCurrentUser setObject:tabbarData forKey:@"tabbarImage"];
     self.theCurrentUser.fetchWhenSave = YES;

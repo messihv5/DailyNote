@@ -39,35 +39,35 @@ static WLLDailyNoteDataManager *manager = nil;
 
 #pragma mark - 数组
 // 请求数据
-- (void)requestDataAndFinished:(void (^)())finished {
-    
-    [self.noteData removeAllObjects];
-    
-    // 异步加载数据
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        
-        NoteDetail *model = [[NoteDetail alloc] init];
-        // 日记内容初始值
-        model.content = @"今天下载了随手记~~~今天下载了随手记~~~今天下载了随手记~~~rect.size.height/self.contentLabel.numberOfLinesrect.size.height/self.contentLabel.numberOfLines";
-        model.date = [[NSDate alloc] init];
-        model.dates = [NSString nt_nowDateFromDate:model.date];
-        model.monthAndYear = [NSString nt_monthAndYearFromDate:model.date];
-        model.time = [NSString nt_timeFromDate:model.date];
-        model.weekLabel = [NSString wd_weekDayFromDate:model.date];
-        
-        // 背景色, 字体颜色, 字体大小初始值
-        model.backColor = [UIColor whiteColor];
-        model.fontColor = [UIColor blackColor];
-        model.contentFont = [UIFont sf_adapterScreenWithFont];
-        
-        [self.noteData addObject:model];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            
-            finished();
-        });
-    });
-}
+//- (void)requestDataAndFinished:(void (^)())finished {
+//    
+//    [self.noteData removeAllObjects];
+//    
+//    // 异步加载数据
+//    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+//        
+//        NoteDetail *model = [[NoteDetail alloc] init];
+//        // 日记内容初始值
+//        model.content = @"今天下载了随手记~~~今天下载了随手记~~~今天下载了随手记~~~rect.size.height/self.contentLabel.numberOfLinesrect.size.height/self.contentLabel.numberOfLines";
+//        model.date = [[NSDate alloc] init];
+//        model.dates = [NSString nt_nowDateFromDate:model.date];
+//        model.monthAndYear = [NSString nt_monthAndYearFromDate:model.date];
+//        model.time = [NSString nt_timeFromDate:model.date];
+//        model.weekLabel = [NSString wd_weekDayFromDate:model.date];
+//        
+//        // 背景色, 字体颜色, 字体大小初始值
+//        model.backColor = [UIColor whiteColor];
+//        model.fontColor = [UIColor blackColor];
+//        model.contentFont = [UIFont sf_adapterScreenWithFont];
+//        
+//        [self.noteData addObject:model];
+//        
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            
+//            finished();
+//        });
+//    });
+//}
 
 
 // 返回模型

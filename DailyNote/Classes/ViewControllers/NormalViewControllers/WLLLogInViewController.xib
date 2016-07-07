@@ -27,19 +27,19 @@
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="email.png" translatesAutoresizingMaskIntoConstraints="NO" id="KDx-4Q-VXa">
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="email.png" translatesAutoresizingMaskIntoConstraints="NO" id="KDx-4Q-VXa">
                     <rect key="frame" x="20" y="278" width="32" height="36"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="KDx-4Q-VXa" secondAttribute="height" multiplier="31:35" id="yLV-4H-V9G"/>
                     </constraints>
                 </imageView>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="lock.png" translatesAutoresizingMaskIntoConstraints="NO" id="7IJ-RP-6Wc">
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="lock.png" translatesAutoresizingMaskIntoConstraints="NO" id="7IJ-RP-6Wc">
                     <rect key="frame" x="20" y="344" width="32" height="32"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="7IJ-RP-6Wc" secondAttribute="height" id="GHj-06-zmh"/>
                     </constraints>
                 </imageView>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ajU-vy-cUK">
+                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ajU-vy-cUK">
                     <rect key="frame" x="20" y="408" width="279.5" height="30"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <state key="normal" title="登录">
@@ -49,12 +49,12 @@
                         <action selector="logInAction:" destination="-1" eventType="touchUpInside" id="QAd-06-QwR"/>
                     </connections>
                 </button>
-                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="请输入账号邮箱" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="MbK-DO-KM9">
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="请输入账号邮箱" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="MbK-DO-KM9">
                     <rect key="frame" x="62" y="278" width="238" height="36"/>
                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                     <textInputTraits key="textInputTraits"/>
                 </textField>
-                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="请输入密码" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="XRP-eG-NNG">
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="请输入密码" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="XRP-eG-NNG">
                     <rect key="frame" x="62" y="342" width="238" height="36.5"/>
                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                     <textInputTraits key="textInputTraits"/>

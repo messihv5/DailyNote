@@ -497,24 +497,20 @@ static NSString  *const reuseIdentifier = @"note_cell";
     }
     
     //从currentUser的navigationColor字段获取颜色
-    NSString *colorString = [[AVUser currentUser] objectForKey:@"navigationColor"];
-    if (colorString == nil) {
-        [tabbar setTintColor:[UIColor blueColor]];
-        [bar setBarTintColor:[UIColor blueColor]];
-    } else if ([colorString isEqualToString:@"blue"]){
-        [tabbar setTintColor:[UIColor blueColor]];
-        [bar setBarTintColor:[UIColor blueColor]];
-    } else if ([colorString isEqualToString:@"black"]) {
-        [tabbar setTintColor:[UIColor darkTextColor]];
-        [bar setBarTintColor:[UIColor darkTextColor]];
-    } else if ([colorString isEqualToString:@"red"]) {
-        [tabbar setTintColor:[UIColor redColor]];
-        [bar setBarTintColor:[UIColor redColor]];
-    } else if ([colorString isEqualToString:@"gray"]) {
-        [tabbar setTintColor:[UIColor lightGrayColor]];
-        [bar setBarTintColor:[UIColor lightGrayColor]];
-    }
+//    NSString *colorString = [[AVUser currentUser] objectForKey:@"navigationColor"];
+    NSData *colorData = [[AVUser currentUser] objectForKey:@"navigationColor"];
     
+    NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:colorData];
+    
+    UIColor *color = [unarchiver decodeObjectForKey:@"navigationColor"];
+    
+    if (color == nil) {
+        [tabbar setTintColor:[UIColor blueColor]];
+        [bar setBarTintColor:[UIColor blueColor]];
+    } else {
+        [tabbar setTintColor:color];
+        [bar setBarTintColor:color];
+    }
 }
 
 //渲染view.layer获取image
@@ -575,8 +571,5 @@ static NSString  *const reuseIdentifier = @"note_cell";
     
     return height;
 }
-
-
-
 
 @end

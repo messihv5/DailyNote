@@ -19,43 +19,49 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lIR-nk-qho">
-                    <rect key="frame" x="20" y="99" width="280" height="1"/>
+                    <rect key="frame" x="20" y="155" width="280" height="1"/>
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="1" id="bBm-iA-JKc"/>
                     </constraints>
                 </view>
                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="请输入新密码" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="VRb-2h-bay">
-                    <rect key="frame" x="20" y="105" width="280" height="30"/>
+                    <rect key="frame" x="20" y="161" width="280" height="50"/>
+                    <color key="backgroundColor" red="1" green="0.92724492449999996" blue="0.24090861" alpha="1" colorSpace="calibratedRGB"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits"/>
                 </textField>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uzW-Wb-ZxY">
-                    <rect key="frame" x="20" y="140" width="280" height="1"/>
+                    <rect key="frame" x="20" y="216" width="280" height="1"/>
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="1" id="XYD-MJ-5qP"/>
                     </constraints>
                 </view>
                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="请输入新密码" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="uwX-iK-NgH">
-                    <rect key="frame" x="20" y="146" width="280" height="30"/>
+                    <rect key="frame" x="20" y="222" width="280" height="50"/>
+                    <color key="backgroundColor" red="0.79690559689999996" green="1" blue="0.15943767810000001" alpha="1" colorSpace="calibratedRGB"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits"/>
                 </textField>
                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="请输入原密码" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="N5U-Zy-WNp">
-                    <rect key="frame" x="20" y="64" width="280" height="30"/>
+                    <rect key="frame" x="20" y="100" width="280" height="50"/>
+                    <color key="backgroundColor" red="0.79690559689999996" green="1" blue="0.15943767810000001" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="50" id="4Cd-Iq-6M5"/>
+                    </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                     <textInputTraits key="textInputTraits"/>
                 </textField>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="spb-q6-8Tg">
-                    <rect key="frame" x="20" y="181" width="280" height="1"/>
+                    <rect key="frame" x="20" y="277" width="280" height="1"/>
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="1" id="40a-p4-nYT"/>
                     </constraints>
                 </view>
             </subviews>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <color key="backgroundColor" red="1" green="0.99287173669999995" blue="0.89512924630000001" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
                 <constraint firstItem="lIR-nk-qho" firstAttribute="leading" secondItem="N5U-Zy-WNp" secondAttribute="leading" id="1NM-Bm-73H"/>
                 <constraint firstItem="uwX-iK-NgH" firstAttribute="trailing" secondItem="N5U-Zy-WNp" secondAttribute="trailing" id="1sS-nM-qAh"/>
@@ -70,7 +76,7 @@
                 <constraint firstItem="uwX-iK-NgH" firstAttribute="height" secondItem="N5U-Zy-WNp" secondAttribute="height" id="eQe-fU-QgS"/>
                 <constraint firstItem="VRb-2h-bay" firstAttribute="centerX" secondItem="N5U-Zy-WNp" secondAttribute="centerX" id="jIP-oG-fAT"/>
                 <constraint firstItem="uzW-Wb-ZxY" firstAttribute="top" secondItem="VRb-2h-bay" secondAttribute="bottom" constant="5" id="nEz-XN-6rb"/>
-                <constraint firstItem="N5U-Zy-WNp" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="64" id="oSe-2c-OfN"/>
+                <constraint firstItem="N5U-Zy-WNp" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="100" id="oSe-2c-OfN"/>
                 <constraint firstItem="spb-q6-8Tg" firstAttribute="top" secondItem="uwX-iK-NgH" secondAttribute="bottom" constant="5" id="ova-9z-LCW"/>
                 <constraint firstItem="spb-q6-8Tg" firstAttribute="leading" secondItem="N5U-Zy-WNp" secondAttribute="leading" id="pqG-BU-s9U"/>
                 <constraint firstItem="lIR-nk-qho" firstAttribute="top" secondItem="N5U-Zy-WNp" secondAttribute="bottom" constant="5" id="rGs-wK-s3M"/>

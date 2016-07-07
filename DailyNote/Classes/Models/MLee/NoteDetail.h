@@ -11,25 +11,17 @@
 #import <Foundation/Foundation.h>
 
 @interface NoteDetail : NSObject
-/* 日期 */
-@property (nonatomic, strong) NSDate *date;
+
 /* 日记内容 */
 @property (nonatomic, copy) NSString *content;
-/* 日期 */
-@property (nonatomic, copy) NSString *dates;
-/* 礼拜 */
-@property (nonatomic, copy) NSString *weekLabel;
-/* 年月 */
-@property (nonatomic, copy) NSString *monthAndYear;
-/* 时间 */
-@property (nonatomic, copy) NSString *time;
-/* 字体大小 */
-@property (nonatomic, strong) UIFont *contentFont;
-/* 存储背景色, 字体颜色 */
-@property (nonatomic, strong) UIColor *backColor, *fontColor;
-
-@property (nonatomic, assign) NSInteger index;
-
-@property (nonatomic, strong) NSMutableArray<UIImage *> *imageArray;
+/* 多久以前写的日记 */
+@property (nonatomic, copy) NSString *timeString;
+/*昵称*/
+@property (copy, nonatomic) NSString *nickName;
+/*点赞数*/
+@property (copy, nonatomic) NSString *starNumber;
+/*头像*/
+@property (strong, nonatomic) UIImage *headImage;
+@property (strong, nonatomic) NSArray *staredUserArray;
 
 @end

@@ -175,7 +175,7 @@
         
     } else {    // 否则为创建新日记, 弹出键盘
         
-        [self getModelWithoutIndexPth];
+//        [self getModelWithoutIndexPth];
         
         //[self.contentText becomeFirstResponder];
         // 加载toolView, 键盘隐藏
@@ -193,12 +193,12 @@
 //    self.fontColor = self.model.fontColor;
 //    self.contentFont = self.model.contentFont;
 //}
-- (void)getModelWithoutIndexPth {
-    self.model = [[NoteDetail alloc] init];
-    self.backColor = self.model.backColor;
-    self.fontColor = self.model.fontColor;
-    self.contentFont = self.model.contentFont;
-}
+//- (void)getModelWithoutIndexPth {
+//    self.model = [[NoteDetail alloc] init];
+//    self.backColor = self.model.backColor;
+//    self.fontColor = self.model.fontColor;
+//    self.contentFont = self.model.contentFont;
+//}
 
 // view出现后 加载分类页面初始位置
 - (void)viewDidAppear:(BOOL)animated {
@@ -383,7 +383,7 @@
         self.fontView.frame = CGRectMake(0, kHeight, kWidth, 0.4*kHeight);
         
         // 添加新模型
-        [self addANewModel];
+//        [self addANewModel];
         
         if (_modelDelegate && [_modelDelegate respondsToSelector:@selector(sendEditModel:)]) {
             [_modelDelegate sendEditModel:self.model];
@@ -448,22 +448,22 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 // 添加新模型
-- (void)addANewModel {
-    
-    self.model.content = self.contentText.text;
-    
-    if (self.model.backColor == nil) self.model.backColor = [UIColor whiteColor];
-    if (self.model.fontColor == nil) self.model.fontColor = [UIColor blackColor];
-    if (self.model.contentFont == nil) self.model.contentFont = [UIFont sf_adapterScreenWithFont];
-    
-    self.model.date = [NSDate date];
-    self.model.time = [NSString nt_timeFromDate:_model.date];
-    self.model.weekLabel = [NSString wd_weekDayFromDate:_model.date];
-    self.model.monthAndYear = [NSString nt_monthAndYearFromDate:_model.date];
-    self.model.dates = [NSString nt_nowDateFromDate:_model.date];
-    
-    [[WLLDailyNoteDataManager sharedInstance] addDailyNoteWithNote:self.model];
-}
+//- (void)addANewModel {
+//    
+//    self.model.content = self.contentText.text;
+//    
+//    if (self.model.backColor == nil) self.model.backColor = [UIColor whiteColor];
+//    if (self.model.fontColor == nil) self.model.fontColor = [UIColor blackColor];
+//    if (self.model.contentFont == nil) self.model.contentFont = [UIFont sf_adapterScreenWithFont];
+//    
+//    self.model.date = [NSDate date];
+//    self.model.time = [NSString nt_timeFromDate:_model.date];
+//    self.model.weekLabel = [NSString wd_weekDayFromDate:_model.date];
+//    self.model.monthAndYear = [NSString nt_monthAndYearFromDate:_model.date];
+//    self.model.dates = [NSString nt_nowDateFromDate:_model.date];
+//    
+//    [[WLLDailyNoteDataManager sharedInstance] addDailyNoteWithNote:self.model];
+//}
 
 // 取消
 - (void)cancel {
@@ -472,9 +472,9 @@
     [self.coverView removeFromSuperview];
 
     // 取消时将原值赋回
-    self.model.backColor = self.backColor;
-    self.model.fontColor = self.fontColor;
-    self.model.contentFont = self.contentFont;
+//    self.model.backColor = self.backColor;
+//    self.model.fontColor = self.fontColor;
+//    self.model.contentFont = self.contentFont;
 
     [self.contentText resignFirstResponder];
 
@@ -561,7 +561,7 @@
 - (void)cancelChoice {
 
     self.contentText.backgroundColor = [UIColor whiteColor];
-    self.model.backColor = self.contentText.backgroundColor;
+//    self.model.backColor = self.contentText.backgroundColor;
 }
 
 // 选择心情视图

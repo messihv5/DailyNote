@@ -69,6 +69,15 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     WChaoPrivateCodeCellTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CW"
                                                                               forIndexPath:indexPath];
+    //从当前用户获取是否开启锁屏功能
+    NSString *swithOnOrNot = [[AVUser currentUser] objectForKey:@"isLocked"];
+    
+    if ([swithOnOrNot isEqualToString:@"YES"]) {
+        cell.privateCodeSwith.on = YES;
+    } else {
+        cell.privateCodeSwith.on = NO;
+    }
+    
     PrivateModel *model = self.data[indexPath.section][indexPath.row];
     cell.titleLabel.text = model.titleString;
     cell.instructionLabel.text = model.detailString;
@@ -86,13 +95,22 @@
         [self.navigationController pushViewController:lockController animated:YES];
         
         //在userDefault里设置手势锁为开
-        [self.userDefault setObject:@"YES" forKey:@"privateCode"];
-        [self.userDefault synchronize];
+//        [self.userDefault setObject:@"YES" forKey:@"privateCode"];
+//        [self.userDefault synchronize];
+        
+        //在当前用户里设置解屏锁为开
+        [[AVUser currentUser] setObject:@"YES" forKey:@"isLocked"];
+        [[AVUser currentUser] saveInBackground];
+        
     } else {
         
         //解屏锁为开的时候，解除解屏锁
-        [self.userDefault setObject:@"NO" forKey:@"privateCode"];
-        [self.userDefault synchronize];
+//        [self.userDefault setObject:@"NO" forKey:@"privateCode"];
+//        [self.userDefault synchronize];
+        
+        [[AVUser currentUser] setObject:@"NO" forKey:@"isLocked"];
+        [[AVUser currentUser] saveInBackground];
+        
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"已取消手势锁" message:@"" preferredStyle:UIAlertControllerStyleAlert];
         
         //设置NSTimer让alertController过一段时间自动消失

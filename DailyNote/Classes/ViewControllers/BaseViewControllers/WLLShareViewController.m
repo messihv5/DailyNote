@@ -10,8 +10,7 @@
 #import "WChaoShareCellTableViewCell.h"
 #import "WLLNoteDetailViewController.h"
 #import "WLLShareDetailViewController.h"
-
-
+#import "NoteDetail.h"
 
 @interface WLLShareViewController ()<UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate>
 
@@ -335,7 +334,62 @@
         
         [categoryQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             //这里可以先把objects数据解析到model里面，再把model存到数组里面
-            [self.data addObjectsFromArray:objects];
+            for (AVObject *object in objects) {
+                NoteDetail *model = [[NoteDetail alloc] init];
+                
+                //获取点赞用户数组，判断用户是否点赞
+                NSArray *staredUserArray = [object objectForKey:@"staredUser"];
+                model.staredUserArray = staredUserArray;
+
+                //获取日记的创建时间
+                NSString *string = nil;
+                
+                NSDate *createdDate = [object objectForKey:@"createdAt"];
+                
+                NSDate *currentDate = [NSDate date];
+                
+                NSTimeInterval timeInterval = [currentDate timeIntervalSinceDate:createdDate];
+                
+                if (timeInterval / (24 * 60 * 60) >= 1) {
+                    string = [NSString stringWithFormat:@"%ld天前", (NSInteger)timeInterval / (24 * 60 * 60) ];
+                } else if (timeInterval / (60 * 60) >= 1) {
+                    string = [NSString stringWithFormat:@"%ld小时前", (NSInteger)timeInterval / (60 * 60)];
+                } else if (timeInterval / 60 >= 1) {
+                    string = [NSString stringWithFormat:@"%ld分钟以前", (NSInteger)timeInterval / 60];
+                } else {
+                    string = [NSString stringWithFormat:@"%ld秒前", (NSInteger)timeInterval];
+                }
+                model.timeString = string;
+                
+                //点赞数
+                model.starNumber = [object objectForKey:@"starNumber"];
+                if (model.starNumber == nil) {
+                    model.starNumber = @"0";
+                }
+                
+                //内容
+                model.content = [object objectForKey:@"content"];
+                
+                //获取到这篇日记的作者的信息
+                NSArray *keys = [NSArray arrayWithObjects:@"belong", nil];
+                [object fetchInBackgroundWithKeys:keys block:^(AVObject *object, NSError *error) {
+                    AVUser *relatedUser = [object objectForKey:@"belong"];
+                    
+                    model.nickName = [relatedUser objectForKey:@"nickName"];
+                    
+                    AVFile *file = [relatedUser objectForKey:@"headImage"];
+                    
+                    if (file == nil) {
+                        model.headImage = nil;
+                    } else {
+                        [file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+                            UIImage *image = [UIImage imageWithData:data];
+                            model.headImage = image;
+                        }];
+                    }
+                }];
+                [self.data addObject:model];
+            }
             [self.shareTableView reloadData];
         }];;
     }
@@ -350,67 +404,25 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    //指向时间
-    NSString *string = nil;
     
     WChaoShareCellTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CW_Cell"
                                                             forIndexPath:indexPath];
-    AVObject *object = self.data[indexPath.row];
+    NoteDetail *model = self.data[indexPath.row];
     
-    //获取点赞用户数组，判断用户是否点赞
-    NSArray *staredUserArray = [object objectForKey:@"staredUser"];
+    cell.theTextLable.text = model.content;
+    cell.timeLabel.text = model.timeString;
+    cell.nickNameLabel.text = model.nickName;
+    cell.headImageView.image = model.headImage;
+    cell.starNumberLabel.text = model.starNumber;
     
-    //获取日记的创建时间
-    NSDate *createdDate = [object objectForKey:@"createdAt"];
-    
-    NSDate *currentDate = [NSDate date];
-    
-    NSTimeInterval timeInterval = [currentDate timeIntervalSinceDate:createdDate];
-    
-    if (timeInterval / (24 * 60 * 60) >= 1) {
-        string = [NSString stringWithFormat:@"%ld天前", (NSInteger)timeInterval / (24 * 60 * 60) ];
-    } else if (timeInterval / (60 * 60) >= 1) {
-        string = [NSString stringWithFormat:@"%ld小时前", (NSInteger)timeInterval / (60 * 60)];
-    } else if (timeInterval / 60 >= 1) {
-        string = [NSString stringWithFormat:@"%ld分钟以前", (NSInteger)timeInterval / 60];
+    //判断当前用户是否已经点赞
+    if ([model.staredUserArray containsObject:self.currentUser]) {
+        [cell.starButton setImage:[UIImage imageNamed:@"heartSelected15X15"] forState:UIControlStateNormal];
     } else {
-        string = [NSString stringWithFormat:@"%ld秒前", (NSInteger)timeInterval];
+        [cell.starButton setImage:[UIImage imageNamed:@"heart15X15"] forState:UIControlStateNormal];
     }
     
-    //获取用户的图像,这种方法比较好，然后把所有的数据一起给cell赋值
-    AVFile *file = [[AVUser currentUser] objectForKey:@"headImage"];
-    
-    [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
-        NSData *data = [file getData];
-        
-        UIImage *image = [UIImage imageWithData:data];
-        
-            cell.headImageView.image = image;
-            cell.theTextLable.text = [object objectForKey:@"content"];
-
-            NSArray *keys = [NSArray arrayWithObjects:@"belong", nil];
-            [object fetchInBackgroundWithKeys:keys block:^(AVObject *object, NSError *error) {
-                AVUser *relatedUser = [object objectForKey:@"belong"];
-                cell.nickNameLabel.text = [relatedUser objectForKey:@"nickName"];
-            }];
-        
-        cell.starNumberLabel.text = [object objectForKey:@"starNumber"];
-        if (cell.starNumberLabel.text == nil) {
-            cell.starNumberLabel.text = @"0";
-        }
-        
-        cell.timeLabel.text = string;
-            
-            //判断当前用户是否已经点赞
-            if ([staredUserArray containsObject:self.currentUser]) {
-                [cell.starButton setImage:[UIImage imageNamed:@"heartSelected15X15"] forState:UIControlStateNormal];
-            } else {
-                [cell.starButton setImage:[UIImage imageNamed:@"heart15X15"] forState:UIControlStateNormal];
-            }
-            
-            [cell.starButton addTarget:self action:@selector(starAction:) forControlEvents:UIControlEventTouchUpInside];
-    }];
-    
+    [cell.starButton addTarget:self action:@selector(starAction:) forControlEvents:UIControlEventTouchUpInside];
     return cell;
 }
 
@@ -515,6 +527,10 @@
     AVObject *object = notification.userInfo[@"passedObject"];
     [self.data removeObject:object];
     [self.shareTableView reloadData];
+}
+
+- (void)dealloc {
+    NSLog(@"dailyNote%@", self);
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
