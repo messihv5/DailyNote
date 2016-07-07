@@ -98,7 +98,7 @@
     tabController.viewControllers = @[dailyController, shareController, userController];
     tabController.tabBar.tintColor = [UIColor orangeColor];
     
-    UINavigationController *nvController = [[UINavigationController alloc] initWithRootViewController:tabController];
+     UINavigationController *nvController = [[UINavigationController alloc] initWithRootViewController:tabController];
     
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.window.backgroundColor = [UIColor whiteColor];
@@ -116,6 +116,9 @@
         [application registerUserNotificationSettings:settings];
         [application registerForRemoteNotifications];
     }
+    
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    
     return YES;
 }
 

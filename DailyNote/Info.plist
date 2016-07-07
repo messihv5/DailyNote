@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<true/>
+	<false/>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -40,22 +40,10 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-    <key>NSAppTransportSecurity</key>
-    <dict>
-        <key>NSAllowsArbitraryLoads</key>
-        <true/></dict>
-<!--	<key>NSAppTransportSecurity</key>-->
-<!--	<dict>-->
-<!--		<key>NSExceptionDomains</key>-->
-<!--		<dict>-->
-<!--			<key>clouddn.com</key>-->
-<!--			<dict>-->
-<!--				<key>NSIncludesSubdomains</key>-->
-<!--				<true/>-->
-<!--				<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>-->
-<!--				<true/>-->
-<!--			</dict>-->
-<!--		</dict>-->
-<!--	</dict>-->
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 </dict>
 </plist>

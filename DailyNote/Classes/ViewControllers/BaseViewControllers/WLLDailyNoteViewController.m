@@ -78,6 +78,8 @@ static NSString  *const reuseIdentifier = @"note_cell";
     
     if (self.isFromCalendar == YES) {
         
+        //添加标题
+        self.navigationItem.title = self.dateString;
         //从calendar点击来的，加载对应的那一天的日记
         [[WLLDailyNoteDataManager sharedInstance] loadTenDiariesOfDateString:self.dateString finished:^{
             self.data = [WLLDailyNoteDataManager sharedInstance].noteData;
