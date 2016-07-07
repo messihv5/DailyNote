@@ -15,7 +15,6 @@
 #import "WLLLockViewController.h"
 #import <ShareSDK/ShareSDK.h>
 #import <ShareSDKConnector/ShareSDKConnector.h>
-#import "WLLRootNavigationController.h"
 
 //腾讯开放平台（对应QQ和QQ空间）SDK头文件
 #import <TencentOpenAPI/TencentOAuth.h>
@@ -99,7 +98,7 @@
     tabController.viewControllers = @[dailyController, shareController, userController];
     tabController.tabBar.tintColor = [UIColor orangeColor];
     
-     WLLRootNavigationController *nvController = [[WLLRootNavigationController alloc] initWithRootViewController:tabController];
+     UINavigationController *nvController = [[UINavigationController alloc] initWithRootViewController:tabController];
     
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.window.backgroundColor = [UIColor whiteColor];
@@ -117,6 +116,9 @@
         [application registerUserNotificationSettings:settings];
         [application registerForRemoteNotifications];
     }
+    
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    
     return YES;
 }
 
