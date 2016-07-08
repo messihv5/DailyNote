@@ -10,8 +10,6 @@
 
 @interface WLLDailyNoteDataManager ()
 
-
-
 @end
 
 static WLLDailyNoteDataManager *manager = nil;
@@ -36,6 +34,7 @@ static WLLDailyNoteDataManager *manager = nil;
     }
     return _noteData;
 }
+<<<<<<< HEAD
 
 #pragma mark - 数组
 // 请求数据
@@ -88,6 +87,8 @@ static WLLDailyNoteDataManager *manager = nil;
     return self.noteData.count;
 }
 
+=======
+>>>>>>> 66726fa1701851d1e1ecfce9d1b1a8721a6fb2df
 // 添加日记
 - (void)addDailyNoteWithNote:(NoteDetail *)note {
     

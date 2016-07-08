@@ -26,33 +26,6 @@
 
 
 /**
- * 返回index对应的模型
- */
-- (NoteDetail *)getModelWithIndex:(NSInteger)index;
-
-
-/**
- * 请求分类数据
- */
-- (void)requestDataAndFinished:(void(^)())finished;
-
-
-/**
- *  返回日记数组
- *
- *  @return 返回数组
- */
-- (NSMutableArray *)getNoteData;
-
-/**
- *  返回数组个数
- *
- *  @return 个数
- */
-- (NSInteger)countOfNoteData;
-
-
-/**
  *  添加日志
  *
  *  @param note 日志模型
