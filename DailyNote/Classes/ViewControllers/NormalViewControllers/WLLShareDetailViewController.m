@@ -109,42 +109,38 @@
 
 //加载传过来的信息
 - (void)loadPersonnalInfo {
-    NSArray *key = [NSArray arrayWithObjects:@"belong", nil];
-    [self.passedObject fetchInBackgroundWithKeys:key block:^(AVObject *object, NSError *error) {
-        AVUser *relatedUser = [object objectForKey:@"belong"];
-        self.nickNameLabel.text = [relatedUser objectForKey:@"nickName"];
-        self.signatureLabel.text = [relatedUser objectForKey:@"signature"];
-        self.starNumberLabel.text = [relatedUser objectForKey:@"starNumber"];
-        self.contentLabel.text = [object objectForKey:@"content"];
-        self.currentDiaryStarNumberLabel.text = [object objectForKey:@"starNumber"];
-        
-        //处理该日记的被阅读次数
-        NSString *readTime = [object objectForKey:@"readTime"];
-        self.readNumberLabel.text = [NSString stringWithFormat:@"%ld", [readTime integerValue] + 1];
-        [object setObject:self.readNumberLabel.text forKey:@"readTime"];
-        object.fetchWhenSave = YES;
-        [object saveInBackground];
-        
-        AVFile *backgroundImageViewFile = [relatedUser objectForKey:@"theBackgroundImage"];
-        [backgroundImageViewFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-                self.backgroundImageView.image = [UIImage imageWithData:data];
-        }];
-        
-        AVFile *headImageViewFile = [relatedUser objectForKey:@"headImage"];
-        [headImageViewFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-                self.headImageView.image = [UIImage imageWithData:data];
-        }];
-        
-        NSDate *createdDate = [object objectForKey:@"createdAt"];
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:@"yyyy年MM月dd日EEEE"];
-        self.dateLabel.text = [dateFormatter stringFromDate:createdDate];
-        
-        NSArray *staredUserArray = [object objectForKey:@"staredUser"];
-        if ([staredUserArray containsObject:self.currentUser]) {
-            [self.starButton setImage:[UIImage imageNamed:@"heartSelected40X40"] forState:UIControlStateNormal];
-        }
-    }];
+    AVObject *object = [AVObject objectWithClassName:@"Diary" objectId:self.passedObject.diaryId];
+    
+    self.nickNameLabel.text = self.passedObject.nickName;
+    self.signatureLabel.text = self.passedObject.signature;
+    self.starNumberLabel.text = self.passedObject.totalStarNumber;
+    self.contentLabel.text = self.passedObject.content;
+    self.currentDiaryStarNumberLabel.text = self.passedObject.starNumber;
+    
+    NSString *readTime = self.passedObject.readTime;
+    if (readTime == nil) {
+        readTime = @"0";
+    }
+    self.readNumberLabel.text = [NSString stringWithFormat:@"%ld", [readTime integerValue] + 1];
+    self.passedObject.readTime = self.readNumberLabel.text;
+    [object setObject:self.readNumberLabel.text forKey:@"readTime"];
+    object.fetchWhenSave = YES;
+    [object saveInBackground];
+    
+    self.backgroundImageView.image = self.passedObject.backgroundImage;
+    self.headImageView.image = self.passedObject.headImage;
+    
+    NSDate *createdDate = self.passedObject.date;
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy年MM月dd日EEEE"];
+    self.dateLabel.text = [dateFormatter stringFromDate:createdDate];
+
+    NSArray *staredUserArray = self.passedObject.staredUserArray;
+    
+    if ([staredUserArray containsObject:self.currentUser]) {
+        [self.starButton setImage:[UIImage imageNamed:@"heartSelected40X40"] forState:UIControlStateNormal];
+    }
+
 }
 
 //代码布局
@@ -205,38 +201,76 @@
 
 //返回操作
 - (void)backAction:(UIButton *)sender {
+    
+    self.block(self.passedObject);
     [self.navigationController popViewControllerAnimated:YES];
 }
 
 //点赞操作
 - (void)starAction:(UIButton *)sender {
-    [self.passedObject fetchIfNeededInBackgroundWithBlock:^(AVObject *object, NSError *error) {
-        NSMutableArray *staredUserArray = [object objectForKey:@"staredUser"];
-        if ([staredUserArray containsObject:self.currentUser]) {
-            self.alreadyStaredLabel.hidden = NO;
-            [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(hidesAlertLabel) userInfo:nil repeats:NO];
-            return;
-        }
+    AVObject *object = [AVObject objectWithClassName:@"Diary" objectId:self.passedObject.diaryId];
+    
+    NoteDetail *diary = self.passedObject;
+    
+    NSMutableArray *staredUserArray = self.passedObject.staredUserArray;
+    
+    if (staredUserArray == nil) {
         
-        [self.starButton setImage:[UIImage imageNamed:@"heartSelected40X40"] forState:UIControlStateNormal];
+        //第一次查询时点赞用户数组为空
+        NSMutableArray *staredUserArray = [NSMutableArray arrayWithCapacity:10];
         
-        //如果该用户没有点赞，执行点赞，点赞数加1
-        NSInteger numberOfStar = [self.currentDiaryStarNumberLabel.text integerValue];
-        self.currentDiaryStarNumberLabel.text = [NSString stringWithFormat:@"%ld", numberOfStar + 1];
+        //日记里面保存的点赞数字显示1
+        NSString *num = @"1";
+        diary.starNumber = num;
+        [object setObject:num forKey:@"starNumber"];
         
-        //同时，数据库中的点赞数也加1
-        NSInteger numberOfStarInDiary = [[object objectForKey:@"starNumber"] integerValue] +1;
-        NSString *starNumber = [NSString stringWithFormat:@"%ld", numberOfStarInDiary];
-        self.block(starNumber);
+        //把点赞的用户添加到数组中，以便下次点赞时进行判断
+        AVUser *user = [AVUser currentUser];
         
-        //把当前用户添加到点赞用户数组里面
-        [staredUserArray addObject:self.currentUser];
+        //把点赞的用户添加到diary的数组中保存
+        [staredUserArray addObject:user];
         [object setObject:staredUserArray forKey:@"staredUser"];
-        [object setObject:starNumber forKey:@"starNumber"];
+        diary.staredUserArray = staredUserArray;
         
         object.fetchWhenSave = YES;
         [object saveInBackground];
-    }];
+    } else {
+        
+        //如果该用户已经点赞
+        if ([staredUserArray containsObject:[AVUser currentUser]]) {
+            self.alreadyStaredLabel.hidden = NO;
+            [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(hidesAlertLabel) userInfo:nil repeats:NO];
+            return;
+        } else {
+            
+            //该用户没有点赞
+            
+            //日记里面保存的点赞数字也加1
+            NSString *num = diary.diaryId;
+            num = [NSString stringWithFormat:@"%ld", [num integerValue] + 1];
+            diary.starNumber = num;
+            [object setObject:num forKey:@"starNumber"];
+            
+            //把点赞的用户添加到数组中，以便下次点赞时进行判断
+            AVUser *user = [AVUser currentUser];
+            
+            //把点赞的用户添加到diary的数组中保存
+            [staredUserArray addObject:user];
+            
+            object.fetchWhenSave = YES;
+            [object setObject:staredUserArray forKey:@"staredUser"];
+            [object saveInBackground];
+        }
+    }
+    
+    [self.starButton setImage:[UIImage imageNamed:@"heartSelected40X40"] forState:UIControlStateNormal];
+
+    //如果该用户没有点赞，执行点赞，点赞数加1
+    NSInteger numberOfStar = [self.currentDiaryStarNumberLabel.text integerValue];
+    self.currentDiaryStarNumberLabel.text = [NSString stringWithFormat:@"%ld", numberOfStar + 1];
+        
+    self.alreadyStaredLabel.hidden = NO;
+    [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(hidesAlertLabel) userInfo:nil repeats:NO];
 }
 
 //收藏操作
@@ -244,11 +278,13 @@
     AVRelation *collectionRelation = [self.currentUser relationForKey:@"collectionDiaries"];
     
     AVQuery *collectionQuery = [collectionRelation query];
+    
+    AVObject *diary = [AVObject objectWithClassName:@"Diary" objectId:self.passedObject.diaryId];
     [collectionQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if ([objects containsObject:self.passedObject]) {
+        if ([objects containsObject:diary]) {
             
             //已经收藏，点击之后取消收藏
-            [collectionRelation removeObject:self.passedObject];
+            [collectionRelation removeObject:diary];
             [self.currentUser saveInBackground];
             
             self.alreadyCollectionLabel.hidden = NO;
@@ -269,12 +305,12 @@
         } else {
             
             //没有收藏
-            [self.passedObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            [diary saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                 if (error) {
                     NSLog(@"%@", error);
                 } else {
                     AVRelation *collectionRelation = [self.currentUser relationForKey:@"collectionDiaries"];
-                    [collectionRelation addObject:self.passedObject];
+                    [collectionRelation addObject:diary];
                     [self.currentUser saveInBackground];
                     
                     self.alreadyCollectionLabel.hidden = NO;

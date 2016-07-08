@@ -8,11 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-typedef void (^Block)(NSString *string);
+typedef void (^Block)(NoteDetail *passedObject);
 
 @interface WLLShareDetailViewController : UIViewController
 
-@property (strong, nonatomic) AVObject *passedObject;
+@property (strong, nonatomic) NoteDetail *passedObject;
 @property (copy, nonatomic) Block block;
 @property (strong, nonatomic) NSIndexPath *passedIndexPath;
 

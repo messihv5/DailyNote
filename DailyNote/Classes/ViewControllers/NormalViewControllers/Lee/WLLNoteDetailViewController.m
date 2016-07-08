@@ -82,10 +82,10 @@
 - (void)dataFromNoteDaily {
     
     //日记内容赋值
-    self.contentLabel.text = [self.passedObject objectForKey:@"content"];
+    self.contentLabel.text = self.passedObject.content;
     
     //日记日期赋值
-    NSDate *createdAt = [self.passedObject objectForKey:@"createdAt"];
+    NSDate *createdAt = self.passedObject.date;
     
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"MM月dd日 H:mm"];
@@ -98,19 +98,16 @@
 //    self.timeLabel.text = self.model.time;
     
     //背景颜色赋值
-    NSData *colorData = [self.passedObject objectForKey:@"backColor"];
-    NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:colorData];
-    UIColor *backColor = [unarchiver decodeObjectForKey:@"backColor"];
-    self.contentView.backgroundColor = backColor;
+    
+    self.contentView.backgroundColor = self.passedObject.backColor;
     
     //字体颜色解析
-    NSData *fontColorData = [self.passedObject objectForKey:@"fontColor"];
-    NSKeyedUnarchiver *fontColorUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:fontColorData];
-    UIColor *fontColor = [fontColorUnarchiver decodeObjectForKey:@"fontColor"];
+    
+    UIColor *fontColor = self.passedObject.fontColor;
     
     //字体解析
-    NSString *fontString = [self.passedObject objectForKey:@"fontNumber"];
-    float fontNumber = [fontString floatValue];
+    NSString *fontNumberString = self.passedObject.fontNumber;
+    float fontNumber = [fontNumberString floatValue];
     UIFont *font = [UIFont systemFontOfSize:fontNumber];
     
     if (fontColor == nil) {
@@ -142,6 +139,11 @@
 - (void)editDaily:(UIBarButtonItem *)button {
     self.EditVC.indexPath = self.indexPath;
     self.EditVC.passedObject = self.passedObject;
+    
+    __weak WLLNoteDetailViewController *weakSelf = self;
+    self.EditVC.block = ^ (NoteDetail *passedObject){
+        weakSelf.passedObject = passedObject;
+    };
     [self.navigationController pushViewController:self.EditVC animated:YES];
 }
 

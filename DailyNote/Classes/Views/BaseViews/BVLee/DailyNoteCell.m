@@ -24,13 +24,13 @@
 
 @implementation DailyNoteCell
 
-- (void)setModel:(AVObject *)model {
+- (void)setModel:(NoteDetail *)model {
     
     _model = model;
     
-    self.contentLabel.text = [model objectForKey:@"content"];
+    self.contentLabel.text = model.content;
     
-    NSDate *createdDate = [model objectForKey:@"createdAt"];
+    NSDate *createdDate = model.date;
     
     self.weekLabel.text = [NSString wd_weekDayFromDate:createdDate];
     

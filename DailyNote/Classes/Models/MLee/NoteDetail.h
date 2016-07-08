@@ -12,6 +12,8 @@
 
 @interface NoteDetail : NSObject
 
+/*日期*/
+@property (strong, nonatomic) NSDate *date;
 /* 日记内容 */
 @property (nonatomic, copy) NSString *content;
 /* 多久以前写的日记 */
@@ -22,6 +24,27 @@
 @property (copy, nonatomic) NSString *starNumber;
 /*头像*/
 @property (strong, nonatomic) UIImage *headImage;
-@property (strong, nonatomic) NSArray *staredUserArray;
+/*点赞用户数组*/
+@property (strong, nonatomic) NSMutableArray *staredUserArray;
+/*日记背景颜色*/
+@property (strong, nonatomic) UIColor *backColor;
+/*字体颜色*/
+@property (strong, nonatomic) UIColor *fontColor;
+/*字体大小*/
+@property (copy, nonatomic) NSString *fontNumber;
+/*日记的id*/
+@property (copy, nonatomic) NSString *diaryId;
+/*签名*/
+@property (copy, nonatomic) NSString *signature;
+/*总的点赞数*/
+@property (copy, nonatomic) NSString *totalStarNumber;
+/*该日记的点赞数*/
+@property (copy, nonatomic) NSString *currentDiaryStarNumber;
+/*背景图片*/
+@property (strong, nonatomic) UIImage *backgroundImage;
+/*日记被阅读的次数*/
+@property (copy, nonatomic) NSString *readTime;
+
+
 
 @end

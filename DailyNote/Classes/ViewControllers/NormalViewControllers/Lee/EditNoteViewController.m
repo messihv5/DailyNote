@@ -134,11 +134,11 @@
         
         //内容
         // MARK: 没网没内容?!
-        self.contentText.text = [self.passedObject objectForKey:@"content"];
+        self.contentText.text = self.passedObject.content;
         self.countLabel.text = [NSString stringWithFormat:@"%ld", self.contentText.text.length];
         
         //字体
-        NSString *fontNumberString = [self.passedObject objectForKey:@"fontNumber"];
+        NSString *fontNumberString = self.passedObject.fontNumber;
         if (fontNumberString == nil) {
             UIFont *font = [UIFont systemFontOfSize:15];
             self.contentText.font = font;
@@ -148,26 +148,24 @@
         }
         
         //背景颜色
-        NSData *backColorData = [self.passedObject objectForKey:@"backColor"];
+        ;
         
-        NSKeyedUnarchiver *backColorUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:backColorData];
         
-        UIColor *backColor = [backColorUnarchiver decodeObjectForKey:@"backColor"];
+        UIColor *backColor = self.passedObject.backColor;
         
-        if (backColorData == nil) {
+        if (backColor == nil) {
             self.contentText.backgroundColor = [UIColor whiteColor];
         } else {
             self.contentText.backgroundColor = backColor;
         }
         
         //字体颜色
-        NSData *fontColorData = [self.passedObject objectForKey:@"fontColor"];
         
-        NSKeyedUnarchiver *fontColorUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:fontColorData];
         
-        UIColor *fontColor = [fontColorUnarchiver decodeObjectForKey:@"fontColor"];
         
-        if (fontColorData == nil) {
+        UIColor *fontColor = self.fontColor;
+        
+        if (fontColor == nil) {
             self.contentText.textColor = [UIColor darkTextColor];
         } else {
             self.contentText.textColor = fontColor;
@@ -295,11 +293,9 @@
 - (void)saveNote:(UIBarButtonItem *)button {
     if (_indexPath) {   // 如果是由点击DailyNote页面cell 进入，就是编辑
         
+        
         // 移除遮盖view
         [self.coverView removeFromSuperview];
-        
-        // 将改变后的文本赋值给model
-//        self.model.content = self.contentText.text;
         
         // 注销第一响应
         [self.contentText resignFirstResponder];
@@ -315,6 +311,9 @@
         self.mood.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.3);
         
         //修改传过来的日记，并保存在网络
+        //通过model获取日记
+        AVObject *object = [AVObject objectWithClassName:@"Diary" objectId:self.passedObject.diaryId];
+
         //保存日记内容,确保作者的内容不为空
         
         NSCharacterSet *set = [NSCharacterSet whitespaceAndNewlineCharacterSet];
@@ -335,23 +334,27 @@
         } else {
             
             //日记内容不为空，保存日记
-            [self.passedObject setObject:self.contentText.text forKey:@"content"];
+            self.passedObject.content = self.contentText.text;
+            [object setObject:self.contentText.text forKey:@"content"];
+            
             //保存背景颜色
             NSMutableData *data = [[NSMutableData alloc] init];
-            
             NSKeyedArchiver *archiverBackColor = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
             [archiverBackColor encodeObject:self.contentText.backgroundColor forKey:@"backColor"];
             [archiverBackColor finishEncoding];
             
-            [self.passedObject setObject:data forKey:@"backColor"];
+            self.passedObject.backColor = self.contentText.backgroundColor;
+            [object setObject:data forKey:@"backColor"];
             
             //保存字体大小
             //从详情页面传过来的object中解析的字体
-            NSString *passedFontNumber = [self.passedObject objectForKey:@"fontNumber"];
+            NSString *passedFontNumber = self.passedObject.fontNumber;
             if (self.fontNumber != nil) {
-                [self.passedObject setObject:self.fontNumber forKey:@"fontNumber"];
+                self.passedObject.fontNumber = self.fontNumber;
+                [object setObject:self.fontNumber forKey:@"fontNumber"];
             } else {
-                [self.passedObject setObject:passedFontNumber forKey:@"fontNumber"];
+                self.passedObject.fontNumber = passedFontNumber;
+                [object setObject:passedFontNumber forKey:@"fontNumber"];
             }
             
             //保存字体的颜色
@@ -361,12 +364,13 @@
             [archiverFontColor encodeObject:self.contentText.textColor forKey:@"fontColor"];
             [archiverFontColor finishEncoding];
             
-            [self.passedObject setObject:fontColor forKey:@"fontColor"];
+            self.passedObject.fontColor = self.contentText.textColor;
+            [object setObject:fontColor forKey:@"fontColor"];
+            
+            self.block(self.passedObject);
             
             //保存日记的作者为当前用户
-            [self.passedObject setObject:[AVUser currentUser] forKey:@"belong"];
-            
-            [self.passedObject saveInBackground];
+            [object saveInBackground];
         }
     } else {    // 如果是由DailyNote页面直接点击添加进入，就是添加
         // 移除遮盖view
@@ -659,34 +663,6 @@
             NSString *string1 = [state stringByAppendingString:city];
             
             string1 = [string1 stringByAppendingString:sublocality];
-            
-//            AVUser *currentUser = [AVUser currentUser];//不加这句，日记就没有关联到指定的用户，相当于分享的日记
-//            AVObject *dairy = [AVObject objectWithClassName:@"Dairy"];
-//            NSString *contentOfDaily = @"今天是2016.5.29，星日，我还得继续努力啊man";
-//            
-//            [dairy setObject:contentOfDaily forKey:@"content"];
-//            [dairy setObject:@"第一类" forKey:@"Category"];
-//            [dairy setObject:@"public" forKey:@"isPrivate"];
-//            [dairy setObject:currentUser forKey:@"belong"];//日记没有指定用户，分享的日记
-//            [dairy setObject:[NSMutableArray array] forKey:@"staredUser"];//存储点赞的用户
-//            [dairy setObject:@"0" forKey:@"starNumber"];//存储点赞数
-//            [dairy setObject:string1 forKey:@"myLocation"];
-//            [dairy setObject:@"0" forKey:@"readTime"];
-//            
-//            UIImage *theImage = [UIImage imageNamed:@"star.png"];
-//            NSData *data = UIImagePNGRepresentation(theImage);
-//            AVFile *file = [AVFile fileWithName:@"head.png" data:data];
-//            
-//            UIImage *secondImage = [UIImage imageNamed:@"share.png"];
-//            NSData *secondData = UIImagePNGRepresentation(secondImage);
-//            AVFile *secondFile = [AVFile fileWithData:secondData];
-//            
-//            NSArray *array = [NSArray arrayWithObjects:file, secondFile, nil];
-//            [dairy addUniqueObjectsFromArray:array forKey:@"picture"];
-//            
-//            //保持网络和本地的日记同步
-//            dairy.fetchWhenSave = YES;
-//            [dairy saveInBackground];
             
             [self.locationManager stopUpdatingLocation];
             

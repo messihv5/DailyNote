@@ -17,7 +17,7 @@
 
 @interface DailyNoteCell : UITableViewCell
 /* 日记模型 */
-@property (nonatomic, strong) AVObject *model;
+@property (nonatomic, strong) NoteDetail *model;
 
 @property (weak, nonatomic) IBOutlet UIImageView *noteImage;
 

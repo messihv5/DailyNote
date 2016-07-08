@@ -12,6 +12,8 @@
 #import <UIKit/UIKit.h>
 @class NoteDetail;
 
+typedef void(^Block)(NoteDetail *passedObject);
+
 // 由未经indexPath进入而获取的model, 修改后传至DailyNote页面
 @protocol SendEditModelDelegate <NSObject>
 
@@ -33,6 +35,8 @@
 @property (nonatomic, assign) id <SendEditModelDelegate> modelDelegate;
 
 //接收从详情页面传过来的AVObject
-@property (strong, nonatomic) AVObject *passedObject;
+@property (strong, nonatomic) NoteDetail *passedObject;
+
+@property (copy, nonatomic) Block block;
 
 @end

@@ -11,6 +11,7 @@
 #import "WLLNoteDetailViewController.h"
 #import "WLLShareDetailViewController.h"
 #import "NoteDetail.h"
+#import "WLLDailyNoteDataManager.h"
 
 @interface WLLShareViewController ()<UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate>
 
@@ -88,104 +89,73 @@
 - (void)refreshAction:(UIRefreshControl *)refreshControl {
     [refreshControl beginRefreshing];
     
+    //得到数据中的第一个数据
+    
     //刷新数据，加载最新的数据，当数组存储了数据，查询的新数据插到数组的最前面
     if (self.data.count != 0) {
-        AVObject *firstObject = self.data[0];
+        NoteDetail *firstObject = self.data[0];
         
-        NSDate *firstDate = firstObject.createdAt;
-        
+        NSDate *firstDate = firstObject.date;
         if (self.passedIndexPath) {
             
             //点击收藏加载数据
-            AVRelation *collectionRelation = [self.currentUser relationForKey:@"collectionDiaries"];
-            
-            AVQuery *collectionQuery = [collectionRelation query];
-            [collectionQuery whereKey:@"createdAt" greaterThan:firstDate];
-            
-            [collectionQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-                if (error == nil) {
-                    if (objects.count != 0) {
-                        NSInteger number = objects.count;
-                        NSRange range = NSMakeRange(0, number);
-                        NSIndexSet *set = [NSIndexSet indexSetWithIndexesInRange:range];
-                        [self.data insertObjects:objects atIndexes:set];
-                        [self.shareTableView reloadData];
-                        [refreshControl endRefreshing];
-                    } else {
-                        [refreshControl endRefreshing];
-                        return;
-                    }
+            [[WLLDailyNoteDataManager sharedInstance] refreshTenDiariesOfCollectionByDate:firstDate finished:^{
+                NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
+                if (array.count != 0) {
+                    NSInteger number = array.count;
+                    NSRange range = NSMakeRange(0, number);
+                    NSIndexSet *set = [NSIndexSet indexSetWithIndexesInRange:range];
+                    [self.data insertObjects:array atIndexes:set];
+                    [self.shareTableView reloadData];
+                    [refreshControl endRefreshing];
                 } else {
                     [refreshControl endRefreshing];
-                    return;
                 }
             }];
         } else {
             
             //嵌套在tabbar中的Viewcontroller加载数据
-            AVQuery *query = [AVQuery queryWithClassName:@"Diary"];
-            [query whereKey:@"createdAt" greaterThan:firstDate];
-            [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-                if (error == nil) {
-                    if (objects.count != 0) {
-                        NSInteger number = objects.count;
-                        NSRange range = NSMakeRange(0, number);
-                        NSIndexSet *set = [NSIndexSet indexSetWithIndexesInRange:range];
-                        [self.data insertObjects:objects atIndexes:set];
-                        [self.shareTableView reloadData];
-                        [refreshControl endRefreshing];
-                    } else {
-                        [refreshControl endRefreshing];
-                        return;
-                    }
-                    
+            [[WLLDailyNoteDataManager sharedInstance] refreshTenDiariesOfSharingByDate:firstDate finished:^{
+                NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
+                if (array.count != 0) {
+                    NSInteger number = array.count;
+                    NSRange range = NSMakeRange(0, number);
+                    NSIndexSet *set = [NSIndexSet indexSetWithIndexesInRange:range];
+                    [self.data insertObjects:array atIndexes:set];
+                    [self.shareTableView reloadData];
+                    [refreshControl endRefreshing];
                 } else {
                     [refreshControl endRefreshing];
-                    return;
                 }
             }];
         }
     } else {
         
         //数组没有数据时，直接数组添加数据
-        
+        NSDate *date = [NSDate date];
         //点击收藏按钮加载的数据
         if (self.passedIndexPath) {
-            AVRelation *collectionRelation = [self.currentUser relationForKey:@"collectionDiaries"];
-            
-            AVQuery *collectionQuery = [collectionRelation query];
-            [collectionQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-                if (error == nil) {
-                    if (objects.count != 0) {
-                        [self.data addObjectsFromArray:objects];
-                        [self.shareTableView reloadData];
-                        [refreshControl endRefreshing];
-                    } else {
-                        [refreshControl endRefreshing];
-                        return;
-                    }
+            [[WLLDailyNoteDataManager sharedInstance] refreshTenDiariesOfCollectionByDate:date finished:^{
+                NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
+                if (array != 0) {
+                    [self.data addObjectsFromArray:array];
+                    [self.shareTableView reloadData];
+                    [refreshControl endRefreshing];
                 } else {
                     [refreshControl endRefreshing];
-                    return;
                 }
             }];
         } else {
             
             //嵌套在tabbar中的Viewcontroller加载数据
-            AVQuery *query = [AVQuery queryWithClassName:@"Diary"];
-            [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-                if (error == nil) {
-                    if (objects.count != 0) {
-                        [self.data addObjectsFromArray:objects];
-                        [self.shareTableView reloadData];
-                        [refreshControl endRefreshing];
-                    } else {
-                        [refreshControl endRefreshing];
-                        return;
-                    }
+            [[WLLDailyNoteDataManager sharedInstance] refreshTenDiariesOfSharingByDate:date finished:^{
+                NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
+                if (array.count != 0) {
+                    [self.data addObjectsFromArray:array];
+                    [self.shareTableView reloadData];
+                    [refreshControl endRefreshing];
                 } else {
                     [refreshControl endRefreshing];
-                    return;
                 }
             }];
         }
@@ -257,37 +227,39 @@
         self.upLabel.hidden = NO;
         
         //调用加载方法
-        [self loadTenMorediary];
+        [self loadTenMorediaries];
     }else {
         self.upLabel.hidden = YES;
     }
 }
 
 //每次上拉最多加载10篇日记
-- (void)loadTenMorediary {
+- (void)loadTenMorediaries {
     
-    AVObject *object = [self.data lastObject];
+    NoteDetail *object = [self.data lastObject];
     
-    NSDate *date = object.createdAt;
+    NSDate *date = object.date;
     
-    AVQuery *query = [AVQuery queryWithClassName:@"Diary"];
-    [query whereKey:@"createdAt" lessThan:date];
-    [query orderByDescending:@"createdAt"];
-     query.limit = 10;
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (error == nil) {
-            if (objects.count != 0) {
-                [self.data addObjectsFromArray:objects];
+    if (self.passedIndexPath) {
+        [[WLLDailyNoteDataManager sharedInstance] loadTenDiariesOfCollectionByDate:date finished:^{
+            NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
+            if (array != 0) {
+                [self.data addObjectsFromArray:array];
                 [self.shareTableView reloadData];
-                self.downLoadLabel.hidden = NO;
-            } else {
             }
-        } else {
-            self.downLoadLabel.text = @"网络错误";
-            self.downLoadLabel.hidden = NO;
-        }
-        self.isLoading = NO;
-    }];
+            self.isLoading = NO;
+        }];
+    } else {
+        [[WLLDailyNoteDataManager sharedInstance] loadTenDiariesOfSharingByDate:date finished:^{
+            NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
+            
+            if (array.count != 0) {
+                [self.data addObjectsFromArray:array];
+                [self.shareTableView reloadData];
+            }
+            self.isLoading = NO;
+        }];
+    }
 }
 
 //消失alertController
@@ -306,92 +278,27 @@
     
     //获取当前时间
     NSDate *todayDate = [NSDate date];
-    NSDate *myDate = [NSDate dateWithTimeInterval:8 * 60 * 60 sinceDate:todayDate];
     
     if (self.passedIndexPath) {
         
         //从收藏页面过来的
-        AVRelation *collectionRelation = [self.currentUser relationForKey:@"collectionDiaries"];
-        
-        AVQuery *collectionQuery = [collectionRelation query];
-        
-        collectionQuery.limit = 10;
-        [collectionQuery orderByDescending:@"createdAt"];
-        [collectionQuery whereKey:@"createdAt" lessThan:myDate];
-        
-        [collectionQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            [self.data addObjectsFromArray:objects];
-            [self.shareTableView reloadData];
+        [[WLLDailyNoteDataManager sharedInstance] loadTenDiariesOfCollectionByDate:todayDate finished:^{
+            NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
+            if (array.count != 0) {
+                [self.data addObjectsFromArray:array];
+                [self.shareTableView reloadData];
+            }
         }];
     } else {
-        
-        //嵌套在tabbar中的viewController加载数据
-        AVQuery *categoryQuery = [AVQuery queryWithClassName:@"Diary"];
-    
-        [categoryQuery orderByDescending:@"createdAt"];
-        [categoryQuery whereKey:@"createdAt" lessThan:myDate];
-        categoryQuery.limit = 10;
-        
-        [categoryQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            //这里可以先把objects数据解析到model里面，再把model存到数组里面
-            for (AVObject *object in objects) {
-                NoteDetail *model = [[NoteDetail alloc] init];
-                
-                //获取点赞用户数组，判断用户是否点赞
-                NSArray *staredUserArray = [object objectForKey:@"staredUser"];
-                model.staredUserArray = staredUserArray;
-
-                //获取日记的创建时间
-                NSString *string = nil;
-                
-                NSDate *createdDate = [object objectForKey:@"createdAt"];
-                
-                NSDate *currentDate = [NSDate date];
-                
-                NSTimeInterval timeInterval = [currentDate timeIntervalSinceDate:createdDate];
-                
-                if (timeInterval / (24 * 60 * 60) >= 1) {
-                    string = [NSString stringWithFormat:@"%ld天前", (NSInteger)timeInterval / (24 * 60 * 60) ];
-                } else if (timeInterval / (60 * 60) >= 1) {
-                    string = [NSString stringWithFormat:@"%ld小时前", (NSInteger)timeInterval / (60 * 60)];
-                } else if (timeInterval / 60 >= 1) {
-                    string = [NSString stringWithFormat:@"%ld分钟以前", (NSInteger)timeInterval / 60];
-                } else {
-                    string = [NSString stringWithFormat:@"%ld秒前", (NSInteger)timeInterval];
-                }
-                model.timeString = string;
-                
-                //点赞数
-                model.starNumber = [object objectForKey:@"starNumber"];
-                if (model.starNumber == nil) {
-                    model.starNumber = @"0";
-                }
-                
-                //内容
-                model.content = [object objectForKey:@"content"];
-                
-                //获取到这篇日记的作者的信息
-                NSArray *keys = [NSArray arrayWithObjects:@"belong", nil];
-                [object fetchInBackgroundWithKeys:keys block:^(AVObject *object, NSError *error) {
-                    AVUser *relatedUser = [object objectForKey:@"belong"];
-                    
-                    model.nickName = [relatedUser objectForKey:@"nickName"];
-                    
-                    AVFile *file = [relatedUser objectForKey:@"headImage"];
-                    
-                    if (file == nil) {
-                        model.headImage = nil;
-                    } else {
-                        [file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-                            UIImage *image = [UIImage imageWithData:data];
-                            model.headImage = image;
-                        }];
-                    }
-                }];
-                [self.data addObject:model];
+        [[WLLDailyNoteDataManager sharedInstance] loadTenDiariesOfSharingByDate:todayDate finished:^{
+            NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
+            if (array.count != 0) {
+                [self.data addObjectsFromArray:array];
+                [self.shareTableView reloadData];
+            } else {
+                return;
             }
-            [self.shareTableView reloadData];
-        }];;
+        }];
     }
 }
 
@@ -435,9 +342,8 @@
     
     detailController.passedObject = self.data[indexPath.row];
     
-    detailController.block = ^ (NSString *string) {
-        WChaoShareCellTableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-        cell.starNumberLabel.text = string;
+    detailController.block = ^ (NoteDetail *passedObject) {
+        self.data[indexPath.row] = passedObject;
     };
     
     //如果是从收藏页面过去的,传个indexpath作为标记
@@ -460,30 +366,34 @@
     
     //检查diary数组，如果含有该用户，就return，不能进行点赞
     
-    AVObject *diary = self.data[indexPath.row];
+    NoteDetail *diary = self.data[indexPath.row];
 
-    NSMutableArray *array = [diary objectForKey:@"staredUser"];
+    NSMutableArray *array = diary.staredUserArray;
     
+    //获取到日记对象
+    AVObject *object = [AVObject objectWithClassName:@"Diary" objectId:diary.diaryId];
     if (array == nil) {
+        
+       
         
         //第一次查询时点赞用户数组为空
         self.staredUserArray = [NSMutableArray arrayWithCapacity:10];
         
-        //日记里面保存的点赞数字也加1
-        NSString *num = [diary objectForKey:@"starNumber"];
-        num = [NSString stringWithFormat:@"%ld", [num integerValue] + 1];
-        [diary setObject:num forKey:@"starNumber"];
+        //日记里面保存的点赞数字显示1
+        NSString *num = @"1";
+        diary.starNumber = num;
+        [object setObject:num forKey:@"starNumber"];
         
         //把点赞的用户添加到数组中，以便下次点赞时进行判断
         AVUser *user = [AVUser currentUser];
         
         //把点赞的用户添加到diary的数组中保存
         [self.staredUserArray addObject:user];
+        [object setObject:self.staredUserArray forKey:@"staredUser"];
+        diary.staredUserArray = self.staredUserArray;
         
-        diary.fetchWhenSave = YES;
-        [diary setObject:self.staredUserArray forKey:@"staredUser"];
-        [diary saveInBackground];
-
+        object.fetchWhenSave = YES;
+        [object saveInBackground];
     } else {
         
         //如果该用户已经点赞
@@ -494,9 +404,10 @@
             //该用户没有点赞
             
             //日记里面保存的点赞数字也加1
-            NSString *num = [diary objectForKey:@"starNumber"];
+            NSString *num = diary.diaryId;
             num = [NSString stringWithFormat:@"%ld", [num integerValue] + 1];
-            [diary setObject:num forKey:@"starNumber"];
+            diary.starNumber = num;
+            [object setObject:num forKey:@"starNumber"];
             
             //把点赞的用户添加到数组中，以便下次点赞时进行判断
             AVUser *user = [AVUser currentUser];
@@ -504,9 +415,9 @@
             //把点赞的用户添加到diary的数组中保存
             [array addObject:user];
             
-            diary.fetchWhenSave = YES;
-            [diary setObject:array forKey:@"staredUser"];
-            [diary saveInBackground];
+            object.fetchWhenSave = YES;
+            [object setObject:array forKey:@"staredUser"];
+            [object saveInBackground];
         }
     }
     
