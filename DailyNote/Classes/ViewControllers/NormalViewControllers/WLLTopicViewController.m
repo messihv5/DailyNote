@@ -107,6 +107,7 @@
     [self.grayButton addTarget:self action:@selector(changeTopicToGrayAction:) forControlEvents:UIControlEventTouchUpInside];
     
     NSString *colorString = [self.theCurrentUser objectForKey:@"navigationColor"];
+    
     if ([colorString isEqualToString:@"blue"]) {
         [self.blueButton setImage:[UIImage imageNamed:@"blue_selectedButton"] forState:UIControlStateNormal];
     } else if ([colorString isEqualToString:@"black"]) {
@@ -142,16 +143,8 @@
     NSData *naviData = UIImagePNGRepresentation(self.navigationImageView.image);
     NSData *tabbarData = UIImagePNGRepresentation(self.tabbarImageView.image);
     
-    //把颜色归档
-    NSMutableData *colorData = [[NSMutableData alloc] init];
-    
-    NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:colorData];
-    [archiver encodeObject:[UIColor blueColor] forKey:@"navigationColor"];
-    [archiver finishEncoding];
-    
     //把设置的颜色、image保存在currentUser里面
-//    [self.theCurrentUser setObject:@"blue" forKey:@"navigationColor"];
-    [self.theCurrentUser setObject:colorData forKey:@"navigationColor"];
+    [self.theCurrentUser setObject:@"blue" forKey:@"navigationColor"];
     [self.theCurrentUser setObject:naviData forKey:@"navigationImage"];
     [self.theCurrentUser setObject:tabbarData forKey:@"tabbarImage"];
     self.theCurrentUser.fetchWhenSave = YES;
@@ -174,14 +167,8 @@
     NSData *naviData = UIImagePNGRepresentation(self.navigationImageView.image);
     NSData *tabbarData = UIImagePNGRepresentation(self.tabbarImageView.image);
     
-    NSMutableData *colorData = [[NSMutableData alloc] init];
-    NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:colorData];
-    [archiver encodeObject:[UIColor darkTextColor] forKey:@"navigationColor"];
-    [archiver finishEncoding];
-    
     //把设置的颜色、image保存在currentUser里面
-//    [self.theCurrentUser setObject:@"black" forKey:@"navigationColor"];
-    [self.theCurrentUser setObject:colorData forKey:@"navigationColor"];
+    [self.theCurrentUser setObject:@"black" forKey:@"navigationColor"];
     [self.theCurrentUser setObject:naviData forKey:@"navigationImage"];
     [self.theCurrentUser setObject:tabbarData forKey:@"tabbarImage"];
     self.theCurrentUser.fetchWhenSave = YES;
@@ -205,14 +192,8 @@
     NSData *naviData = UIImagePNGRepresentation(self.navigationImageView.image);
     NSData *tabbarData = UIImagePNGRepresentation(self.tabbarImageView.image);
     
-    NSMutableData *colorData = [[NSMutableData alloc] init];
-    NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:colorData];
-    [archiver encodeObject:[UIColor redColor] forKey:@"navigationColor"];
-    [archiver finishEncoding];
-    
     //把设置的颜色、image保存在currentUser里面
-//    [self.theCurrentUser setObject:@"red" forKey:@"navigationColor"];
-    [self.theCurrentUser setObject:colorData forKey:@"navigationColor"];
+    [self.theCurrentUser setObject:@"red" forKey:@"navigationColor"];
     [self.theCurrentUser setObject:naviData forKey:@"navigationImage"];
     [self.theCurrentUser setObject:tabbarData forKey:@"tabbarImage"];
     self.theCurrentUser.fetchWhenSave = YES;
@@ -236,14 +217,8 @@
     NSData *naviData = UIImagePNGRepresentation(self.navigationImageView.image);
     NSData *tabbarData = UIImagePNGRepresentation(self.tabbarImageView.image);
     
-    NSMutableData *colorData = [[NSMutableData alloc] init];
-    NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:colorData];
-    [archiver encodeObject:[UIColor lightGrayColor] forKey:@"navigationColor"];
-    [archiver finishEncoding];
-    
     //把设置的颜色、image保存在currentUser里面
-//    [self.theCurrentUser setObject:@"gray" forKey:@"navigationColor"];
-    [self.theCurrentUser setObject:colorData forKey:@"navigationColor"];
+    [self.theCurrentUser setObject:@"gray" forKey:@"navigationColor"];
     [self.theCurrentUser setObject:naviData forKey:@"navigationImage"];
     [self.theCurrentUser setObject:tabbarData forKey:@"tabbarImage"];
     self.theCurrentUser.fetchWhenSave = YES;
