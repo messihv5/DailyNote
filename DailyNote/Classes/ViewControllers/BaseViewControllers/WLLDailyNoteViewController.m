@@ -117,8 +117,6 @@ static NSString  *const reuseIdentifier = @"note_cell";
 - (void)refreshAction:(UIRefreshControl *)refreshControl {
     [refreshControl beginRefreshing];
     
-    
-
     if (self.isFromCalendar) {
         
         //从calender点击过来的刷新
@@ -258,7 +256,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
     CGFloat contentOffset = scrollView.contentOffset.y;
     
     //contentsize减去scrollView的height + 富余量10
-    CGFloat loadDataContentOffset = scrollView.contentSize.height - self.notesTableView.frame.size.height + 10;
+    CGFloat loadDataContentOffset = scrollView.contentSize.height - self.notesTableView.height + 10;
     
     if (contentOffset > loadDataContentOffset) {
         self.isLoading = YES;
@@ -465,7 +463,6 @@ static NSString  *const reuseIdentifier = @"note_cell";
     
     DailyNoteCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier
                                                           forIndexPath:indexPath];
-    
     if (cell.noteImage.image == nil) {
         cell.noteImage = nil;
     }
@@ -481,12 +478,12 @@ static NSString  *const reuseIdentifier = @"note_cell";
     [self.navigationController pushViewController:self.NoteDetailVC animated:YES];
 }
 
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     NoteDetail *model = self.data[indexPath.row];
     
-//    DailyNoteCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
-    DailyNoteCell *cell = [[DailyNoteCell alloc] init];
-    
+    DailyNoteCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
+//    DailyNoteCell *cell = [[DailyNoteCell alloc] init];
     CGFloat height = [cell heightForCell:model.content];
     
     return height;

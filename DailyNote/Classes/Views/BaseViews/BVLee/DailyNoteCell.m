@@ -64,11 +64,11 @@
     CGFloat height = 20.287109;
     
     if (!_noteImage.image) {
-        
+    
         if (rect.size.height <= 3 * height) {
-            return rect.size.height + _timeView.height + 45;
+            return rect.size.height + 28 + 45;
         } else {
-            return 3*height + _timeView.height + 45;
+            return 3*height + 28 + 45;
         }
     } else {
         if (rect.size.height <= 3 * height) {
@@ -76,7 +76,6 @@
         } else {
             return 3 * height + _timeView.frame.size.height + _noteImage.frame.size.height;
         }
-        
     }
 }
 

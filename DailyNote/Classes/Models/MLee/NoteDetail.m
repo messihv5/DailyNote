@@ -7,11 +7,11 @@
 //
 
 #import "NoteDetail.h"
+#import "DailyNoteCell.h"
 
 @implementation NoteDetail
 
 - (void)setValue:(id)value forUndefinedKey:(NSString *)key {
     
 }
-
 @end
