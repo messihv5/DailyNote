@@ -112,10 +112,7 @@
     NSLog(@"%@", nickName);
     
     AVFile *theBackgroundImageFile = [self.theCurrentUser objectForKey:@"theBackgroundImage"];
-//    [AVFile getFileWithObjectId:theBackgroundImageFile.objectId withBlock:^(AVFile *file, NSError *error) {
-//        NSData *theBackgroundImageData = [file getData];
-//        self.theBackgroundImageView.image = [UIImage imageWithData:theBackgroundImageData];
-//    }];
+    
     [self.theBackgroundImageView sd_setImageWithURL:[NSURL URLWithString:theBackgroundImageFile.url]];
     
     
@@ -132,10 +129,7 @@
     self.headImageView.backgroundColor = [UIColor purpleColor];
     
     AVFile *headImageFile = [self.theCurrentUser objectForKey:@"headImage"];
-//    [AVFile getFileWithObjectId:headImageFile.objectId withBlock:^(AVFile *file, NSError *error) {
-//        NSData *headImageFileData = [file getData];
-//        self.headImageView.image = [UIImage imageWithData:headImageFileData];
-//    }];
+
     [self.headImageView sd_setImageWithURL:[NSURL URLWithString:headImageFile.url]];
     self.headImageView.layer.cornerRadius = kHeight / 18;
     self.headImageView.layer.masksToBounds = YES;

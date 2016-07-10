@@ -65,6 +65,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
     
     //添加下拉刷新
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+    
     [refreshControl addTarget:self action:@selector(refreshAction:) forControlEvents:UIControlEventValueChanged];
     refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"努力刷新中"];
     [self.notesTableView addSubview:refreshControl];
@@ -83,6 +84,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
         //从calendar点击来的，加载对应的那一天的日记
         [[WLLDailyNoteDataManager sharedInstance] loadTenDiariesOfDateString:self.dateString finished:^{
             NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
+            
             [self.data addObjectsFromArray:array];
             [self.notesTableView reloadData];
         }];
@@ -404,18 +406,29 @@ static NSString  *const reuseIdentifier = @"note_cell";
     }
     
     //从currentUser的navigationColor字段获取颜色
-    NSData *colorData = [[AVUser currentUser] objectForKey:@"navigationColor"];
+    NSString *colorString = [[AVUser currentUser] objectForKey:@"navigationColor"];
     
-    NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:colorData];
-    
-    UIColor *color = [unarchiver decodeObjectForKey:@"navigationColor"];
-    
-    if (color == nil) {
+//    NSData *colorData = [[AVUser currentUser] objectForKey:@"navigationColor"];
+//    
+//    NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:colorData];
+//    
+//    UIColor *color = [unarchiver decodeObjectForKey:@"navigationColor"];
+//    
+    if (colorString == nil) {
         [tabbar setTintColor:[UIColor blueColor]];
         [bar setBarTintColor:[UIColor blueColor]];
-    } else {
-        [tabbar setTintColor:color];
-        [bar setBarTintColor:color];
+    } else if ([colorString isEqualToString:@"blue"]) {
+        [tabbar setTintColor:[UIColor blueColor]];
+        [bar setBarTintColor:[UIColor blueColor]];
+    } else if ([colorString isEqualToString:@"black"]) {
+        [tabbar setTintColor:[UIColor darkTextColor]];
+        [bar setBarTintColor:[UIColor darkTextColor]];
+    } else if ([colorString isEqualToString:@"gray"]) {
+        [tabbar setTintColor:[UIColor lightGrayColor]];
+        [bar setBarTintColor:[UIColor lightGrayColor]];
+    } else if ([colorString isEqualToString:@"red"]) {
+        [tabbar setTintColor:[UIColor redColor]];
+        [bar setBarTintColor:[UIColor redColor]];
     }
 }
 
@@ -471,7 +484,8 @@ static NSString  *const reuseIdentifier = @"note_cell";
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     NoteDetail *model = self.data[indexPath.row];
     
-    DailyNoteCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
+//    DailyNoteCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
+    DailyNoteCell *cell = [[DailyNoteCell alloc] init];
     
     CGFloat height = [cell heightForCell:model.content];
     
