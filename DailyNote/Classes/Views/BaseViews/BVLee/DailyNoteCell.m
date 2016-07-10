@@ -63,18 +63,18 @@
     
     CGFloat height = 20.287109;
     
-    if (!self.noteImage.image) {
+    if (!_noteImage.image) {
         
         if (rect.size.height <= 3 * height) {
-            return rect.size.height + self.timeView.height + 45;
+            return rect.size.height + _timeView.height + 45;
         } else {
-            return 3*height + self.timeView.height + 45;
+            return 3*height + _timeView.height + 45;
         }
     } else {
         if (rect.size.height <= 3 * height) {
-            return rect.size.height + self.timeView.frame.size.height + self.noteImage.frame.size.height;
+            return rect.size.height + _timeView.frame.size.height + _noteImage.frame.size.height;
         } else {
-            return 3 * height + self.timeView.frame.size.height + self.noteImage.frame.size.height;
+            return 3 * height + _timeView.frame.size.height + _noteImage.frame.size.height;
         }
         
     }
