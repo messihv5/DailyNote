@@ -65,6 +65,7 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:YES];
     if (self.passedIndexPath) {
         
         //从用户界面，收藏cell，push过来的controller
@@ -244,6 +245,7 @@
         [[WLLDailyNoteDataManager sharedInstance] loadTenDiariesOfCollectionByDate:date finished:^{
             NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
             if (array != 0) {
+                [self.data removeAllObjects];
                 [self.data addObjectsFromArray:array];
                 [self.shareTableView reloadData];
             }
@@ -319,7 +321,7 @@
     cell.theTextLable.text = model.content;
     cell.timeLabel.text = model.timeString;
     cell.nickNameLabel.text = model.nickName;
-    cell.headImageView.image = model.headImage;
+    [cell.headImageView sd_setImageWithURL:model.headImageUrl];
     cell.starNumberLabel.text = model.starNumber;
     
     //判断当前用户是否已经点赞
@@ -446,6 +448,7 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    NSLog(@"share controller low memory");
 }
 
 /*

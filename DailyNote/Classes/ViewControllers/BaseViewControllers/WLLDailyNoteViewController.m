@@ -330,11 +330,13 @@ static NSString  *const reuseIdentifier = @"note_cell";
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:YES];
     self.parentViewController.navigationItem.leftBarButtonItem = nil;
     self.parentViewController.navigationItem.rightBarButtonItem = nil;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:YES];
     //进入app时，弹出登录界面，如果用户没有退出系统，再进入时不用弹出登录界面
     if (![AVUser currentUser]) {
         dispatch_async(dispatch_get_main_queue(), ^{

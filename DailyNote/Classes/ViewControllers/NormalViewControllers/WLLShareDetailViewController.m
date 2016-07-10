@@ -127,8 +127,8 @@
     object.fetchWhenSave = YES;
     [object saveInBackground];
     
-    self.backgroundImageView.image = self.passedObject.backgroundImage;
-    self.headImageView.image = self.passedObject.headImage;
+    [self.backgroundImageView sd_setImageWithURL:self.passedObject.backgroundImageUrl];
+    [self.headImageView sd_setImageWithURL:self.passedObject.headImageUrl];
     
     NSDate *createdDate = self.passedObject.date;
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
@@ -159,6 +159,7 @@
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:YES];
     self.navigationController.navigationBar.hidden = NO;
 }
 
