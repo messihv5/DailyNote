@@ -86,7 +86,6 @@
 		4D8A3F481CF423F1000C2D42 /* WLLLogInViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D8A3F461CF423F1000C2D42 /* WLLLogInViewController.xib */; };
 		4D8A3F4C1CF442E9000C2D42 /* email.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D8A3F4B1CF442E9000C2D42 /* email.png */; };
 		4D8A3F4E1CF443F3000C2D42 /* lock.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D8A3F4D1CF443F3000C2D42 /* lock.png */; };
-		4D8C14851D313CD70090FA40 /* God.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D8C14841D313CD70090FA40 /* God.png */; };
 		4D96D6AC1D0FCB0300AC23FD /* WChaoReminderCellTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D96D6AA1D0FCB0300AC23FD /* WChaoReminderCellTableViewCell.m */; };
 		4D96D6AD1D0FCB0300AC23FD /* WChaoReminderCellTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D96D6AB1D0FCB0300AC23FD /* WChaoReminderCellTableViewCell.xib */; };
 		4D96D6B61D0FF46A00AC23FD /* WLLTimePickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D96D6B41D0FF46A00AC23FD /* WLLTimePickerController.m */; };
@@ -274,7 +273,6 @@
 		4D8A3F461CF423F1000C2D42 /* WLLLogInViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WLLLogInViewController.xib; sourceTree = "<group>"; };
 		4D8A3F4B1CF442E9000C2D42 /* email.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = email.png; sourceTree = "<group>"; };
 		4D8A3F4D1CF443F3000C2D42 /* lock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lock.png; sourceTree = "<group>"; };
-		4D8C14841D313CD70090FA40 /* God.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = God.png; sourceTree = "<group>"; };
 		4D96D6A91D0FCB0300AC23FD /* WChaoReminderCellTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WChaoReminderCellTableViewCell.h; sourceTree = "<group>"; };
 		4D96D6AA1D0FCB0300AC23FD /* WChaoReminderCellTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WChaoReminderCellTableViewCell.m; sourceTree = "<group>"; };
 		4D96D6AB1D0FCB0300AC23FD /* WChaoReminderCellTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WChaoReminderCellTableViewCell.xib; sourceTree = "<group>"; };
@@ -680,7 +678,6 @@
 		4D8A3F2C1CF3D615000C2D42 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				4D8C14841D313CD70090FA40 /* God.png */,
 				4DCAD5971D1F60EB007E47E9 /* heartSelected40X40.png */,
 				4DCAD5951D1F60BC007E47E9 /* heart40X40.png */,
 				4D2010231D1A3AFD00CE8EC9 /* heart15X15.png */,
@@ -1089,7 +1086,6 @@
 				4D70E7621D0A930900C44B66 /* WLLTopicViewController.xib in Resources */,
 				4D83E33D1D0C5F83003D5756 /* redButton.png in Resources */,
 				4D992C7C1D0BF7C200A23C46 /* blue_selectedButton.png in Resources */,
-				4D8C14851D313CD70090FA40 /* God.png in Resources */,
 				4D6E2DB91D0EB01E00AB8271 /* WLLSetReminderTimeViewController.xib in Resources */,
 				4D649B951D1131290005276B /* ShareSDK.bundle in Resources */,
 				4DD519781D27747F00745AA1 /* WLLMoodView.xib in Resources */,
