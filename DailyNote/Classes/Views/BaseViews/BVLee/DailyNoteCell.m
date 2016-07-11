@@ -60,6 +60,7 @@
     NSDictionary *dic = @{NSFontAttributeName:[UIFont systemFontOfSize:17]};
     // 计算：2 通过字符串获得rect
     CGRect rect = [text boundingRectWithSize:size options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin attributes:dic context:nil];
+    
     CGFloat height = 20.287109;
 
     if (model.imageUrl == nil) {
@@ -79,10 +80,8 @@
         } else {
             return 3 * height + 28 + 40 + 50;
         }
-        
     }
 }
-
 
 
 @end

@@ -117,8 +117,6 @@ static NSString  *const reuseIdentifier = @"note_cell";
 - (void)refreshAction:(UIRefreshControl *)refreshControl {
     [refreshControl beginRefreshing];
     
-    
-
     if (self.isFromCalendar) {
         
         //从calender点击过来的刷新
@@ -258,7 +256,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
     CGFloat contentOffset = scrollView.contentOffset.y;
     
     //contentsize减去scrollView的height + 富余量10
-    CGFloat loadDataContentOffset = scrollView.contentSize.height - self.notesTableView.frame.size.height + 10;
+    CGFloat loadDataContentOffset = scrollView.contentSize.height - self.notesTableView.height + 10;
     
     if (contentOffset > loadDataContentOffset) {
         self.isLoading = YES;
@@ -337,7 +335,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:YES];
-        self.parentViewController.navigationItem.leftBarButtonItem = nil;
+    self.parentViewController.navigationItem.leftBarButtonItem = nil;
     self.parentViewController.navigationItem.rightBarButtonItem = nil;
 }
 
