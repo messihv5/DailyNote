@@ -58,7 +58,6 @@
                                     block:^(AVUser *user, NSError *error) {
         if (user != nil) {
             self.isBackFromLoginController = YES;
-            self.block(self.isBackFromLoginController);
             [self dismissViewControllerAnimated:YES completion:nil];
         } else {
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"邮箱或密码有误"

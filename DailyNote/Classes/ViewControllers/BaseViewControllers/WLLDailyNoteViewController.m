@@ -305,7 +305,11 @@ static NSString  *const reuseIdentifier = @"note_cell";
 // 加载 barButton Item
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:YES];
-    
+    //如果用户登录，加载一次日记
+    if ([AVUser currentUser] && self.isFromCalendar == NO) {
+        [self loadTenDiaries];
+    }
+
     self.parentViewController.navigationItem.title = @"Time Line";
     
     self.EditVC = [[EditNoteViewController alloc] initWithNibName:@"EditNoteViewController"
@@ -333,7 +337,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:YES];
-    self.parentViewController.navigationItem.leftBarButtonItem = nil;
+        self.parentViewController.navigationItem.leftBarButtonItem = nil;
     self.parentViewController.navigationItem.rightBarButtonItem = nil;
 }
 
@@ -345,19 +349,14 @@ static NSString  *const reuseIdentifier = @"note_cell";
             WLLLogInViewController *logController;
             logController = [[WLLLogInViewController alloc] initWithNibName:@"WLLLogInViewController"
                                                                      bundle:[NSBundle mainBundle]];
-            logController.block = ^ (BOOL isBackFromLoginController) {
-                self.isBackFromLoginController = isBackFromLoginController;
-            };
+            
             UINavigationController *naviController;
             naviController= [[UINavigationController alloc] initWithRootViewController:logController];
             [self.parentViewController.navigationController presentViewController:naviController animated:NO completion:nil];
         });
     }
     
-    //如果用户登录，加载一次日记
-    if ([AVUser currentUser] && self.isFromCalendar == NO) {
-        [self loadTenDiaries];
-    }
+    
     
     //获取当前的导航栏和tab栏
     UITabBar *tabbar = self.tabBarController.tabBar;
@@ -465,10 +464,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
     
     DailyNoteCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier
                                                           forIndexPath:indexPath];
-    
-    if (cell.noteImage.image == nil) {
-        cell.noteImage = nil;
-    }
+   
     cell.model = self.data[indexPath.row];
 
     return cell;
@@ -483,12 +479,9 @@ static NSString  *const reuseIdentifier = @"note_cell";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     NoteDetail *model = self.data[indexPath.row];
-    
-//    DailyNoteCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
-    DailyNoteCell *cell = [[DailyNoteCell alloc] init];
-    
-    CGFloat height = [cell heightForCell:model.content];
-    
+
+    CGFloat height = [DailyNoteCell heightForCell:model.content model:model];
+
     return height;
 }
 

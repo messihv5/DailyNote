@@ -54,31 +54,35 @@
 
 }
 
-- (CGFloat)heightForCell:(NSString *)text {
++ (CGFloat)heightForCell:(NSString *)text model:(NoteDetail *) model{
     // 计算：1 准备工作
     CGSize size = CGSizeMake(CGRectGetWidth([UIScreen mainScreen].bounds) - 20, 2000);
     NSDictionary *dic = @{NSFontAttributeName:[UIFont systemFontOfSize:17]};
     // 计算：2 通过字符串获得rect
     CGRect rect = [text boundingRectWithSize:size options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin attributes:dic context:nil];
-    
     CGFloat height = 20.287109;
-    
-    if (!self.noteImage.image) {
+
+    if (model.imageUrl == nil) {
         
-        if (rect.size.height <= 3 * height) {
-            return rect.size.height + self.timeView.height + 45;
+        if (rect.size.height <= height + 1) {
+            return height + 28 + 40;
+        } else if (rect.size.height <= 2 * height + 2 && rect.size.height > height + 1){
+            return 2 * height + 28 + 40;
         } else {
-            return 3*height + self.timeView.height + 45;
+            return 3 * height + 28 + 40;
         }
     } else {
-        if (rect.size.height <= 3 * height) {
-            return rect.size.height + self.timeView.frame.size.height + self.noteImage.frame.size.height;
+        if (rect.size.height <= height + 1) {
+            return height + 28 + 40 + 50;
+        } else if (rect.size.height <= 2 * height + 2 && rect.size.height > height + 1){
+            return 2 * height + 28 + 40 + 50;
         } else {
-            return 3 * height + self.timeView.frame.size.height + self.noteImage.frame.size.height;
+            return 3 * height + 28 + 40 + 50;
         }
         
     }
 }
+
 
 
 @end

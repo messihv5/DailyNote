@@ -23,9 +23,6 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="600-ei-8xc">
-                                <rect key="frame" x="5" y="64" width="352" height="174"/>
-                            </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SUS-zw-iwc" userLabel="timeView">
                                 <rect key="frame" x="0.0" y="0.0" width="362" height="28"/>
                                 <subviews>
@@ -59,6 +56,9 @@
                                     <constraint firstItem="1DS-32-q0S" firstAttribute="centerY" secondItem="SUS-zw-iwc" secondAttribute="centerY" id="xs5-w4-vp6"/>
                                 </constraints>
                             </view>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="600-ei-8xc">
+                                <rect key="frame" x="5" y="64" width="352" height="174"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>

@@ -26,6 +26,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *contentLabel;
 
 
-- (CGFloat)heightForCell:(NSString *)text;
+//- (CGFloat)heightForCell:(NSString *)text;
++ (CGFloat)heightForCell:(NSString *)text model:(NoteDetail *)model;
 
 @end
