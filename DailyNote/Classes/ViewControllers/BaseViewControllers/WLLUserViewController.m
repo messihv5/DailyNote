@@ -118,7 +118,6 @@
     
     [self.theBackgroundImageView sd_setImageWithURL:[NSURL URLWithString:theBackgroundImageFile.url]];
     
-    
     UITapGestureRecognizer *tapGestureRecognizer;
     tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
                                                                    action:@selector(theBackgroudImageViewTapAction)];
@@ -343,17 +342,6 @@
 - (void)logOutAction:(UIButton *)sender {
     [AVUser logOut];
     
-//    WLLLogInViewController *logInViwController;
-//    logInViwController = [[WLLLogInViewController alloc] initWithNibName:@"WLLLogInViewController"
-//                                                                  bundle:[NSBundle mainBundle]];
-//
-//    UINavigationController *naviController;
-//    naviController = [[UINavigationController alloc] initWithRootViewController:logInViwController];
-//    
-//    //弹出登录界面之前，先让tabbarController回到主页面，然后在present出登录界面
-//    UITabBarController *controller = (UITabBarController *)self.parentViewController;
-//    controller.selectedIndex = 0;
-//    [self.navigationController presentViewController:naviController animated:YES completion:nil];
     [[UIApplication sharedApplication].delegate application:[UIApplication sharedApplication] didFinishLaunchingWithOptions:nil];
     
 }

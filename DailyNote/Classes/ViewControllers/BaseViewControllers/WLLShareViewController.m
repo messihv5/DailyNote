@@ -27,7 +27,6 @@
 @property (strong, nonatomic) UIView *alertView;
 @property (strong, nonatomic) UILabel *upLabel;
 @property (strong, nonatomic) NSMutableArray *staredUserArray;
-
 @end
 
 @implementation WLLShareViewController
@@ -35,7 +34,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    
+        
     if (self.passedIndexPath) {
         
         //从用户界面，收藏cell，push过来的controller
@@ -62,6 +61,7 @@
     [self addViewToFooterView];
     
     [self addAlertView];
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -85,6 +85,7 @@
     }
     return _data;
 }
+
 
 //下拉刷新方法，加载最新的日记
 - (void)refreshAction:(UIRefreshControl *)refreshControl {
