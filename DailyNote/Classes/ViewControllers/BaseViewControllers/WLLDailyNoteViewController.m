@@ -38,6 +38,7 @@
 @property (assign, nonatomic) BOOL isRefreshing;
 @property (assign, nonatomic) BOOL isBackFromLoginController;
 @property (strong, nonatomic) NSDate *dateFromCalendar;
+@property (assign, nonatomic) BOOL isLoadedFromViewDidLoad;
 
 @end
 
@@ -47,6 +48,8 @@ static NSString  *const reuseIdentifier = @"note_cell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.isLoadedFromViewDidLoad = YES;
 
     self.userDefaults = [NSUserDefaults standardUserDefaults];
     
@@ -101,7 +104,6 @@ static NSString  *const reuseIdentifier = @"note_cell";
 
 //加载10篇日记
 - (void)loadTenDiaries {
-    [self.data removeAllObjects];
     NSDate *date = [NSDate date];
     
     //加载日期比当前日期多1s，因为你点击保存当前日记，就开始了查询，两个时间重叠，所以加上1s，才能加载到刚添加的日记
@@ -120,13 +122,14 @@ static NSString  *const reuseIdentifier = @"note_cell";
     if (self.isFromCalendar) {
         
         //从calender点击过来的刷新
-        //先从数组中获取日期
-        NoteDetail *firstObject = self.data[0];
-        
-        NSDate *firstDate = firstObject.date;
-        //刷新数据，加载最新的数据，当数组存储了数据，查询的新数据插到数组的最前面
+       //刷新数据，加载最新的数据，当数组存储了数据，查询的新数据插到数组的最前面
         
         if (self.data.count != 0) {
+            //先从数组中获取日期
+            NoteDetail *firstObject = self.data[0];
+            
+            NSDate *firstDate = firstObject.date;
+
             [[WLLDailyNoteDataManager sharedInstance] refreshTenDiriesOfTheCurrentUserByDateString:self.dateString dateFromLoadDiary:firstDate finished:^{
                 
                 NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
@@ -149,7 +152,8 @@ static NSString  *const reuseIdentifier = @"note_cell";
             
         } else {
             //数据数组中没有数据时，数据数组直接添加数据
-            [[WLLDailyNoteDataManager sharedInstance] refreshTenDiriesOfTheCurrentUserByDateString:self.dateString dateFromLoadDiary:firstDate finished:^{
+            NSDate *date = [NSDate date];
+            [[WLLDailyNoteDataManager sharedInstance] loadTenDiariesOfTheCurrentUserByDate:date finished:^{
                 NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
                 if (array.count != 0) {
                     [self.data addObjectsFromArray:array];
@@ -163,11 +167,16 @@ static NSString  *const reuseIdentifier = @"note_cell";
     } else {
         //不是从calendar过来的数据,加载当前用户的所有数据
         
-        NSDate *date = [NSDate date];
         //刷新数据，加载最新的数据，当数组存储了数据，查询的新数据插到数组的最前面
         
         if (self.data.count != 0) {
-            [[WLLDailyNoteDataManager sharedInstance] refreshTenDiariesOfTheCurrentUserByDate:date finished:^{
+            
+            //先从数组中获取日期
+            NoteDetail *firstObject = self.data[0];
+            
+            NSDate *firstDate = firstObject.date;
+
+            [[WLLDailyNoteDataManager sharedInstance] refreshTenDiariesOfTheCurrentUserByDate:firstDate finished:^{
                 NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
                 if (array.count != 0) {
                     NSInteger number = array.count;
@@ -185,7 +194,10 @@ static NSString  *const reuseIdentifier = @"note_cell";
             }];
         } else {
             //数据数组中没有数据时，数据数组直接添加数据
-            [[WLLDailyNoteDataManager sharedInstance] refreshTenDiariesOfTheCurrentUserByDate:date finished:^{
+            
+            NSDate *date = [NSDate date];
+            
+            [[WLLDailyNoteDataManager sharedInstance] loadTenDiariesOfTheCurrentUserByDate:date finished:^{
                 NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
                 if (array.count != 0) {
                     [self.data addObjectsFromArray:array];
@@ -304,7 +316,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:YES];
     
-    self.parentViewController.navigationItem.title = @"Time Line";
+        self.parentViewController.navigationItem.title = @"Time Line";
     
     self.EditVC = [[EditNoteViewController alloc] initWithNibName:@"EditNoteViewController"
                                                            bundle:[NSBundle mainBundle]];
@@ -343,20 +355,24 @@ static NSString  *const reuseIdentifier = @"note_cell";
             WLLLogInViewController *logController;
             logController = [[WLLLogInViewController alloc] initWithNibName:@"WLLLogInViewController"
                                                                      bundle:[NSBundle mainBundle]];
-            logController.block = ^ (BOOL isBackFromLoginController) {
-                self.isBackFromLoginController = isBackFromLoginController;
-            };
+            
             UINavigationController *naviController;
             naviController= [[UINavigationController alloc] initWithRootViewController:logController];
             [self.parentViewController.navigationController presentViewController:naviController animated:NO completion:nil];
         });
     }
     
-    //如果用户登录，加载一次日记
-    if ([AVUser currentUser] && self.isFromCalendar == NO) {
-        [self loadTenDiaries];
+    //从viewDidLoad第一次进入页面时，不刷新，后面每次进入页面都刷新
+    if ([AVUser currentUser] && self.isLoadedFromViewDidLoad == NO) {
+        [self refreshAction:nil];
     }
     
+    //进入日记，从viewDidLoad进入时，加载一次日记
+    if ([AVUser currentUser] && self.isFromCalendar == NO && self.isLoadedFromViewDidLoad == YES) {
+        [self loadTenDiaries];
+        self.isLoadedFromViewDidLoad = NO;
+    }
+
     //获取当前的导航栏和tab栏
     UITabBar *tabbar = self.tabBarController.tabBar;
     UINavigationBar *bar = self.tabBarController.navigationController.navigationBar;
@@ -463,9 +479,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
     
     DailyNoteCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier
                                                           forIndexPath:indexPath];
-    if (cell.noteImage.image == nil) {
-        cell.noteImage = nil;
-    }
+   
     cell.model = self.data[indexPath.row];
 
     return cell;
@@ -478,14 +492,11 @@ static NSString  *const reuseIdentifier = @"note_cell";
     [self.navigationController pushViewController:self.NoteDetailVC animated:YES];
 }
 
-
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     NoteDetail *model = self.data[indexPath.row];
-    
-    DailyNoteCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
-//    DailyNoteCell *cell = [[DailyNoteCell alloc] init];
-    CGFloat height = [cell heightForCell:model.content];
-    
+
+    CGFloat height = [DailyNoteCell heightForCell:model.content model:model];
+
     return height;
 }
 

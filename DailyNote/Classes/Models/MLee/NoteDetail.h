@@ -48,6 +48,8 @@
 @property (strong, nonatomic) NSURL *backgroundImageUrl;
 /*日记被阅读的次数*/
 @property (copy, nonatomic) NSString *readTime;
+/*存放照片*/
+@property (copy, nonatomic) NSString *imageUrl;
 
 
 
