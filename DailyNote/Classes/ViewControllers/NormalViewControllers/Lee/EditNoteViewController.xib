@@ -9,6 +9,7 @@
             <connections>
                 <outlet property="contentText" destination="PmO-Tq-4W1" id="lYJ-RN-GBo"/>
                 <outlet property="countLabel" destination="csS-rw-Bvx" id="Eg3-Hw-ias"/>
+                <outlet property="photoCount" destination="6Rn-kD-JHy" id="0eZ-af-jcz"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -18,28 +19,36 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="PmO-Tq-4W1">
-                    <rect key="frame" x="0.0" y="10" width="600" height="590"/>
+                    <rect key="frame" x="0.0" y="10" width="600" height="569.5"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                 </textView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="csS-rw-Bvx">
-                    <rect key="frame" x="563.5" y="69" width="26.5" height="12"/>
+                    <rect key="frame" x="563" y="69" width="26.5" height="12"/>
                     <fontDescription key="fontDescription" type="system" pointSize="10"/>
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Rn-kD-JHy">
+                    <rect key="frame" x="548" y="579.5" width="42" height="20.5"/>
+                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
+                <constraint firstAttribute="trailing" secondItem="6Rn-kD-JHy" secondAttribute="trailing" constant="10" id="4Nf-GP-un5"/>
                 <constraint firstAttribute="trailing" secondItem="PmO-Tq-4W1" secondAttribute="trailing" id="BIc-ga-Uxi"/>
                 <constraint firstItem="PmO-Tq-4W1" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="10" id="Itw-Ai-eua"/>
-                <constraint firstAttribute="bottom" secondItem="PmO-Tq-4W1" secondAttribute="bottom" id="Kax-5Z-eBX"/>
                 <constraint firstItem="PmO-Tq-4W1" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="M2x-PG-82x"/>
                 <constraint firstAttribute="trailing" secondItem="csS-rw-Bvx" secondAttribute="trailing" constant="10" id="S2p-Wq-Xmq"/>
+                <constraint firstAttribute="bottom" secondItem="6Rn-kD-JHy" secondAttribute="bottom" id="htI-jz-Egg"/>
                 <constraint firstItem="csS-rw-Bvx" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="69" id="k3m-xO-FRj"/>
+                <constraint firstItem="6Rn-kD-JHy" firstAttribute="top" secondItem="PmO-Tq-4W1" secondAttribute="bottom" id="kjf-vz-2qH"/>
             </constraints>
-            <point key="canvasLocation" x="553" y="74"/>
+            <point key="canvasLocation" x="545" y="6"/>
         </view>
     </objects>
 </document>

@@ -17,6 +17,9 @@
 #import "WLLNoteBackgroundChoice.h"
 #import <CoreLocation/CoreLocation.h>
 
+#import "WLLAssetPickerController.h"
+#import "WLLAssetPickerState.h"
+
 
 @interface EditNoteViewController ()<UITextViewDelegate, ToolViewDelegate, ChangeFontDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, ChangeNoteBackgroundColorDelegate, CancelChoiceDelegate, CLLocationManagerDelegate>
 /* 判断日记分类页面隐藏与否 */
@@ -52,6 +55,8 @@
 @property (strong, nonatomic) CLGeocoder *geoCoder;
 @property (strong, nonatomic) NSString *theString;
 @property (assign, nonatomic) NSString *fontNumber;
+/* 选中照片数 */
+@property (weak, nonatomic) IBOutlet UILabel *photoCount;
 
 @end
 
@@ -145,9 +150,6 @@
         }
         
         //背景颜色
-        ;
-        
-        
         UIColor *backColor = self.passedObject.backColor;
         
         if (backColor == nil) {
@@ -157,9 +159,6 @@
         }
         
         //字体颜色
-        
-        
-        
         UIColor *fontColor = self.fontColor;
         
         if (fontColor == nil) {
@@ -170,31 +169,12 @@
         
     } else {    // 否则为创建新日记, 弹出键盘
         
-//        [self getModelWithoutIndexPth];
-        
         //[self.contentText becomeFirstResponder];
         // 加载toolView, 键盘隐藏
         [self setToolView];
         self.is = YES;
     }
 }
-
-//- (void)getModelWithIndexPath {
-//    
-//    self.model = [[WLLDailyNoteDataManager sharedInstance] getModelWithIndex:self.indexPath.row];
-//    
-//    // 取model时将model原始值赋给属性
-//    self.backColor = self.model.backColor;
-//    self.fontColor = self.model.fontColor;
-//    self.contentFont = self.model.contentFont;
-//}
-//- (void)getModelWithoutIndexPth {
-//    self.model = [[NoteDetail alloc] init];
-//    self.backColor = self.model.backColor;
-//    self.fontColor = self.model.fontColor;
-//    self.contentFont = self.model.contentFont;
-//}
-
 // view出现后 加载分类页面初始位置
 - (void)viewDidAppear:(BOOL)animated {
     
@@ -257,6 +237,8 @@
     [UIView animateWithDuration:duration animations:^{
        
         self.toolView.transform = CGAffineTransformMakeTranslation(0, frame.origin.y - kHeight);
+        self.photoCount.transform = CGAffineTransformMakeTranslation(0, frame.origin.y - kHeight - self.toolView.height);
+        self.photoCount.text = [NSString stringWithFormat:@"日记中未添加图片"];
     }];
 }
 
@@ -314,14 +296,8 @@
         if (self.contentText.text == nil || string.length == 0) {
             
             //日记内容为空，弹出提示框
-            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"请输入内容" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+            [self tipOfNoneDairyContent];
             
-            UIAlertAction *executeAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                
-            }];
-            
-            [alertController addAction:executeAction];
-            [self.navigationController presentViewController:alertController animated:YES completion:nil];
         } else {
             
             //日记内容不为空，保存日记
@@ -377,8 +353,6 @@
         // 收回font view
         self.fontView.frame = CGRectMake(0, kHeight, kWidth, 0.4*kHeight);
         
-        // 添加新模型
-//        [self addANewModel];
         
         if (_modelDelegate && [_modelDelegate respondsToSelector:@selector(sendEditModel:)]) {
             [_modelDelegate sendEditModel:self.model];
@@ -396,14 +370,8 @@
         if (self.contentText.text == nil || string.length == 0) {
             
             //日记内容为空，弹出提示框
-            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"请输入内容" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+            [self tipOfNoneDairyContent];
             
-            UIAlertAction *executeAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                
-            }];
-            
-            [alertController addAction:executeAction];
-            [self.navigationController presentViewController:alertController animated:YES completion:nil];
         } else {
             
             //日记内容不为空，保存日记
@@ -442,23 +410,18 @@
     
     [self.navigationController popViewControllerAnimated:YES];
 }
-// 添加新模型
-//- (void)addANewModel {
-//    
-//    self.model.content = self.contentText.text;
-//    
-//    if (self.model.backColor == nil) self.model.backColor = [UIColor whiteColor];
-//    if (self.model.fontColor == nil) self.model.fontColor = [UIColor blackColor];
-//    if (self.model.contentFont == nil) self.model.contentFont = [UIFont sf_adapterScreenWithFont];
-//    
-//    self.model.date = [NSDate date];
-//    self.model.time = [NSString nt_timeFromDate:_model.date];
-//    self.model.weekLabel = [NSString wd_weekDayFromDate:_model.date];
-//    self.model.monthAndYear = [NSString nt_monthAndYearFromDate:_model.date];
-//    self.model.dates = [NSString nt_nowDateFromDate:_model.date];
-//    
-//    [[WLLDailyNoteDataManager sharedInstance] addDailyNoteWithNote:self.model];
-//}
+
+// 如果日记内容为空, 弹出提示框
+- (void)tipOfNoneDairyContent {
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"请输入内容" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *executeAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        
+    }];
+    
+    [alertController addAction:executeAction];
+    [self.navigationController presentViewController:alertController animated:YES completion:nil];
+}
 
 // 取消
 - (void)cancel {
@@ -617,23 +580,22 @@
 
 // 图片来自相册
 - (void)pictureFromLibrary {
-    UIImagePickerController *pictureController = [[UIImagePickerController alloc] init];
-    pictureController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    pictureController.delegate = self;
+    WLLAssetPickerController *assetPicker = [WLLAssetPickerController pickerWithCompletion:^(NSDictionary *info) {
+        
+        [self dismissViewControllerAnimated:YES completion:^{
+            
+            NSArray *assets = [info objectForKey:WLLAssetPickerSelectedAssets];
+            self.photoCount.text = [NSString stringWithFormat:@"为日记中添加 %ld 张图片", assets.count];
+        }];
+        
+    } canceled:^{
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }];
     
-    [self presentViewController:pictureController animated:YES completion:nil];
+    assetPicker.selectionLimit = 10;
+    
+    [self presentViewController:assetPicker animated:YES completion:nil];
 }
-// 完成选中图片后
-
-- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
-//    self.imgView.image = info[UIImagePickerControllerOriginalImage];
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
 
 #pragma mark - 定位代理方法
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations {
