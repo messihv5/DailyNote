@@ -37,17 +37,15 @@
 + (NSString *)wd_weekDayFromDate:(NSDate *)date {
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     // 初始dateComponents
-    NSDateComponents *comps = [[NSDateComponents alloc] init];
     
     NSInteger unitFlags = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitWeekday | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond;
     
-    comps = [calendar components:unitFlags fromDate:date];
+    NSDateComponents *comps = [calendar components:unitFlags fromDate:date];
     
-    NSString *weekStr = [NSString string];
     
     NSInteger week = [comps weekday];
     
-    weekStr = [self getweek:week];
+    NSString *weekStr = [self getweek:week];
     
     return weekStr;
 }

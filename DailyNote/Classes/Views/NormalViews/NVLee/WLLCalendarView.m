@@ -68,7 +68,6 @@ static NSString *const WLLCalendarCellIdentifier = @"calendar_cell";
     // 显示年月
     [_monthAndYearLabel setText:[NSString stringWithFormat:@"%.2ld-%li",
                                  [self.date month:date],[self.date year:date]]];
-    NSLog(@"%ld", [self.date month:date]);
     [_collectionView reloadData];
 }
 

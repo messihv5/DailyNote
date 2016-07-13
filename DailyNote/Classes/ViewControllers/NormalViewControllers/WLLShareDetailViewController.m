@@ -203,7 +203,7 @@
 //返回操作
 - (void)backAction:(UIButton *)sender {
     
-    self.block(self.passedObject);
+    self.block(self.currentDiaryStarNumberLabel.text);
     [self.navigationController popViewControllerAnimated:YES];
 }
 

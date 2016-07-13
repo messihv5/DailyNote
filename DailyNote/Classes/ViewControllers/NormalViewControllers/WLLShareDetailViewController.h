@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-typedef void (^Block)(NoteDetail *passedObject);
+typedef void (^Block)(NSString *starNumber);
 
 @interface WLLShareDetailViewController : UIViewController
 
