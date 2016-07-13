@@ -140,11 +140,17 @@
 		F309D9751D2A550D00E9D18A /* WLLCalendarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F309D9731D2A550D00E9D18A /* WLLCalendarViewController.m */; };
 		F309D97C1D2A554400E9D18A /* WLLCalendarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F309D9781D2A554400E9D18A /* WLLCalendarCell.m */; };
 		F309D97D1D2A554400E9D18A /* WLLCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = F309D97A1D2A554400E9D18A /* WLLCalendarView.m */; };
+		F37AFD221D3532FC00802BD4 /* WLLAlbumTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F37AFD151D3532FC00802BD4 /* WLLAlbumTableViewController.m */; };
+		F37AFD231D3532FC00802BD4 /* WLLAssetPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = F37AFD171D3532FC00802BD4 /* WLLAssetPickerController.m */; };
+		F37AFD241D3532FC00802BD4 /* WLLAssetPickerState.m in Sources */ = {isa = PBXBuildFile; fileRef = F37AFD191D3532FC00802BD4 /* WLLAssetPickerState.m */; };
+		F37AFD251D3532FC00802BD4 /* WLLAssetsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F37AFD1B1D3532FC00802BD4 /* WLLAssetsCell.m */; };
+		F37AFD261D3532FC00802BD4 /* WLLAssetTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F37AFD1D1D3532FC00802BD4 /* WLLAssetTableViewController.m */; };
+		F37AFD271D3532FC00802BD4 /* WLLAssetViewColumn.m in Sources */ = {isa = PBXBuildFile; fileRef = F37AFD1F1D3532FC00802BD4 /* WLLAssetViewColumn.m */; };
+		F37AFD281D3532FC00802BD4 /* WLLAssetWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = F37AFD211D3532FC00802BD4 /* WLLAssetWrapper.m */; };
+		F37AFD2A1D35354A00802BD4 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F37AFD291D35354A00802BD4 /* AssetsLibrary.framework */; };
 		F3DFB41C1D2CDB1900898765 /* WLLCalendarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F3DFB41B1D2CDB1900898765 /* WLLCalendarView.xib */; };
 		F3DFB4251D2CE24700898765 /* WLLView.m in Sources */ = {isa = PBXBuildFile; fileRef = F3DFB4241D2CE24700898765 /* WLLView.m */; };
 		F3DFB42E1D2CF4E900898765 /* NSDate+WLLDate.m in Sources */ = {isa = PBXBuildFile; fileRef = F3DFB42D1D2CF4E900898765 /* NSDate+WLLDate.m */; };
-		F3DFB4321D2D010C00898765 /* WLLAlbumController.m in Sources */ = {isa = PBXBuildFile; fileRef = F3DFB4301D2D010C00898765 /* WLLAlbumController.m */; };
-		F3DFB4331D2D010C00898765 /* WLLAlbumController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F3DFB4311D2D010C00898765 /* WLLAlbumController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -356,14 +362,26 @@
 		F309D9781D2A554400E9D18A /* WLLCalendarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLCalendarCell.m; sourceTree = "<group>"; };
 		F309D9791D2A554400E9D18A /* WLLCalendarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLCalendarView.h; sourceTree = "<group>"; };
 		F309D97A1D2A554400E9D18A /* WLLCalendarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLCalendarView.m; sourceTree = "<group>"; };
+		F37AFD141D3532FC00802BD4 /* WLLAlbumTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLAlbumTableViewController.h; sourceTree = "<group>"; };
+		F37AFD151D3532FC00802BD4 /* WLLAlbumTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLAlbumTableViewController.m; sourceTree = "<group>"; };
+		F37AFD161D3532FC00802BD4 /* WLLAssetPickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLAssetPickerController.h; sourceTree = "<group>"; };
+		F37AFD171D3532FC00802BD4 /* WLLAssetPickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLAssetPickerController.m; sourceTree = "<group>"; };
+		F37AFD181D3532FC00802BD4 /* WLLAssetPickerState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLAssetPickerState.h; sourceTree = "<group>"; };
+		F37AFD191D3532FC00802BD4 /* WLLAssetPickerState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLAssetPickerState.m; sourceTree = "<group>"; };
+		F37AFD1A1D3532FC00802BD4 /* WLLAssetsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLAssetsCell.h; sourceTree = "<group>"; };
+		F37AFD1B1D3532FC00802BD4 /* WLLAssetsCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLAssetsCell.m; sourceTree = "<group>"; };
+		F37AFD1C1D3532FC00802BD4 /* WLLAssetTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLAssetTableViewController.h; sourceTree = "<group>"; };
+		F37AFD1D1D3532FC00802BD4 /* WLLAssetTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLAssetTableViewController.m; sourceTree = "<group>"; };
+		F37AFD1E1D3532FC00802BD4 /* WLLAssetViewColumn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLAssetViewColumn.h; sourceTree = "<group>"; };
+		F37AFD1F1D3532FC00802BD4 /* WLLAssetViewColumn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLAssetViewColumn.m; sourceTree = "<group>"; };
+		F37AFD201D3532FC00802BD4 /* WLLAssetWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLAssetWrapper.h; sourceTree = "<group>"; };
+		F37AFD211D3532FC00802BD4 /* WLLAssetWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLAssetWrapper.m; sourceTree = "<group>"; };
+		F37AFD291D35354A00802BD4 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		F3DFB41B1D2CDB1900898765 /* WLLCalendarView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WLLCalendarView.xib; sourceTree = "<group>"; };
 		F3DFB4231D2CE24700898765 /* WLLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLView.h; sourceTree = "<group>"; };
 		F3DFB4241D2CE24700898765 /* WLLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLView.m; sourceTree = "<group>"; };
 		F3DFB42C1D2CF4E900898765 /* NSDate+WLLDate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+WLLDate.h"; sourceTree = "<group>"; };
 		F3DFB42D1D2CF4E900898765 /* NSDate+WLLDate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+WLLDate.m"; sourceTree = "<group>"; };
-		F3DFB42F1D2D010C00898765 /* WLLAlbumController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLAlbumController.h; sourceTree = "<group>"; };
-		F3DFB4301D2D010C00898765 /* WLLAlbumController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLAlbumController.m; sourceTree = "<group>"; };
-		F3DFB4311D2D010C00898765 /* WLLAlbumController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WLLAlbumController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -371,6 +389,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F37AFD2A1D35354A00802BD4 /* AssetsLibrary.framework in Frameworks */,
 				4D649BA01D1131E90005276B /* libsqlite3.tbd in Frameworks */,
 				4D649B9E1D1131C80005276B /* JavaScriptCore.framework in Frameworks */,
 				4D649B9C1D1131BA0005276B /* libstdc++.tbd in Frameworks */,
@@ -628,6 +647,7 @@
 		4D8A3F251CF3D615000C2D42 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				F37AFD131D3532FC00802BD4 /* Asset */,
 				4DD519481D2773B400745AA1 /* Categories */,
 				4D8A3F261CF3D615000C2D42 /* AppDelegate */,
 				4D8A3F291CF3D615000C2D42 /* Headers */,
@@ -799,9 +819,6 @@
 				F309D9731D2A550D00E9D18A /* WLLCalendarViewController.m */,
 				F3DFB4231D2CE24700898765 /* WLLView.h */,
 				F3DFB4241D2CE24700898765 /* WLLView.m */,
-				F3DFB42F1D2D010C00898765 /* WLLAlbumController.h */,
-				F3DFB4301D2D010C00898765 /* WLLAlbumController.m */,
-				F3DFB4311D2D010C00898765 /* WLLAlbumController.xib */,
 			);
 			path = Lee;
 			sourceTree = "<group>";
@@ -900,9 +917,31 @@
 			path = HLee;
 			sourceTree = "<group>";
 		};
+		F37AFD131D3532FC00802BD4 /* Asset */ = {
+			isa = PBXGroup;
+			children = (
+				F37AFD141D3532FC00802BD4 /* WLLAlbumTableViewController.h */,
+				F37AFD151D3532FC00802BD4 /* WLLAlbumTableViewController.m */,
+				F37AFD161D3532FC00802BD4 /* WLLAssetPickerController.h */,
+				F37AFD171D3532FC00802BD4 /* WLLAssetPickerController.m */,
+				F37AFD181D3532FC00802BD4 /* WLLAssetPickerState.h */,
+				F37AFD191D3532FC00802BD4 /* WLLAssetPickerState.m */,
+				F37AFD1A1D3532FC00802BD4 /* WLLAssetsCell.h */,
+				F37AFD1B1D3532FC00802BD4 /* WLLAssetsCell.m */,
+				F37AFD1C1D3532FC00802BD4 /* WLLAssetTableViewController.h */,
+				F37AFD1D1D3532FC00802BD4 /* WLLAssetTableViewController.m */,
+				F37AFD1E1D3532FC00802BD4 /* WLLAssetViewColumn.h */,
+				F37AFD1F1D3532FC00802BD4 /* WLLAssetViewColumn.m */,
+				F37AFD201D3532FC00802BD4 /* WLLAssetWrapper.h */,
+				F37AFD211D3532FC00802BD4 /* WLLAssetWrapper.m */,
+			);
+			path = Asset;
+			sourceTree = "<group>";
+		};
 		F4D1E47F5F7EEB4860E1E806 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F37AFD291D35354A00802BD4 /* AssetsLibrary.framework */,
 				4D649B9F1D1131E90005276B /* libsqlite3.tbd */,
 				4D649B9D1D1131C80005276B /* JavaScriptCore.framework */,
 				4D649B9B1D1131BA0005276B /* libstdc++.tbd */,
@@ -1056,7 +1095,6 @@
 				4D888ABC1D08191700545F7D /* WLLPrivateCodeViewController.xib in Resources */,
 				4DD519761D27747F00745AA1 /* WLLFontView.xib in Resources */,
 				4D1C31001CF88D3700C675D7 /* UpGrade.png in Resources */,
-				F3DFB4331D2D010C00898765 /* WLLAlbumController.xib in Resources */,
 				4D649B931D1131290005276B /* README.txt in Resources */,
 				4D649B911D1131290005276B /* TencentOpenApi_IOS_Bundle.bundle in Resources */,
 				4D8A3F3E1CF3D7A1000C2D42 /* WLLShareViewController.xib in Resources */,
@@ -1165,13 +1203,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F37AFD241D3532FC00802BD4 /* WLLAssetPickerState.m in Sources */,
 				4DD519421D2772A300745AA1 /* WLLDailyNoteDataManager.m in Sources */,
-				F3DFB4321D2D010C00898765 /* WLLAlbumController.m in Sources */,
 				4DD28D161D04F37500ADA78D /* WLLSettingViewController.m in Sources */,
 				4D48D1C21CF5678600D9E4F1 /* WLLLogUpViewController.m in Sources */,
 				4D7AD7C71D1918EF005237DC /* WLLShareDetailViewController.m in Sources */,
 				4DD5197B1D27747F00745AA1 /* WLLNoteBackgroundColorView.m in Sources */,
 				4D888AB71D07EB0E00545F7D /* WLLLockViewController.m in Sources */,
+				F37AFD251D3532FC00802BD4 /* WLLAssetsCell.m in Sources */,
 				F309D97C1D2A554400E9D18A /* WLLCalendarCell.m in Sources */,
 				4D8A3EF11CF3D14D000C2D42 /* main.m in Sources */,
 				4DD519591D27744100745AA1 /* DailyNoteCell.m in Sources */,
@@ -1189,15 +1228,18 @@
 				4D48D1C71CF56CDA00D9E4F1 /* WLLResetPasswordViewController.m in Sources */,
 				4D1C30F01CF8856F00C675D7 /* SystemModel.m in Sources */,
 				4D96D6B61D0FF46A00AC23FD /* WLLTimePickerController.m in Sources */,
+				F37AFD221D3532FC00802BD4 /* WLLAlbumTableViewController.m in Sources */,
 				4DD28D1B1D05394800ADA78D /* WLLFunctionController.m in Sources */,
 				4DD519921D27778800745AA1 /* WLLNoteDetailViewController.m in Sources */,
 				4D888AC01D0819B600545F7D /* WChaoPrivateCodeCellTableViewCell.m in Sources */,
 				4DD5193C1D2771DF00745AA1 /* WLLDailyNoteViewController.m in Sources */,
 				F3DFB42E1D2CF4E900898765 /* NSDate+WLLDate.m in Sources */,
 				4D888AC41D081CE900545F7D /* PrivateModel.m in Sources */,
+				F37AFD281D3532FC00802BD4 /* WLLAssetWrapper.m in Sources */,
 				4D1550D21CFD8B79001CF139 /* WLLModifyInfomationViewController.m in Sources */,
 				4DD519831D27747F00745AA1 /* WLLToolView.m in Sources */,
 				4D8A3F471CF423F1000C2D42 /* WLLLogInViewController.m in Sources */,
+				F37AFD231D3532FC00802BD4 /* WLLAssetPickerController.m in Sources */,
 				F309D97D1D2A554400E9D18A /* WLLCalendarView.m in Sources */,
 				4DD519771D27747F00745AA1 /* WLLMoodView.m in Sources */,
 				F309D9751D2A550D00E9D18A /* WLLCalendarViewController.m in Sources */,
@@ -1207,6 +1249,8 @@
 				4D8A3F3D1CF3D7A1000C2D42 /* WLLShareViewController.m in Sources */,
 				4DAFDC651D0697520027B677 /* WLLSecurityViewController.m in Sources */,
 				4DDB2AF61CFEDB96002D7784 /* WChaoShareCellTableViewCell.m in Sources */,
+				F37AFD261D3532FC00802BD4 /* WLLAssetTableViewController.m in Sources */,
+				F37AFD271D3532FC00802BD4 /* WLLAssetViewColumn.m in Sources */,
 				4D8A3F341CF3D615000C2D42 /* AppDelegate.m in Sources */,
 				4D70E7611D0A930900C44B66 /* WLLTopicViewController.m in Sources */,
 				4DD519551D2773B400745AA1 /* WLLConst.m in Sources */,
