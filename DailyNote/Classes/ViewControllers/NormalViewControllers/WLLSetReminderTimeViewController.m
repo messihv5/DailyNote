@@ -53,8 +53,7 @@
 
 //自定义导航栏按钮的方法
 - (void)backAction {
-    
-    NSString *reminder = [self.userDefaults objectForKey:@"noteReminder"];
+    NSString *reminder = [[AVUser currentUser] objectForKey:@"noteReminder"];
     
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:1 inSection:0];
     WChaoReminderCellTableViewCell *cell = [self.remindreTableView cellForRowAtIndexPath:indexPath];
@@ -65,8 +64,8 @@
         self.block(@"已关闭");
     }
     //把该状态设置到userDefault里面
-    [self.userDefaults setObject:time forKey:@"reminderTime"];
-    [self.userDefaults synchronize];
+    [[AVUser currentUser] setObject:time forKey:@"reminderTime"];
+    [[AVUser currentUser] saveInBackground];
 
     [self.navigationController popViewControllerAnimated:YES];
 }
@@ -83,7 +82,7 @@
         WChaoPrivateCodeCellTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CW" forIndexPath:indexPath];
         
         //判断提醒日记的开关状态
-        NSString *reminder = [self.userDefaults objectForKey:@"noteReminder"];
+        NSString *reminder = [[AVUser currentUser] objectForKey:@"noteReminder"];
         if ([reminder isEqualToString:@"YES"]) {
             cell.privateCodeSwith.on = YES;
         } else {
@@ -98,7 +97,7 @@
     } else {
         
         //从用户数据里面获取写日记的提醒时间
-        NSString *reminderTime = [self.userDefaults objectForKey:@"reminderTime"];
+        NSString *reminderTime = [[AVUser currentUser] objectForKey:@"reminderTime"];
         
         WChaoReminderCellTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CW2" forIndexPath:indexPath];
         cell.titleLabel.text = @"提醒时间";
@@ -114,13 +113,12 @@
 //开关日记提醒
 - (void)reminderSwitch:(UISwitch *)sender {
     if (sender.on == YES) {
-        [self.userDefaults setObject:@"YES" forKey:@"noteReminder"];
-        [self.userDefaults synchronize];
+        [[AVUser currentUser] setObject:@"YES" forKey:@"noteReminder"];
+        [[AVUser currentUser] saveInBackground];
         
     } else {
-        self.block(@"已关闭");
-        [self.userDefaults setObject:@"NO" forKey:@"noteReminder"];
-        [self.userDefaults synchronize];
+        [[AVUser currentUser] setObject:@"NO" forKey:@"noteReminder"];
+        [[AVUser currentUser] saveInBackground];
     }
 }
 

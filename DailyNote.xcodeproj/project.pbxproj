@@ -1022,7 +1022,7 @@
 				TargetAttributes = {
 					4D8A3EEB1CF3D14D000C2D42 = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = 6AE6EYLE4G;
+						DevelopmentTeam = B7ERBCTM4Y;
 					};
 					4D8A3F071CF3D14D000C2D42 = {
 						CreatedOnToolsVersion = 7.3.1;
@@ -1418,7 +1418,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/ShareSDK/Support/PlatformSDK/WeChatSDK",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.JustThree;
+				PRODUCT_BUNDLE_IDENTIFIER = com.JustThree.DailyNote;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};
@@ -1448,7 +1448,7 @@
 					"$(PROJECT_DIR)/ShareSDK/Support/PlatformSDK/WeChatSDK",
 				);
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.JustThree;
+				PRODUCT_BUNDLE_IDENTIFIER = com.JustThree.DailyNote;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};

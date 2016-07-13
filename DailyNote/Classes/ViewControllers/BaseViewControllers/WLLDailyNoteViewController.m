@@ -104,14 +104,26 @@ static NSString  *const reuseIdentifier = @"note_cell";
 
 //加载10篇日记
 - (void)loadTenDiaries {
+    NSDate *cacheDate = [[AVUser currentUser] objectForKey:@"cacheDate"];
+    
     NSDate *date = [NSDate date];
     
-    //加载日期比当前日期多1s，因为你点击保存当前日记，就开始了查询，两个时间重叠，所以加上1s，才能加载到刚添加的日记
-    NSDate *loadDate = [date dateByAddingTimeInterval:1];
-    [[WLLDailyNoteDataManager sharedInstance] loadTenDiariesOfTheCurrentUserByDate:loadDate finished:^{
+    [[WLLDailyNoteDataManager sharedInstance] loadTenDiariesOfTheCurrentUserByDate:date finished:^{
         NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
         [self.data addObjectsFromArray:array];
         [self.notesTableView reloadData];
+        
+        [[AVUser currentUser] setObject:date forKey:@"cacheDate"];
+        [[AVUser currentUser] saveInBackground];
+    } error:^{
+        [[WLLDailyNoteDataManager sharedInstance] loadTenDiariesOfTheCurrentUserByDate:cacheDate finished:^{
+            NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
+            [self.data addObjectsFromArray:array];
+            [self.notesTableView reloadData];
+            self.upLabel.hidden = YES;
+        } error:^{
+            //添加网络错误的代码
+        }];
     }];
 }
 
@@ -153,15 +165,17 @@ static NSString  *const reuseIdentifier = @"note_cell";
         } else {
             //数据数组中没有数据时，数据数组直接添加数据
             NSDate *date = [NSDate date];
-            [[WLLDailyNoteDataManager sharedInstance] loadTenDiariesOfTheCurrentUserByDate:date finished:^{
+            [[WLLDailyNoteDataManager sharedInstance]  loadTenDiariesOfTheCurrentUserByDate:date finished:^{
                 NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
                 if (array.count != 0) {
                     [self.data addObjectsFromArray:array];
                     [self.notesTableView reloadData];
                     [refreshControl endRefreshing];
                 } else {
-                    [refreshControl endRefreshing];
+                [refreshControl endRefreshing];
                 }
+            } error:^{
+                
             }];
         }
     } else {
@@ -206,6 +220,9 @@ static NSString  *const reuseIdentifier = @"note_cell";
                 } else {
                     [refreshControl endRefreshing];
                 }
+
+            } error:^{
+                
             }];
         }
     }
@@ -276,7 +293,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
         
         //调用加载方法
         [self loadTenMoreDiaries];
-    }else {
+    } else {
         self.upLabel.hidden = YES;
     }
 }
@@ -299,14 +316,18 @@ static NSString  *const reuseIdentifier = @"note_cell";
             self.isLoading = NO;
         }];
     } else {
+        
         [[WLLDailyNoteDataManager sharedInstance] loadTenDiariesOfTheCurrentUserByDate:date finished:^{
             NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
             if (array.count != 0) {
                 [self.data addObjectsFromArray:array];
                 [self.notesTableView reloadData];
             } else {
-                
+                            
             }
+            self.isLoading = NO;
+        } error:^{
+            //添加网络错误代码
             self.isLoading = NO;
         }];
     }

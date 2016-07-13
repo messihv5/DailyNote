@@ -42,7 +42,6 @@
     calendarView.calendarBlock = ^(NSInteger day, NSInteger month, NSInteger year){
         
         self.dateString = [NSString stringWithFormat:@"%li-%li-%li", year, month, day];
-        NSLog(@"%li-%li-%li", year,month,day);
     };
     self.calendarView = calendarView;
 }

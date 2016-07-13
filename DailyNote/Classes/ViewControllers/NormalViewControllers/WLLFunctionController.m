@@ -85,8 +85,8 @@
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     cell.textLabel.text = model.systemString;
     if (indexPath.section == 0) {
-        NSString *reminder = [self.userDefaults objectForKey:@"noteReminder"];
-        NSString *reminderTime = [self.userDefaults objectForKey:@"reminderTime"];
+        NSString *reminder = [[AVUser currentUser] objectForKey:@"noteReminder"];
+        NSString *reminderTime = [[AVUser currentUser] objectForKey:@"reminderTime"];
         if ([reminder isEqualToString:@"YES"]) {
             cell.detailTextLabel.text = reminderTime;
         } else {

@@ -112,7 +112,6 @@
     self.theBackgroundImageView.backgroundColor = [UIColor cyanColor];
     
     NSString *nickName = [self.theCurrentUser objectForKey:@"nickName"];
-    NSLog(@"%@", nickName);
     
     AVFile *theBackgroundImageFile = [self.theCurrentUser objectForKey:@"theBackgroundImage"];
     
@@ -343,7 +342,6 @@
     [AVUser logOut];
     
     [[UIApplication sharedApplication].delegate application:[UIApplication sharedApplication] didFinishLaunchingWithOptions:nil];
-    
 }
 
 #pragma mark - tableview下拉滚动视图
@@ -481,7 +479,6 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
 
 - (UIStatusBarStyle)preferredStatusBarStyle
 {
-    NSLog(@"hey i' here");
     return UIStatusBarStyleLightContent;
 }
 

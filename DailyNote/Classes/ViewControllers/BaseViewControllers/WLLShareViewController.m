@@ -42,6 +42,7 @@
                                                  selector:@selector(removeDiaryAndReloadTableView:) name:@"deleteThisDiariyCollection"
                                                    object:nil];
     }
+    
     self.currentUser = [AVUser currentUser];
     
     self.shareTableView.delegate = self;
@@ -75,7 +76,6 @@
         //嵌套在tabbarController里面的controller
         self.parentViewController.navigationItem.title = @"日记分享";
     }
-
 }
 
 //懒加载
@@ -255,29 +255,25 @@
     } else {
         [[WLLDailyNoteDataManager sharedInstance] loadTenDiariesOfSharingByDate:date finished:^{
             NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
-            
             if (array.count != 0) {
                 [self.data addObjectsFromArray:array];
                 [self.shareTableView reloadData];
             }
             self.isLoading = NO;
+        } error:^{
+            //加载网络错误代码
+            self.isLoading = NO;
         }];
     }
-}
-
-//消失alertController
-- (void)dismissAlertController:(NSTimer *)timer {
-    UIAlertController *alertController = timer.userInfo;
-    [alertController dismissViewControllerAnimated:YES completion:nil];
-    alertController = nil;
-    self.isLoading = NO;
-    self.downLoadLabel.hidden = NO;
 }
 
 //进入页面加载10篇日记
 - (void)loadTenDairies {
     
     //查询数据库中的日记，并保存在数组中，然后刷新tableView
+    
+    //获取缓存时间
+    NSDate *shareCacheDate = [[AVUser currentUser] objectForKey:@"shareCacheDate"];
     
     //获取当前时间
     NSDate *todayDate = [NSDate date];
@@ -298,10 +294,23 @@
             if (array.count != 0) {
                 [self.data addObjectsFromArray:array];
                 [self.shareTableView reloadData];
+                [[AVUser currentUser] setObject:todayDate forKey:@"shareCacheDate"];
+                [[AVUser currentUser]  saveInBackground];
             } else {
-                return;
             }
+        } error:^{
+            [[WLLDailyNoteDataManager sharedInstance] loadTenDiariesOfSharingByDate:shareCacheDate finished:^{
+                NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
+                if (array.count != 0) {
+                    [self.data addObjectsFromArray:array];
+                    [self.shareTableView reloadData];
+                } else {
+                }
+            } error:^{
+                //添加网络错误代码
+            }];
         }];
+
     }
 }
 
@@ -313,8 +322,6 @@
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    
     WChaoShareCellTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CW_Cell"
                                                             forIndexPath:indexPath];
     NoteDetail *model = self.data[indexPath.row];
@@ -341,12 +348,16 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    WLLShareDetailViewController *detailController = [[WLLShareDetailViewController alloc] initWithNibName:@"WLLShareDetailViewController" bundle:[NSBundle mainBundle]];
+    WLLShareDetailViewController *detailController;
+    detailController = [[WLLShareDetailViewController alloc] initWithNibName:@"WLLShareDetailViewController"
+                                                                      bundle:[NSBundle mainBundle]];
     
     detailController.passedObject = self.data[indexPath.row];
     
-    detailController.block = ^ (NoteDetail *passedObject) {
-        self.data[indexPath.row] = passedObject;
+    detailController.block = ^ (NSString *starNumber) {
+        WChaoShareCellTableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+        
+        cell.starNumberLabel.text = starNumber;
     };
     
     //如果是从收藏页面过去的,传个indexpath作为标记
@@ -443,13 +454,10 @@
     [self.shareTableView reloadData];
 }
 
-- (void)dealloc {
-    NSLog(@"dailyNote%@", self);
-}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-    NSLog(@"share controller low memory");
 }
 
 /*
