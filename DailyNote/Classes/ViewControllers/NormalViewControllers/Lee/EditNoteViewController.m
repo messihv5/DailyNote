@@ -66,9 +66,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // 初始化分类页面按钮
-//    [self initNaviButton];
-    
     // 设置代理
     self.contentText.delegate = self;
     
@@ -113,7 +110,6 @@
 // view将要出现时加载左右键及加载来自详情页面数据
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:YES];
-    
     
     UIBarButtonItem *left = [[UIBarButtonItem alloc] initWithTitle:@"取消"
                                                              style:UIBarButtonItemStylePlain
@@ -169,10 +165,10 @@
         
     } else {    // 否则为创建新日记, 弹出键盘
         
-        //[self.contentText becomeFirstResponder];
         // 加载toolView, 键盘隐藏
         [self setToolView];
         self.is = YES;
+        [self.contentText becomeFirstResponder];
     }
 }
 // view出现后 加载分类页面初始位置
@@ -216,7 +212,9 @@
 // 设置工具条
 - (void)setToolView {
     
+    self.toolView.y = kHeight - self.toolView.height;
     [self.view addSubview:self.toolView];
+    
     // 监听键盘收放
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillChangeFrameNotification:)
@@ -230,14 +228,15 @@
     // 获取键盘frame
     CGRect frame = [note.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
     
+    
     // 获取键盘收放动画时间
     CGFloat duration = [note.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     
     // 工具条跟随键盘收放
     [UIView animateWithDuration:duration animations:^{
-       
+        self.contentText.backgroundColor = [UIColor redColor];
         self.toolView.transform = CGAffineTransformMakeTranslation(0, frame.origin.y - kHeight);
-        self.photoCount.transform = CGAffineTransformMakeTranslation(0, frame.origin.y - kHeight - self.toolView.height);
+        self.photoCount.transform = CGAffineTransformMakeTranslation(0, frame.origin.y - self.toolView.height - kHeight);
         self.photoCount.text = [NSString stringWithFormat:@"日记中未添加图片"];
     }];
 }
@@ -585,7 +584,18 @@
         [self dismissViewControllerAnimated:YES completion:^{
             
             NSArray *assets = [info objectForKey:WLLAssetPickerSelectedAssets];
+            
+            NSMutableArray *imgArray = [NSMutableArray array];
             self.photoCount.text = [NSString stringWithFormat:@"为日记中添加 %ld 张图片", assets.count];
+            
+            [assets enumerateObjectsUsingBlock:^(ALAsset *asset, NSUInteger idx, BOOL * _Nonnull stop) {
+                
+                UIImage *img = [UIImage imageWithCGImage:asset.defaultRepresentation.fullScreenImage];
+                [imgArray addObject:img];
+            }];
+            
+            // MARK: !!! 此处将所获取的图片上传至网络 缓存到本地
+            
         }];
         
     } canceled:^{

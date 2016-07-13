@@ -12,8 +12,17 @@
 
 // toolView frame
 - (void)drawRect:(CGRect)rect {
+//    self.height = kHeight * 0.07;
+//    self.width = kWidth;
+}
+
+- (void)awakeFromNib {
+//    self.height = kHeight * 0.07;
+//    self.width = kWidth;
+}
+
+- (void)layoutSubviews {
     self.height = kHeight * 0.07;
-    self.y = kHeight - self.height;
     self.width = kWidth;
 }
 
