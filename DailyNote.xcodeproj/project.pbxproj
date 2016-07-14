@@ -98,6 +98,8 @@
 		4DA9CD681D0CF3220075D1B3 /* gray_selectedButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DA9CD671D0CF3220075D1B3 /* gray_selectedButton.png */; };
 		4DAFDC651D0697520027B677 /* WLLSecurityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DAFDC631D0697520027B677 /* WLLSecurityViewController.m */; };
 		4DAFDC661D0697520027B677 /* WLLSecurityViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4DAFDC641D0697520027B677 /* WLLSecurityViewController.xib */; };
+		4DB6EC731D3721B500BD7ED9 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DB6EC721D3721B500BD7ED9 /* SystemConfiguration.framework */; };
+		4DB6EC771D372B9400BD7ED9 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DB6EC761D372B9400BD7ED9 /* Reachability.m */; };
 		4DBEE30A1D0268CA0082F306 /* cleanCache.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DBEE3091D0268CA0082F306 /* cleanCache.png */; };
 		4DC3459E1D10F64A00D260BA /* backButton2.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DC3459D1D10F64A00D260BA /* backButton2.png */; };
 		4DCAD5961D1F60BC007E47E9 /* heart40X40.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DCAD5951D1F60BC007E47E9 /* heart40X40.png */; };
@@ -294,6 +296,9 @@
 		4DAFDC621D0697520027B677 /* WLLSecurityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLSecurityViewController.h; sourceTree = "<group>"; };
 		4DAFDC631D0697520027B677 /* WLLSecurityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLSecurityViewController.m; sourceTree = "<group>"; };
 		4DAFDC641D0697520027B677 /* WLLSecurityViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WLLSecurityViewController.xib; sourceTree = "<group>"; };
+		4DB6EC721D3721B500BD7ED9 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		4DB6EC751D372B8D00BD7ED9 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		4DB6EC761D372B9400BD7ED9 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		4DBEE3091D0268CA0082F306 /* cleanCache.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cleanCache.png; sourceTree = "<group>"; };
 		4DC3459D1D10F64A00D260BA /* backButton2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = backButton2.png; sourceTree = "<group>"; };
 		4DCAD5951D1F60BC007E47E9 /* heart40X40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = heart40X40.png; sourceTree = "<group>"; };
@@ -389,6 +394,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4DB6EC731D3721B500BD7ED9 /* SystemConfiguration.framework in Frameworks */,
 				F37AFD2A1D35354A00802BD4 /* AssetsLibrary.framework in Frameworks */,
 				4D649BA01D1131E90005276B /* libsqlite3.tbd in Frameworks */,
 				4D649B9E1D1131C80005276B /* JavaScriptCore.framework in Frameworks */,
@@ -681,6 +687,7 @@
 		4D8A3F2A1CF3D615000C2D42 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				4DB6EC741D372B7400BD7ED9 /* WangChao */,
 				F37114751CF69EF30078A317 /* HLee */,
 			);
 			path = Helpers;
@@ -804,6 +811,15 @@
 				F37114671CF69ED60078A317 /* NVLee */,
 			);
 			path = NormalViews;
+			sourceTree = "<group>";
+		};
+		4DB6EC741D372B7400BD7ED9 /* WangChao */ = {
+			isa = PBXGroup;
+			children = (
+				4DB6EC751D372B8D00BD7ED9 /* Reachability.h */,
+				4DB6EC761D372B9400BD7ED9 /* Reachability.m */,
+			);
+			name = WangChao;
 			sourceTree = "<group>";
 		};
 		4DB98D761CF6D0D600D3A3EF /* Lee */ = {
@@ -941,6 +957,7 @@
 		F4D1E47F5F7EEB4860E1E806 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4DB6EC721D3721B500BD7ED9 /* SystemConfiguration.framework */,
 				F37AFD291D35354A00802BD4 /* AssetsLibrary.framework */,
 				4D649B9F1D1131E90005276B /* libsqlite3.tbd */,
 				4D649B9D1D1131C80005276B /* JavaScriptCore.framework */,
@@ -1213,6 +1230,7 @@
 				F37AFD251D3532FC00802BD4 /* WLLAssetsCell.m in Sources */,
 				F309D97C1D2A554400E9D18A /* WLLCalendarCell.m in Sources */,
 				4D8A3EF11CF3D14D000C2D42 /* main.m in Sources */,
+				4DB6EC771D372B9400BD7ED9 /* Reachability.m in Sources */,
 				4DD519591D27744100745AA1 /* DailyNoteCell.m in Sources */,
 				4DD519541D2773B400745AA1 /* UIView+WLLExtension.m in Sources */,
 				4DD519521D2773B400745AA1 /* NSString+WeekDay.m in Sources */,

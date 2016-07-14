@@ -35,6 +35,18 @@ static WLLDailyNoteDataManager *manager = nil;
     return _noteData;
 }
 
+- (BOOL)isNetworkAvailable {
+    Reachability *network = [Reachability reachabilityForInternetConnection];
+    
+    NetworkStatus networkStatus = [network currentReachabilityStatus];
+    
+    if (networkStatus == 0) {
+        return NO;
+    } else {
+        return YES;
+    }
+}
+
 //加载某一天的日记
 - (void)loadTenDiariesOfDateString:(NSString *)dateString finished:(void (^)())finished{
     [self.noteData removeAllObjects];
@@ -211,12 +223,6 @@ static WLLDailyNoteDataManager *manager = nil;
     [query whereKey:@"belong" equalTo:[AVUser currentUser]];
     [query orderByDescending:@"createdAt"];
     [query whereKey:@"createdAt" lessThan:date];
-   
-    if ([query hasCachedResult]) {
-        NSLog(@"有缓存");
-    } else {
-        NSLog(@"无缓存");
-    }
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (error) {
             hasError();

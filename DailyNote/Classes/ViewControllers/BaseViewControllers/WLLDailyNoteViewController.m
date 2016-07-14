@@ -123,107 +123,141 @@ static NSString  *const reuseIdentifier = @"note_cell";
             self.upLabel.hidden = YES;
         } error:^{
             //添加网络错误的代码
+            UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"网络故障" message:nil preferredStyle:UIAlertControllerStyleAlert];
+            [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(dismissAlertVC:) userInfo:alertVC repeats:NO];
+            [self.navigationController presentViewController:alertVC animated:YES completion:nil];
         }];
     }];
+}
+
+//消失alertViewcontroller
+- (void)dismissAlertVC:(NSTimer *)timer {
+    if ([timer.userInfo isKindOfClass:[UIAlertController class]]) {
+        UIAlertController *alertVC = timer.userInfo;
+        [alertVC dismissViewControllerAnimated:YES completion:nil];
+        alertVC = nil;
+    } else {
+        UILabel *label = timer.userInfo;
+        label.text = @"日记已加载完";
+        label.hidden = YES;
+        self.isLoading = NO;
+    }
+    
+    
+    
 }
 
 //下拉刷新方法，加载最新的日记
 - (void)refreshAction:(UIRefreshControl *)refreshControl {
     [refreshControl beginRefreshing];
     
-    if (self.isFromCalendar) {
-        
-        //从calender点击过来的刷新
-       //刷新数据，加载最新的数据，当数组存储了数据，查询的新数据插到数组的最前面
-        
-        if (self.data.count != 0) {
-            //先从数组中获取日期
-            NoteDetail *firstObject = self.data[0];
-            
-            NSDate *firstDate = firstObject.date;
-
-            [[WLLDailyNoteDataManager sharedInstance] refreshTenDiriesOfTheCurrentUserByDateString:self.dateString dateFromLoadDiary:firstDate finished:^{
-                
-                NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
-                
-                if (array.count != 0) {
-                    NSInteger number = array.count;
-                    
-                    NSRange range = NSMakeRange(0, number);
-                    
-                    NSIndexSet *set = [NSIndexSet indexSetWithIndexesInRange:range];
-                    
-                    [self.data insertObjects:array atIndexes:set];
-                    [self.notesTableView reloadData];
-                    [refreshControl endRefreshing];
-                } else {
-                    [refreshControl endRefreshing];
-                }
-                
-            }];
-            
-        } else {
-            //数据数组中没有数据时，数据数组直接添加数据
-            NSDate *date = [NSDate date];
-            [[WLLDailyNoteDataManager sharedInstance]  loadTenDiariesOfTheCurrentUserByDate:date finished:^{
-                NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
-                if (array.count != 0) {
-                    [self.data addObjectsFromArray:array];
-                    [self.notesTableView reloadData];
-                    [refreshControl endRefreshing];
-                } else {
-                [refreshControl endRefreshing];
-                }
-            } error:^{
-                
-            }];
-        }
+    self.isLoading = YES;
+    
+    BOOL networkAvailable = [WLLDailyNoteDataManager sharedInstance].isNetworkAvailable;
+    
+    if (networkAvailable == NO) {
+        self.upLabel.hidden = NO;
+        self.upLabel.text = @"网络错误";
+        [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(dismissAlertVC:) userInfo:self.upLabel repeats:NO];
+        [refreshControl endRefreshing];
     } else {
-        //不是从calendar过来的数据,加载当前用户的所有数据
-        
-        //刷新数据，加载最新的数据，当数组存储了数据，查询的新数据插到数组的最前面
-        
-        if (self.data.count != 0) {
+        if (self.isFromCalendar) {
             
-            //先从数组中获取日期
-            NoteDetail *firstObject = self.data[0];
+            //从calender点击过来的刷新
+            //刷新数据，加载最新的数据，当数组存储了数据，查询的新数据插到数组的最前面
             
-            NSDate *firstDate = firstObject.date;
-
-            [[WLLDailyNoteDataManager sharedInstance] refreshTenDiariesOfTheCurrentUserByDate:firstDate finished:^{
-                NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
-                if (array.count != 0) {
-                    NSInteger number = array.count;
-                    
-                    NSRange range = NSMakeRange(0, number);
-                    
-                    NSIndexSet *set = [NSIndexSet indexSetWithIndexesInRange:range];
-                    
-                    [self.data insertObjects:array atIndexes:set];
-                    [self.notesTableView reloadData];
-                    [refreshControl endRefreshing];
-                } else {
-                    [refreshControl endRefreshing];
-                }
-            }];
-        } else {
-            //数据数组中没有数据时，数据数组直接添加数据
-            
-            NSDate *date = [NSDate date];
-            
-            [[WLLDailyNoteDataManager sharedInstance] loadTenDiariesOfTheCurrentUserByDate:date finished:^{
-                NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
-                if (array.count != 0) {
-                    [self.data addObjectsFromArray:array];
-                    [self.notesTableView reloadData];
-                    [refreshControl endRefreshing];
-                } else {
-                    [refreshControl endRefreshing];
-                }
-
-            } error:^{
+            if (self.data.count != 0) {
+                //先从数组中获取日期
+                NoteDetail *firstObject = self.data[0];
                 
-            }];
+                NSDate *firstDate = firstObject.date;
+                
+                [[WLLDailyNoteDataManager sharedInstance] refreshTenDiriesOfTheCurrentUserByDateString:self.dateString dateFromLoadDiary:firstDate finished:^{
+                    
+                    NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
+                    
+                    if (array.count != 0) {
+                        NSInteger number = array.count;
+                        
+                        NSRange range = NSMakeRange(0, number);
+                        
+                        NSIndexSet *set = [NSIndexSet indexSetWithIndexesInRange:range];
+                        
+                        [self.data insertObjects:array atIndexes:set];
+                        [self.notesTableView reloadData];
+                    } else {
+                   
+                    }
+                    [refreshControl endRefreshing];
+                    self.isLoading = NO;
+                }];
+                
+            } else {
+                //数据数组中没有数据时，数据数组直接添加数据
+                NSDate *date = [NSDate date];
+                [[WLLDailyNoteDataManager sharedInstance]  loadTenDiariesOfTheCurrentUserByDate:date finished:^{
+                    NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
+                    if (array.count != 0) {
+                        [self.data addObjectsFromArray:array];
+                        [self.notesTableView reloadData];
+                        [refreshControl endRefreshing];
+                    } else {
+                        [refreshControl endRefreshing];
+                        self.isLoading = NO;
+                    }
+                } error:^{
+                    [refreshControl endRefreshing];
+                    self.isLoading = NO;
+                }];
+            }
+        } else {
+            //不是从calendar过来的数据,加载当前用户的所有数据
+            
+            //刷新数据，加载最新的数据，当数组存储了数据，查询的新数据插到数组的最前面
+            
+            if (self.data.count != 0) {
+                
+                //先从数组中获取日期
+                NoteDetail *firstObject = self.data[0];
+                
+                NSDate *firstDate = firstObject.date;
+                
+                [[WLLDailyNoteDataManager sharedInstance] refreshTenDiariesOfTheCurrentUserByDate:firstDate finished:^{
+                    NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
+                    if (array.count != 0) {
+                        NSInteger number = array.count;
+                        
+                        NSRange range = NSMakeRange(0, number);
+                        
+                        NSIndexSet *set = [NSIndexSet indexSetWithIndexesInRange:range];
+                        
+                        [self.data insertObjects:array atIndexes:set];
+                        [self.notesTableView reloadData];
+                    } else {
+                    }
+                    [refreshControl endRefreshing];
+                    self.isLoading = NO;
+                }];
+                [refreshControl endRefreshing];
+            } else {
+                //数据数组中没有数据时，数据数组直接添加数据
+                
+                NSDate *date = [NSDate date];
+                
+                [[WLLDailyNoteDataManager sharedInstance] loadTenDiariesOfTheCurrentUserByDate:date finished:^{
+                    NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
+                    if (array.count != 0) {
+                        [self.data addObjectsFromArray:array];
+                        [self.notesTableView reloadData];
+                    } else {
+                    }
+                    [refreshControl endRefreshing];
+                    self.isLoading = NO;
+                } error:^{
+                    [refreshControl endRefreshing];
+                    self.isLoading = NO;
+                }];
+            }
         }
     }
 }
@@ -268,31 +302,53 @@ static NSString  *const reuseIdentifier = @"note_cell";
 
 //scrollView滑动的代理方法，上拉刷新
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if (self.data.count < 10 ) {
-        CGFloat offset = scrollView.contentOffset.y;
-        if (offset > -50 ) {
-            self.upLabel.hidden = NO;
-        } else if (offset <= -64) {
-            self.upLabel.hidden = YES;
-        }
-        return;
-    }
+    CGFloat offset = scrollView.contentOffset.y;
     
+    BOOL networkAvailable = [WLLDailyNoteDataManager sharedInstance].isNetworkAvailable;
+
     if (self.isLoading == YES) {
         return;
     }
     
-    CGFloat contentOffset = scrollView.contentOffset.y;
+    if (self.data.count < 10 ) {
+
+        if (networkAvailable == NO) {
+            if (offset > -50 ) {
+                self.upLabel.hidden = NO;
+                self.upLabel.text = @"网络出错";
+            } else if (offset == -64) {
+                self.upLabel.hidden = YES;
+            }
+            return;
+        } else {
+            if (offset > -50 ) {
+                self.upLabel.hidden = NO;
+                self.upLabel.text = @"日记已加载完";
+            } else if (offset == -64) {
+                self.upLabel.hidden = YES;
+            }
+            return;
+        }
+    }
+    
     
     //contentsize减去scrollView的height + 富余量10
     CGFloat loadDataContentOffset = scrollView.contentSize.height - self.notesTableView.height + 10;
     
-    if (contentOffset > loadDataContentOffset) {
-        self.isLoading = YES;
-        self.upLabel.hidden = NO;
+    if (offset > loadDataContentOffset) {
         
-        //调用加载方法
-        [self loadTenMoreDiaries];
+        if (networkAvailable == YES) {
+            self.isLoading = YES;
+            self.upLabel.hidden = NO;
+            self.upLabel.text = @"日记已加载完";
+            //调用加载方法
+            [self loadTenMoreDiaries];
+        } else {
+            self.isLoading = YES;
+            self.upLabel.hidden = NO;
+            self.upLabel.text = @"网络出错";
+            self.isLoading = NO;
+        }
     } else {
         self.upLabel.hidden = YES;
     }
@@ -316,7 +372,6 @@ static NSString  *const reuseIdentifier = @"note_cell";
             self.isLoading = NO;
         }];
     } else {
-        
         [[WLLDailyNoteDataManager sharedInstance] loadTenDiariesOfTheCurrentUserByDate:date finished:^{
             NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
             if (array.count != 0) {
@@ -337,7 +392,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:YES];
     
-        self.parentViewController.navigationItem.title = @"Time Line";
+    self.parentViewController.navigationItem.title = @"Time Line";
     
     self.EditVC = [[EditNoteViewController alloc] initWithNibName:@"EditNoteViewController"
                                                            bundle:[NSBundle mainBundle]];

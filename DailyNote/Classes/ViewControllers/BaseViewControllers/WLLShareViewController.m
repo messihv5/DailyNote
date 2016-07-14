@@ -27,6 +27,8 @@
 @property (strong, nonatomic) UIView *alertView;
 @property (strong, nonatomic) UILabel *upLabel;
 @property (strong, nonatomic) NSMutableArray *staredUserArray;
+@property (assign, nonatomic) BOOL isNetworkAvailable;
+
 @end
 
 @implementation WLLShareViewController
@@ -34,6 +36,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    
+    self.isNetworkAvailable = [WLLDailyNoteDataManager sharedInstance].isNetworkAvailable;
         
     if (self.passedIndexPath) {
         
@@ -91,76 +95,85 @@
 - (void)refreshAction:(UIRefreshControl *)refreshControl {
     [refreshControl beginRefreshing];
     
+    self.isLoading = YES;
     //得到数据中的第一个数据
     
-    //刷新数据，加载最新的数据，当数组存储了数据，查询的新数据插到数组的最前面
-    if (self.data.count != 0) {
-        NoteDetail *firstObject = self.data[0];
-        
-        NSDate *firstDate = firstObject.date;
-        if (self.passedIndexPath) {
-            
-            //点击收藏加载数据
-            [[WLLDailyNoteDataManager sharedInstance] refreshTenDiariesOfCollectionByDate:firstDate finished:^{
-                NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
-                if (array.count != 0) {
-                    NSInteger number = array.count;
-                    NSRange range = NSMakeRange(0, number);
-                    NSIndexSet *set = [NSIndexSet indexSetWithIndexesInRange:range];
-                    [self.data insertObjects:array atIndexes:set];
-                    [self.shareTableView reloadData];
-                    [refreshControl endRefreshing];
-                } else {
-                    [refreshControl endRefreshing];
-                }
-            }];
-        } else {
-            
-            //嵌套在tabbar中的Viewcontroller加载数据
-            [[WLLDailyNoteDataManager sharedInstance] refreshTenDiariesOfSharingByDate:firstDate finished:^{
-                NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
-                if (array.count != 0) {
-                    NSInteger number = array.count;
-                    NSRange range = NSMakeRange(0, number);
-                    NSIndexSet *set = [NSIndexSet indexSetWithIndexesInRange:range];
-                    [self.data insertObjects:array atIndexes:set];
-                    [self.shareTableView reloadData];
-                    [refreshControl endRefreshing];
-                } else {
-                    [refreshControl endRefreshing];
-                }
-            }];
-        }
+    if (self.isNetworkAvailable == NO) {
+        self.upLabel.hidden = NO;
+        self.upLabel.text = @"网络错误";
+        [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(dismissView:) userInfo:self.upLabel repeats:NO];
+        [refreshControl endRefreshing];
     } else {
-        
-        //数组没有数据时，直接数组添加数据
-        NSDate *date = [NSDate date];
-        //点击收藏按钮加载的数据
-        if (self.passedIndexPath) {
-            [[WLLDailyNoteDataManager sharedInstance] refreshTenDiariesOfCollectionByDate:date finished:^{
-                NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
-                if (array != 0) {
-                    [self.data addObjectsFromArray:array];
-                    [self.shareTableView reloadData];
+        //刷新数据，加载最新的数据，当数组存储了数据，查询的新数据插到数组的最前面
+        if (self.data.count != 0) {
+            NoteDetail *firstObject = self.data[0];
+            
+            NSDate *firstDate = firstObject.date;
+            if (self.passedIndexPath) {
+                
+                //点击收藏加载数据
+                [[WLLDailyNoteDataManager sharedInstance] refreshTenDiariesOfCollectionByDate:firstDate finished:^{
+                    NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
+                    if (array.count != 0) {
+                        NSInteger number = array.count;
+                        NSRange range = NSMakeRange(0, number);
+                        NSIndexSet *set = [NSIndexSet indexSetWithIndexesInRange:range];
+                        [self.data insertObjects:array atIndexes:set];
+                        [self.shareTableView reloadData];
+                    } else {
+                    }
                     [refreshControl endRefreshing];
-                } else {
+                    self.isLoading = NO;
+                }];
+            } else {
+                
+                //嵌套在tabbar中的Viewcontroller加载数据
+                [[WLLDailyNoteDataManager sharedInstance] refreshTenDiariesOfSharingByDate:firstDate finished:^{
+                    NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
+                    if (array.count != 0) {
+                        NSInteger number = array.count;
+                        NSRange range = NSMakeRange(0, number);
+                        NSIndexSet *set = [NSIndexSet indexSetWithIndexesInRange:range];
+                        [self.data insertObjects:array atIndexes:set];
+                        [self.shareTableView reloadData];
+                    } else {
+                    }
                     [refreshControl endRefreshing];
-                }
-            }];
+                    self.isLoading = NO;
+                }];
+            }
         } else {
             
-            //嵌套在tabbar中的Viewcontroller加载数据
-            [[WLLDailyNoteDataManager sharedInstance] refreshTenDiariesOfSharingByDate:date finished:^{
-                NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
-                if (array.count != 0) {
-                    [self.data addObjectsFromArray:array];
-                    [self.shareTableView reloadData];
+            //数组没有数据时，直接数组添加数据
+            NSDate *date = [NSDate date];
+            //点击收藏按钮加载的数据
+            if (self.passedIndexPath) {
+                [[WLLDailyNoteDataManager sharedInstance] refreshTenDiariesOfCollectionByDate:date finished:^{
+                    NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
+                    if (array != 0) {
+                        [self.data addObjectsFromArray:array];
+                        [self.shareTableView reloadData];
+                    } else {
+                    }
                     [refreshControl endRefreshing];
-                } else {
+                    self.isLoading = NO;
+                }];
+            } else {
+                
+                //嵌套在tabbar中的Viewcontroller加载数据
+                [[WLLDailyNoteDataManager sharedInstance] refreshTenDiariesOfSharingByDate:date finished:^{
+                    NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
+                    if (array.count != 0) {
+                        [self.data addObjectsFromArray:array];
+                        [self.shareTableView reloadData];
+                    } else {
+                    }
                     [refreshControl endRefreshing];
-                }
-            }];
+                    self.isLoading = NO;
+                }];
+            }
         }
+
     }
 }
 
@@ -205,31 +218,49 @@
 
 //scrollView滑动的代理方法，上拉刷新
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if (self.data.count < 10 ) {
-        CGFloat offset = scrollView.contentOffset.y;
-        if (offset > -50 ) {
-            self.upLabel.hidden = NO;
-        } else if (offset <= -64) {
-            self.upLabel.hidden = YES;
-        }
-        return;
-    }
     
+    CGFloat offset = scrollView.contentOffset.y;
+
     if (self.isLoading == YES) {
         return;
     }
     
-    CGFloat contentOffset = scrollView.contentOffset.y;
+    if (self.data.count < 10 ) {
+        if (self.isNetworkAvailable == NO) {
+            if (offset > -50 ) {
+                self.upLabel.hidden = NO;
+                self.upLabel.text = @"网络出错";
+            } else if (offset == -64) {
+                self.upLabel.hidden = YES;
+            }
+            return;
+        } else {
+            if (offset > -50 ) {
+                self.upLabel.hidden = NO;
+                self.upLabel.text = @"已加载完日记";
+            } else if (offset == -64) {
+                self.upLabel.hidden = YES;
+            }
+            return;
+        }
+    }
     
     //contentsize减去scrollView的height + 富余量10
     CGFloat loadDataContentOffset = scrollView.contentSize.height - self.shareTableView.frame.size.height + 10;
     
-    if (contentOffset > loadDataContentOffset) {
-        self.isLoading = YES;
-        self.upLabel.hidden = NO;
-        
-        //调用加载方法
-        [self loadTenMorediaries];
+    if (offset > loadDataContentOffset) {
+        if (self.isNetworkAvailable == NO) {
+            self.isLoading = YES;
+            self.upLabel.hidden = NO;
+            self.upLabel.text = @"网络出错";
+            self.isLoading = NO;
+        } else {
+            self.isLoading = YES;
+            self.upLabel.hidden = NO;
+            self.upLabel.text = @"已加载完日记";
+            //调用加载方法
+            [self loadTenMorediaries];
+        }
     }else {
         self.upLabel.hidden = YES;
     }
@@ -454,6 +485,14 @@
     [self.shareTableView reloadData];
 }
 
+//使uplabel消失
+- (void)dismissView:(NSTimer *)timer {
+    if ([timer.userInfo isKindOfClass:[UILabel class]]) {
+        UILabel *label = timer.userInfo;
+        label.hidden = YES;
+        self.isLoading = NO;
+    }
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

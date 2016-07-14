@@ -18,6 +18,10 @@
 /* 存储日志 */
 @property (nonatomic, strong) NSMutableArray *noteData;
 
+/*判断网络是否连接*/
+@property (assign, nonatomic) BOOL isNetworkAvailable;
+
+
 
 /**
  * 单例
