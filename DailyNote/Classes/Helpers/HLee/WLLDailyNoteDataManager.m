@@ -158,7 +158,7 @@ static WLLDailyNoteDataManager *manager = nil;
         [object fetchInBackgroundWithKeys:keys block:^(AVObject *object, NSError *error) {
             AVUser *relatedUser = [object objectForKey:@"belong"];
             
-            //获取用户的nickName
+//            //获取用户的nickName
             model.nickName = [relatedUser objectForKey:@"nickName"];
             
             //获取签名

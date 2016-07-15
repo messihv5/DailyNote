@@ -20,7 +20,6 @@
 #import "WLLAssetPickerController.h"
 #import "WLLAssetPickerState.h"
 
-
 @interface EditNoteViewController ()<UITextViewDelegate, ToolViewDelegate, ChangeFontDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, ChangeNoteBackgroundColorDelegate, CancelChoiceDelegate, CLLocationManagerDelegate>
 /* 判断日记分类页面隐藏与否 */
 @property (nonatomic, assign, getter=isHidden) BOOL hidden;
@@ -353,8 +352,6 @@
             
             [object setObject:photoArray forKey:@"photoArray"];
             
-//            self.block(self.passedObject);
-            
             object.fetchWhenSave = YES;
             
             //保存日记的作者为当前用户
@@ -476,7 +473,7 @@
 //    self.model.fontColor = self.fontColor;
 //    self.model.contentFont = self.contentFont;
 
-    [self.contentText resignFirstResponder];
+//    [self.contentText resignFirstResponder];
 
     // 隐藏选择分类页面
 

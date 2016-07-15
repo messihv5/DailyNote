@@ -15,8 +15,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *dateLabel;
 /* 星期 */
 @property (weak, nonatomic) IBOutlet UILabel *weekLabel;
-/* 年月 */
-//@property (weak, nonatomic) IBOutlet UILabel *monthAndYear;
 /* 时间 */
 @property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 
