@@ -12,7 +12,7 @@
 
 @interface AVSaveOption : NSObject
 
-@property (nonatomic, assign) BOOL     fetchWhenSave;
+@property (nonatomic, assign) BOOL fetchWhenSave;
 @property (nonatomic, strong) AVQuery *query;
 
 @end

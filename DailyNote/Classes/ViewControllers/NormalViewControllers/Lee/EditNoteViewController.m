@@ -353,7 +353,7 @@
             
             [object setObject:photoArray forKey:@"photoArray"];
             
-            self.block(self.passedObject);
+//            self.block(self.passedObject);
             
             object.fetchWhenSave = YES;
             
@@ -384,8 +384,6 @@
         //保存日记到网络
         AVObject *object = [AVObject objectWithClassName:@"Diary"];
         
-        //创建一个NoteDetail，Model传递给dailyNote页面
-        
         //保存日记内容,确保作者的内容不为空
         
         NSCharacterSet *set = [NSCharacterSet whitespaceAndNewlineCharacterSet];
@@ -401,6 +399,7 @@
             
             //日记内容不为空，保存日记
             [object setObject:self.contentText.text forKey:@"content"];
+            
             //保存背景颜色
             NSMutableData *data = [[NSMutableData alloc] init];
             
@@ -432,6 +431,8 @@
             if (photoArray == nil) {
                 photoArray = [NSMutableArray arrayWithCapacity:10];
                 [photoArray addObjectsFromArray:self.photoArray];
+            } else {
+                [photoArray addObjectsFromArray:self.photoArray];
             }
             [object addObjectsFromArray:photoArray forKey:@"photoArray"];
             
@@ -440,7 +441,12 @@
             
             object.fetchWhenSave = YES;
             
-            [object saveInBackground];
+            [object saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                if (succeeded) {
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"readyToUpdateNewNote" object:nil userInfo:nil];
+                }
+            }];
+            
         }
     }
     

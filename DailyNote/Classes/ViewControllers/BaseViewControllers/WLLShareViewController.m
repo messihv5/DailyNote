@@ -86,6 +86,9 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:YES];
+    
+    [self.shareTableView reloadData];
+    
     if (self.passedIndexPath) {
         
         //从用户界面，收藏cell，push过来的controller
@@ -402,13 +405,6 @@
     
     WChaoShareCellTableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
 
-    detailController.block = ^ (NSString *starNumber) {
-        cell.starNumberLabel.text = starNumber;
-    };
-    
-    detailController.imageBlock = ^ (UIImage *image) {
-        [cell.starButton setImage:image forState:UIControlStateNormal];
-    };
     //如果是从收藏页面过去的,传个indexpath作为标记
     if (self.passedIndexPath) {
         detailController.passedIndexPath = indexPath;

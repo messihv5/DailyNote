@@ -1,4 +1,4 @@
-//
+ //
 //  WLLDailyNoteDataManager.m
 //  DailyNote
 //

@@ -202,8 +202,6 @@
 
 //返回操作
 - (void)backAction:(UIButton *)sender {
-    
-    self.block(self.currentDiaryStarNumberLabel.text);
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -266,9 +264,6 @@
     
     [self.starButton setImage:[UIImage imageNamed:@"heartSelected40X40"] forState:UIControlStateNormal];
     
-    //点赞后把点赞的image传回去
-    self.imageBlock([UIImage imageNamed:@"heartSelected15X15"]);
-
     //如果该用户没有点赞，执行点赞，点赞数加1
     NSInteger numberOfStar = [self.currentDiaryStarNumberLabel.text integerValue];
     self.currentDiaryStarNumberLabel.text = [NSString stringWithFormat:@"%ld", numberOfStar + 1];
