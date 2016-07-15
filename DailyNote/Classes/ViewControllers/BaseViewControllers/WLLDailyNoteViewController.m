@@ -238,7 +238,6 @@ static NSString  *const reuseIdentifier = @"note_cell";
                     [refreshControl endRefreshing];
                     self.isLoading = NO;
                 }];
-                [refreshControl endRefreshing];
             } else {
                 //数据数组中没有数据时，数据数组直接添加数据
                 
@@ -498,12 +497,6 @@ static NSString  *const reuseIdentifier = @"note_cell";
     //从currentUser的navigationColor字段获取颜色
     NSString *colorString = [[AVUser currentUser] objectForKey:@"navigationColor"];
     
-//    NSData *colorData = [[AVUser currentUser] objectForKey:@"navigationColor"];
-//    
-//    NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:colorData];
-//    
-//    UIColor *color = [unarchiver decodeObjectForKey:@"navigationColor"];
-//    
     if (colorString == nil) {
         [tabbar setTintColor:[UIColor blueColor]];
         [bar setBarTintColor:[UIColor blueColor]];
