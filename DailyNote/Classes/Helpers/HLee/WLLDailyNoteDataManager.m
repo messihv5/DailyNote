@@ -1,4 +1,4 @@
-//
+ //
 //  WLLDailyNoteDataManager.m
 //  DailyNote
 //
@@ -84,7 +84,7 @@ static WLLDailyNoteDataManager *manager = nil;
     }];
 }
 
-- (NSArray *)getDataFromArray:(NSArray <AVObject *>*)array {
+- (void)getDataFromArray:(NSArray <AVObject *>*)array {
     for (AVObject *object in array) {
         NoteDetail *model = [[NoteDetail alloc] init];
         
@@ -150,6 +150,9 @@ static WLLDailyNoteDataManager *manager = nil;
         NSString *readTime = [object objectForKey:@"readTime"];
         model.readTime = readTime;
         
+        //获取日记里图片数组
+        model.photoArray = [object objectForKey:@"photoArray"];
+        
         //获取到这篇日记的作者的信息
         NSArray *keys = [NSArray arrayWithObjects:@"belong", nil];
         [object fetchInBackgroundWithKeys:keys block:^(AVObject *object, NSError *error) {
@@ -177,7 +180,6 @@ static WLLDailyNoteDataManager *manager = nil;
         }];
         [self.noteData addObject:model];
     }
-    return self.noteData;
 }
 
 //下拉加载某一天剩余的日记
@@ -240,8 +242,6 @@ static WLLDailyNoteDataManager *manager = nil;
     AVQuery *query = [AVQuery queryWithClassName:@"Diary"];
     
     query.limit = 10;
-    query.cachePolicy = kAVCachePolicyCacheElseNetwork;
-    query.maxCacheAge = 24 * 60 * 60;
     [query whereKey:@"belong" equalTo:[AVUser currentUser]];
     [query whereKey:@"createdAt" greaterThan:date];
     [query orderByDescending:@"createdAt"];
@@ -274,8 +274,6 @@ static WLLDailyNoteDataManager *manager = nil;
     AVQuery *query = [AVQuery andQueryWithSubqueries:@[twentyfourDateQuery, dateQuery]];
     
     query.limit = 10;
-    query.cachePolicy = kAVCachePolicyCacheElseNetwork;
-    query.maxCacheAge = 24 * 60 * 60;
     [query orderByDescending:@"createdAt"];
     [query whereKey:@"belong" equalTo:[AVUser currentUser]];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -312,8 +310,6 @@ static WLLDailyNoteDataManager *manager = nil;
     AVQuery *query = [AVQuery queryWithClassName:@"Diary"];
     
     query.limit = 10;
-    query.cachePolicy = kAVCachePolicyCacheElseNetwork;
-    query.maxCacheAge = 24 * 60 * 60;
     [query orderByDescending:@"createdAt"];
     [query whereKey:@"createdAt" greaterThan:date];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -351,8 +347,6 @@ static WLLDailyNoteDataManager *manager = nil;
     AVQuery *relationQuery = [collectionRelation query];
     
     relationQuery.limit = 10;
-    relationQuery.cachePolicy = kAVCachePolicyCacheElseNetwork;
-    relationQuery.maxCacheAge = 24 * 60 * 60;
     [relationQuery orderByDescending:@"createdAt"];
     [relationQuery whereKey:@"createdAt" greaterThan:date];
     [relationQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {

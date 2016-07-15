@@ -92,9 +92,16 @@ static NSString  *const reuseIdentifier = @"note_cell";
             [self.notesTableView reloadData];
         }];
     }
+    
+    //注册更新日记通知
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshNewNote:) name:@"readyToUpdateNewNote" object:nil];
 }
 
-//数据数组懒加载
+//更新最新添加的日记方法
+- (void)refreshNewNote:(NSNotification *)notification {
+    [self refreshAction:nil];
+}
+ //数据数组懒加载
 - (NSMutableArray *)data {
     if (_data == nil) {
         _data = [NSMutableArray array];
@@ -238,7 +245,6 @@ static NSString  *const reuseIdentifier = @"note_cell";
                     [refreshControl endRefreshing];
                     self.isLoading = NO;
                 }];
-                [refreshControl endRefreshing];
             } else {
                 //数据数组中没有数据时，数据数组直接添加数据
                 
@@ -392,6 +398,8 @@ static NSString  *const reuseIdentifier = @"note_cell";
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:YES];
     
+    [self.notesTableView reloadData];
+    
     self.parentViewController.navigationItem.title = @"Time Line";
     
     self.EditVC = [[EditNoteViewController alloc] initWithNibName:@"EditNoteViewController"
@@ -438,10 +446,10 @@ static NSString  *const reuseIdentifier = @"note_cell";
         });
     }
     
-    //从viewDidLoad第一次进入页面时，不刷新，后面每次进入页面都刷新
-    if ([AVUser currentUser] && self.isLoadedFromViewDidLoad == NO) {
-        [self refreshAction:nil];
-    }
+//    //从viewDidLoad第一次进入页面时，不刷新，后面每次进入页面都刷新
+//    if ([AVUser currentUser] && self.isLoadedFromViewDidLoad == NO) {
+//        [self refreshAction:nil];
+//    }
     
     //进入日记，从viewDidLoad进入时，加载一次日记
     if ([AVUser currentUser] && self.isFromCalendar == NO && self.isLoadedFromViewDidLoad == YES) {
@@ -498,12 +506,6 @@ static NSString  *const reuseIdentifier = @"note_cell";
     //从currentUser的navigationColor字段获取颜色
     NSString *colorString = [[AVUser currentUser] objectForKey:@"navigationColor"];
     
-//    NSData *colorData = [[AVUser currentUser] objectForKey:@"navigationColor"];
-//    
-//    NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:colorData];
-//    
-//    UIColor *color = [unarchiver decodeObjectForKey:@"navigationColor"];
-//    
     if (colorString == nil) {
         [tabbar setTintColor:[UIColor blueColor]];
         [bar setBarTintColor:[UIColor blueColor]];
@@ -542,7 +544,6 @@ static NSString  *const reuseIdentifier = @"note_cell";
 
 // 写新日记
 - (void)newDaily:(UIBarButtonItem *)button {
-    
     [self.navigationController pushViewController:self.EditVC animated:YES];
 }
 

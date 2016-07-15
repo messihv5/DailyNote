@@ -140,10 +140,10 @@
     self.EditVC.indexPath = self.indexPath;
     self.EditVC.passedObject = self.passedObject;
     
-    __weak WLLNoteDetailViewController *weakSelf = self;
-    self.EditVC.block = ^ (NoteDetail *passedObject){
-        weakSelf.passedObject = passedObject;
-    };
+//    __weak WLLNoteDetailViewController *weakSelf = self;
+//    self.EditVC.block = ^ (NoteDetail *passedObject){
+//        weakSelf.passedObject = passedObject;
+//    };
     [self.navigationController pushViewController:self.EditVC animated:YES];
 }
 

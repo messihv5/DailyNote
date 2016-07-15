@@ -55,6 +55,8 @@
 @property (strong, nonatomic) CLGeocoder *geoCoder;
 @property (strong, nonatomic) NSString *theString;
 @property (assign, nonatomic) NSString *fontNumber;
+/*存放图片的数组*/
+@property (strong, nonatomic) NSMutableArray *photoArray;
 /* 选中照片数 */
 @property (weak, nonatomic) IBOutlet UILabel *photoCount;
 
@@ -105,6 +107,14 @@
     }
     
     self.geoCoder = [[CLGeocoder alloc] init];
+}
+
+//存放图片数组懒加载
+- (NSMutableArray *)photoArray {
+    if (_photoArray == nil) {
+        _photoArray = [NSMutableArray array];
+    }
+    return _photoArray;
 }
 
 // view将要出现时加载左右键及加载来自详情页面数据
@@ -333,12 +343,26 @@
             self.passedObject.fontColor = self.contentText.textColor;
             [object setObject:fontColor forKey:@"fontColor"];
             
-            self.block(self.passedObject);
+            //保存图片数组
+            NSMutableArray *photoArray = [object objectForKey:@"photoArray"];
+            
+            if (photoArray == nil) {
+                NSMutableArray *photoArray = [NSMutableArray arrayWithCapacity:10];
+                [photoArray addObjectsFromArray:self.photoArray];
+            }
+            
+            [object setObject:photoArray forKey:@"photoArray"];
+            
+//            self.block(self.passedObject);
+            
+            object.fetchWhenSave = YES;
             
             //保存日记的作者为当前用户
             [object saveInBackground];
         }
-    } else {    // 如果是由DailyNote页面直接点击添加进入，就是添加
+    } else {
+        // 如果是由DailyNote页面直接点击添加进入，就是添加
+        
         // 移除遮盖view
         [self.coverView removeFromSuperview];
       
@@ -358,7 +382,7 @@
         }
         
         //保存日记到网络
-        AVObject *diary = [AVObject objectWithClassName:@"Diary"];
+        AVObject *object = [AVObject objectWithClassName:@"Diary"];
         
         //保存日记内容,确保作者的内容不为空
         
@@ -374,7 +398,8 @@
         } else {
             
             //日记内容不为空，保存日记
-            [diary setObject:self.contentText.text forKey:@"content"];
+            [object setObject:self.contentText.text forKey:@"content"];
+            
             //保存背景颜色
             NSMutableData *data = [[NSMutableData alloc] init];
             
@@ -382,13 +407,13 @@
             [archiverBackColor encodeObject:self.contentText.backgroundColor forKey:@"backColor"];
             [archiverBackColor finishEncoding];
             
-            [diary setObject:data forKey:@"backColor"];
+            [object setObject:data forKey:@"backColor"];
             
             //保存字体大小
             if (self.fontNumber != nil) {
-                [diary setObject:self.fontNumber forKey:@"fontNumber"];
+                [object setObject:self.fontNumber forKey:@"fontNumber"];
             } else {
-                [diary setObject:@"15" forKey:@"fontNumber"];
+                [object setObject:@"15" forKey:@"fontNumber"];
             }
             
             //保存字体的颜色
@@ -398,12 +423,30 @@
             [archiverFontColor encodeObject:self.contentText.textColor forKey:@"fontColor"];
             [archiverFontColor finishEncoding];
             
-            [diary setObject:fontColor forKey:@"fontColor"];
+            [object setObject:fontColor forKey:@"fontColor"];
+            
+            //保存图片数组
+            NSMutableArray *photoArray = [object objectForKey:@"photoArray"];
+            
+            if (photoArray == nil) {
+                photoArray = [NSMutableArray arrayWithCapacity:10];
+                [photoArray addObjectsFromArray:self.photoArray];
+            } else {
+                [photoArray addObjectsFromArray:self.photoArray];
+            }
+            [object addObjectsFromArray:photoArray forKey:@"photoArray"];
             
             //保存日记的作者为当前用户
-            [diary setObject:[AVUser currentUser] forKey:@"belong"];
+            [object setObject:[AVUser currentUser] forKey:@"belong"];
             
-            [diary saveInBackground];
+            object.fetchWhenSave = YES;
+            
+            [object saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                if (succeeded) {
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"readyToUpdateNewNote" object:nil userInfo:nil];
+                }
+            }];
+            
         }
     }
     
@@ -585,13 +628,18 @@
             
             NSArray *assets = [info objectForKey:WLLAssetPickerSelectedAssets];
             
-            NSMutableArray *imgArray = [NSMutableArray array];
+            
             self.photoCount.text = [NSString stringWithFormat:@"为日记中添加 %ld 张图片", assets.count];
             
             [assets enumerateObjectsUsingBlock:^(ALAsset *asset, NSUInteger idx, BOOL * _Nonnull stop) {
                 
                 UIImage *img = [UIImage imageWithCGImage:asset.defaultRepresentation.fullScreenImage];
-                [imgArray addObject:img];
+                
+                NSData *imageData = UIImagePNGRepresentation(img);
+                
+                AVFile *imageFile = [AVFile fileWithData:imageData];
+                
+                [self.photoArray addObject:imageFile];
             }];
             
             // MARK: !!! 此处将所获取的图片上传至网络 缓存到本地

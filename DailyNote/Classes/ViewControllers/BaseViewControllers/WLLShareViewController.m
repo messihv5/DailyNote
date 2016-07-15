@@ -37,30 +37,27 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
+    //获取网络状态
     self.isNetworkAvailable = [WLLDailyNoteDataManager sharedInstance].isNetworkAvailable;
-        
-    if (self.passedIndexPath) {
-        
-        //从用户界面，收藏cell，push过来的controller
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(removeDiaryAndReloadTableView:) name:@"deleteThisDiariyCollection"
-                                                   object:nil];
-    }
     
+    //从收藏界面，push过来的controller
+    [self controllerFromCollectionView];
+    
+    //获取当前登录用户
     self.currentUser = [AVUser currentUser];
     
+    //设置代理
     self.shareTableView.delegate = self;
     self.shareTableView.dataSource = self;
     
+    //注册cell
     [self.shareTableView registerNib:[UINib nibWithNibName:@"WChaoShareCellTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"CW_Cell"];
     
+    //加载10篇分享的日记
     [self loadTenDairies];
     
     //添加下拉刷新
-    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
-    [refreshControl addTarget:self action:@selector(refreshAction:) forControlEvents:UIControlEventValueChanged];
-    refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"努力刷新中"];
-    [self.shareTableView addSubview:refreshControl];
+    [self addRefreshControl];
     
     //下拉加载，给tableViewfooterView添加view
     [self addViewToFooterView];
@@ -69,8 +66,29 @@
     
 }
 
+//加载从收藏界面push过来的controller
+- (void)controllerFromCollectionView {
+    if (self.passedIndexPath) {
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(removeDiaryAndReloadTableView:) name:@"deleteThisDiariyCollection"
+                                                   object:nil];
+    }
+}
+
+//添加刷新控件
+- (void)addRefreshControl {
+    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+    
+    [refreshControl addTarget:self action:@selector(refreshAction:) forControlEvents:UIControlEventValueChanged];
+    refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"努力刷新中"];
+    [self.shareTableView addSubview:refreshControl];
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:YES];
+    
+    [self.shareTableView reloadData];
+    
     if (self.passedIndexPath) {
         
         //从用户界面，收藏cell，push过来的controller
@@ -385,12 +403,8 @@
     
     detailController.passedObject = self.data[indexPath.row];
     
-    detailController.block = ^ (NSString *starNumber) {
-        WChaoShareCellTableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-        
-        cell.starNumberLabel.text = starNumber;
-    };
-    
+    WChaoShareCellTableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+
     //如果是从收藏页面过去的,传个indexpath作为标记
     if (self.passedIndexPath) {
         detailController.passedIndexPath = indexPath;
