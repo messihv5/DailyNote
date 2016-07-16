@@ -70,8 +70,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.backFromEditNoteVC = YES;
-    
     // 设置代理
     self.contentText.delegate = self;
     
@@ -256,7 +254,6 @@
     
     // 工具条跟随键盘收放
     [UIView animateWithDuration:duration animations:^{
-        self.contentText.backgroundColor = [UIColor redColor];
         self.toolView.transform = CGAffineTransformMakeTranslation(0, frame.origin.y - kHeight);
         self.photoCount.transform = CGAffineTransformMakeTranslation(0, frame.origin.y - self.toolView.height - kHeight);
         self.photoCount.text = [NSString stringWithFormat:@"日记中未添加图片"];

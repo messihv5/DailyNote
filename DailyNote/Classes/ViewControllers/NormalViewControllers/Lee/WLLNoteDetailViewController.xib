@@ -3,7 +3,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
@@ -12,7 +11,7 @@
                 <outlet property="contentLabel" destination="AvE-M5-Y7y" id="F9K-Ml-QcY"/>
                 <outlet property="contentView" destination="Dt1-yy-Jw1" id="bt1-E9-6I7"/>
                 <outlet property="monthAndYearLabel" destination="d4O-2n-gC8" id="fqv-Yk-5Oi"/>
-                <outlet property="noteImage" destination="Isy-mU-gkM" id="ncp-os-MN6"/>
+                <outlet property="scrollView" destination="ELB-Hg-edf" id="dEw-EJ-BVf"/>
                 <outlet property="timeLabel" destination="pQk-sw-w1m" id="mHn-Eu-J2W"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outlet property="weekDayLabel" destination="I3g-mN-Q91" id="60L-LA-Fkg"/>
@@ -60,18 +59,10 @@
                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Isy-mU-gkM">
-                                    <rect key="frame" x="10" y="78" width="275" height="147"/>
-                                    <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                    <constraints>
-                                        <constraint firstAttribute="width" secondItem="Isy-mU-gkM" secondAttribute="height" multiplier="15:8" id="fn1-kO-yHT"/>
-                                    </constraints>
-                                </imageView>
                             </subviews>
                             <constraints>
                                 <constraint firstItem="AvE-M5-Y7y" firstAttribute="top" secondItem="amd-nD-FLY" secondAttribute="bottom" constant="10" id="Bty-Vq-XDc"/>
                                 <constraint firstItem="d4O-2n-gC8" firstAttribute="top" secondItem="Dt1-yy-Jw1" secondAttribute="top" constant="10" id="HiL-UP-Rcr"/>
-                                <constraint firstItem="Isy-mU-gkM" firstAttribute="leading" secondItem="AvE-M5-Y7y" secondAttribute="leading" id="RUS-nh-oIb"/>
                                 <constraint firstItem="I3g-mN-Q91" firstAttribute="leading" secondItem="pQk-sw-w1m" secondAttribute="trailing" constant="10" id="Str-uu-IPl"/>
                                 <constraint firstItem="pQk-sw-w1m" firstAttribute="leading" secondItem="d4O-2n-gC8" secondAttribute="trailing" constant="10" id="VS8-8J-NOt"/>
                                 <constraint firstItem="I3g-mN-Q91" firstAttribute="bottom" secondItem="pQk-sw-w1m" secondAttribute="bottom" id="aDp-mn-5Sd"/>
@@ -80,7 +71,6 @@
                                 <constraint firstItem="pQk-sw-w1m" firstAttribute="bottom" secondItem="d4O-2n-gC8" secondAttribute="bottom" id="oVe-Es-RiR"/>
                                 <constraint firstAttribute="trailing" secondItem="amd-nD-FLY" secondAttribute="trailing" constant="10" id="pNy-VG-91r"/>
                                 <constraint firstItem="d4O-2n-gC8" firstAttribute="leading" secondItem="Dt1-yy-Jw1" secondAttribute="leading" constant="10" id="rMZ-om-wis"/>
-                                <constraint firstItem="Isy-mU-gkM" firstAttribute="top" secondItem="AvE-M5-Y7y" secondAttribute="bottom" constant="5" id="tUU-5c-BXs"/>
                                 <constraint firstItem="amd-nD-FLY" firstAttribute="leading" secondItem="Dt1-yy-Jw1" secondAttribute="leading" constant="10" id="vqz-Sg-yqE"/>
                                 <constraint firstItem="AvE-M5-Y7y" firstAttribute="leading" secondItem="d4O-2n-gC8" secondAttribute="leading" id="yEs-wk-R1R"/>
                             </constraints>
@@ -139,7 +129,6 @@
                 <constraint firstItem="ELB-Hg-edf" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="C4h-mg-3Wo"/>
                 <constraint firstItem="xWk-hu-IuB" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="Ccs-NF-TYG"/>
                 <constraint firstAttribute="trailing" secondItem="xWk-hu-IuB" secondAttribute="trailing" id="FzH-cW-jYy"/>
-                <constraint firstItem="Isy-mU-gkM" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" multiplier="0.5" constant="-25" id="g2C-p8-IYr"/>
                 <constraint firstAttribute="bottom" secondItem="xWk-hu-IuB" secondAttribute="bottom" constant="20" id="gvO-y5-p2f"/>
                 <constraint firstItem="xWk-hu-IuB" firstAttribute="width" secondItem="ELB-Hg-edf" secondAttribute="width" id="hql-Ux-S4J"/>
                 <constraint firstAttribute="bottom" secondItem="ELB-Hg-edf" secondAttribute="bottom" id="sPk-ed-vhM"/>
