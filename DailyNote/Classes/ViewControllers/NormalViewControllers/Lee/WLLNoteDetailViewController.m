@@ -26,7 +26,9 @@
 @property (nonatomic, strong) EditNoteViewController *EditVC;
 /* 背景 */
 @property (weak, nonatomic) IBOutlet UIView *contentView;
-@property (weak, nonatomic) IBOutlet UIImageView *noteImage;
+@property (weak, nonatomic) UIImageView *noteImage;
+
+@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 
 @property (nonatomic, strong) NoteDetail *model;
 
@@ -46,6 +48,53 @@
                                                            bundle:[NSBundle mainBundle]];
     // 标题
     self.navigationItem.title = @"Time Line";
+    
+//    [self addNoteImages];
+    
+}
+
+- (void)addNoteImages {
+    
+    CGRect rect = [self heightForContentLabel];
+    CGRect frame = self.contentLabel.frame;
+    frame.size.height = rect.size.height;
+    self.contentLabel.frame = frame;
+    
+    CGFloat y = CGRectGetMaxY(self.contentLabel.frame) + 10;
+    
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 2; j++) {
+            UIImageView *imageV = [[UIImageView alloc] init];
+            imageV.frame = CGRectMake(10+(kWidth-30)/2*j+10*j, y+0.2*kHeight*i+10*i, (kWidth-30)/2, 0.2*kHeight);
+            imageV.backgroundColor = [UIColor orangeColor];
+            
+            imageV.layer.masksToBounds = YES;
+            imageV.layer.cornerRadius = 10.0f;
+            [self.contentView addSubview:imageV];
+            self.noteImage = imageV;
+            NSLog(@"---%f", imageV.y);
+        }
+    }
+    NSLog(@"%f", y);
+    self.scrollView.contentSize = CGSizeMake(kWidth, 3000);
+    self.contentView.height = self.scrollView.height;
+}
+
+
+- (CGRect)heightForContentLabel {
+    
+    // 计算：1 获取要计算的字符串
+    NSString *temp = self.contentLabel.text;
+    // 计算：2 准备工作
+    // 宽度和label的宽度一样，高度给一个巨大的值
+    CGSize size = CGSizeMake(CGRectGetWidth([UIScreen mainScreen].bounds) - 20, 2000);
+    // 这里要和上面label指定的字体一样
+    NSDictionary *dic = @{NSFontAttributeName:[UIFont systemFontOfSize:17]};
+    
+    // 计算：3 调用方法，获得rect
+    CGRect rect = [temp boundingRectWithSize:size options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin attributes:dic context:nil];
+    // 计算：4 获取当前的label的frame，并将新的frame重新设置上去
+    return rect;
 }
 
 
@@ -76,6 +125,14 @@
     // 本页数据加载自日志页面
     [self dataFromNoteDaily];
     
+    [self addNoteImages];
+    
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    [self.noteImage removeFromSuperview];
 }
 
 // 将日志页面的值赋给详情页面
