@@ -15,6 +15,7 @@
 #import <AVOSCloud/AVOSCloud.h>
 #import <UIImageView+WebCache.h>
 #import "Reachability.h"
+#import <SDImageCache.h>
 
 
 #ifndef PrefixHeader_pch

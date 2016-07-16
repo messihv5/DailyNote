@@ -54,8 +54,11 @@
 @property (strong, nonatomic) CLGeocoder *geoCoder;
 @property (strong, nonatomic) NSString *theString;
 @property (assign, nonatomic) NSString *fontNumber;
-/*存放图片的数组*/
-@property (strong, nonatomic) NSMutableArray *photoArray;
+/*传给网络存放图片的数组*/
+@property (strong, nonatomic) NSMutableArray *photoArrayInternet;
+/*传给第一页面存放图片数组*/
+@property (strong, nonatomic) NSMutableArray *photoArrayLocal;
+@property (assign, nonatomic) BOOL backFromEditNoteVC;
 /* 选中照片数 */
 @property (weak, nonatomic) IBOutlet UILabel *photoCount;
 
@@ -66,6 +69,8 @@
 #pragma mark - Load View
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.backFromEditNoteVC = YES;
     
     // 设置代理
     self.contentText.delegate = self;
@@ -108,12 +113,20 @@
     self.geoCoder = [[CLGeocoder alloc] init];
 }
 
-//存放图片数组懒加载
-- (NSMutableArray *)photoArray {
-    if (_photoArray == nil) {
-        _photoArray = [NSMutableArray array];
+//网络存放图片数组懒加载
+- (NSMutableArray *)photoArrayInternet {
+    if (_photoArrayInternet == nil) {
+        _photoArrayInternet = [NSMutableArray array];
     }
-    return _photoArray;
+    return _photoArrayInternet;
+}
+
+//本地存放图片数组
+- (NSMutableArray *)photoArrayLocal {
+    if (_photoArrayLocal == nil) {
+        _photoArrayLocal = [NSMutableArray array];
+    }
+    return _photoArrayLocal;
 }
 
 // view将要出现时加载左右键及加载来自详情页面数据
@@ -293,69 +306,81 @@
         
         //修改传过来的日记，并保存在网络
         //通过model获取日记
-        AVObject *object = [AVObject objectWithClassName:@"Diary" objectId:self.passedObject.diaryId];
-
-        //保存日记内容,确保作者的内容不为空
         
-        NSCharacterSet *set = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+        NSString *objectId = self.passedObject.diaryId;
         
-        NSString *string = [self.contentText.text stringByTrimmingCharactersInSet:set];
-        
-        if (self.contentText.text == nil || string.length == 0) {
+        if (objectId != nil) {
+            AVObject *object = [AVObject objectWithClassName:@"Diary" objectId:self.passedObject.diaryId];
             
-            //日记内容为空，弹出提示框
-            [self tipOfNoneDairyContent];
+            //保存日记内容,确保作者的内容不为空
+            NSCharacterSet *set = [NSCharacterSet whitespaceAndNewlineCharacterSet];
             
-        } else {
+            NSString *string = [self.contentText.text stringByTrimmingCharactersInSet:set];
             
-            //日记内容不为空，保存日记
-            self.passedObject.content = self.contentText.text;
-            [object setObject:self.contentText.text forKey:@"content"];
-            
-            //保存背景颜色
-            NSMutableData *data = [[NSMutableData alloc] init];
-            NSKeyedArchiver *archiverBackColor = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
-            [archiverBackColor encodeObject:self.contentText.backgroundColor forKey:@"backColor"];
-            [archiverBackColor finishEncoding];
-            
-            self.passedObject.backColor = self.contentText.backgroundColor;
-            [object setObject:data forKey:@"backColor"];
-            
-            //保存字体大小
-            //从详情页面传过来的object中解析的字体
-            NSString *passedFontNumber = self.passedObject.fontNumber;
-            if (self.fontNumber != nil) {
-                self.passedObject.fontNumber = self.fontNumber;
-                [object setObject:self.fontNumber forKey:@"fontNumber"];
+            if (self.contentText.text == nil || string.length == 0) {
+                
+                //日记内容为空，弹出提示框
+                [self tipOfNoneDairyContent];
+                
             } else {
-                self.passedObject.fontNumber = passedFontNumber;
-                [object setObject:passedFontNumber forKey:@"fontNumber"];
+                
+                //日记内容不为空，保存日记
+                self.passedObject.content = self.contentText.text;
+                [object setObject:self.contentText.text forKey:@"content"];
+                
+                //保存背景颜色
+                NSMutableData *data = [[NSMutableData alloc] init];
+                NSKeyedArchiver *archiverBackColor = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
+                [archiverBackColor encodeObject:self.contentText.backgroundColor forKey:@"backColor"];
+                [archiverBackColor finishEncoding];
+                
+                self.passedObject.backColor = self.contentText.backgroundColor;
+                [object setObject:data forKey:@"backColor"];
+                
+                //保存字体大小
+                //从详情页面传过来的object中解析的字体
+                NSString *passedFontNumber = self.passedObject.fontNumber;
+                if (self.fontNumber != nil) {
+                    self.passedObject.fontNumber = self.fontNumber;
+                    [object setObject:self.fontNumber forKey:@"fontNumber"];
+                } else {
+                    self.passedObject.fontNumber = passedFontNumber;
+                    [object setObject:passedFontNumber forKey:@"fontNumber"];
+                }
+                
+                //保存字体的颜色
+                NSMutableData *fontColor = [[NSMutableData alloc] init];
+                
+                NSKeyedArchiver *archiverFontColor = [[NSKeyedArchiver alloc] initForWritingWithMutableData:fontColor];
+                [archiverFontColor encodeObject:self.contentText.textColor forKey:@"fontColor"];
+                [archiverFontColor finishEncoding];
+                
+                self.passedObject.fontColor = self.contentText.textColor;
+                [object setObject:fontColor forKey:@"fontColor"];
+                
+                //保存图片数组
+                NSMutableArray *photoArray = [object objectForKey:@"photoArray"];
+                
+                if (photoArray == nil) {
+                    NSMutableArray *photoArray = [NSMutableArray arrayWithCapacity:10];
+                    [photoArray addObjectsFromArray:self.photoArrayInternet];
+                }
+                
+                [object setObject:photoArray forKey:@"photoArray"];
+                
+                object.fetchWhenSave = YES;
+                
+                //保存日记的作者为当前用户
+                [object saveInBackground];
             }
+        } else {
+            UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"请稍后保存，正在处理网络" message:nil preferredStyle:UIAlertControllerStyleAlert];
             
-            //保存字体的颜色
-            NSMutableData *fontColor = [[NSMutableData alloc] init];
+            UIAlertAction *alertAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            }];
             
-            NSKeyedArchiver *archiverFontColor = [[NSKeyedArchiver alloc] initForWritingWithMutableData:fontColor];
-            [archiverFontColor encodeObject:self.contentText.textColor forKey:@"fontColor"];
-            [archiverFontColor finishEncoding];
-            
-            self.passedObject.fontColor = self.contentText.textColor;
-            [object setObject:fontColor forKey:@"fontColor"];
-            
-            //保存图片数组
-            NSMutableArray *photoArray = [object objectForKey:@"photoArray"];
-            
-            if (photoArray == nil) {
-                NSMutableArray *photoArray = [NSMutableArray arrayWithCapacity:10];
-                [photoArray addObjectsFromArray:self.photoArray];
-            }
-            
-            [object setObject:photoArray forKey:@"photoArray"];
-            
-            object.fetchWhenSave = YES;
-            
-            //保存日记的作者为当前用户
-            [object saveInBackground];
+            [alertVC addAction:alertAction];
+            [self.navigationController presentViewController:alertVC animated:YES completion:nil];
         }
     } else {
         // 如果是由DailyNote页面直接点击添加进入，就是添加
@@ -381,6 +406,9 @@
         //保存日记到网络
         AVObject *object = [AVObject objectWithClassName:@"Diary"];
         
+        //创建model，传给第一页面
+        NoteDetail *model = [[NoteDetail alloc] init];
+        
         //保存日记内容,确保作者的内容不为空
         
         NSCharacterSet *set = [NSCharacterSet whitespaceAndNewlineCharacterSet];
@@ -396,6 +424,7 @@
             
             //日记内容不为空，保存日记
             [object setObject:self.contentText.text forKey:@"content"];
+            model.content = self.contentText.text;
             
             //保存背景颜色
             NSMutableData *data = [[NSMutableData alloc] init];
@@ -405,12 +434,15 @@
             [archiverBackColor finishEncoding];
             
             [object setObject:data forKey:@"backColor"];
+            model.backColor = self.contentText.backgroundColor;
             
             //保存字体大小
             if (self.fontNumber != nil) {
                 [object setObject:self.fontNumber forKey:@"fontNumber"];
+                model.fontNumber = self.fontNumber;
             } else {
                 [object setObject:@"15" forKey:@"fontNumber"];
+                model.fontNumber = @"15";
             }
             
             //保存字体的颜色
@@ -421,17 +453,24 @@
             [archiverFontColor finishEncoding];
             
             [object setObject:fontColor forKey:@"fontColor"];
+            model.fontColor = self.contentText.textColor;
             
             //保存图片数组
             NSMutableArray *photoArray = [object objectForKey:@"photoArray"];
             
             if (photoArray == nil) {
                 photoArray = [NSMutableArray arrayWithCapacity:10];
-                [photoArray addObjectsFromArray:self.photoArray];
+                [photoArray addObjectsFromArray:self.photoArrayInternet];
             } else {
-                [photoArray addObjectsFromArray:self.photoArray];
+                [photoArray addObjectsFromArray:self.photoArrayInternet];
             }
             [object addObjectsFromArray:photoArray forKey:@"photoArray"];
+            model.photoArray = self.photoArrayLocal;
+            
+            //给model日期赋值
+            model.date = [NSDate date];
+            
+            self.block(model);
             
             //保存日记的作者为当前用户
             [object setObject:[AVUser currentUser] forKey:@"belong"];
@@ -440,7 +479,7 @@
             
             [object saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                 if (succeeded) {
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"readyToUpdateNewNote" object:nil userInfo:nil];
+                    model.diaryId = object.objectId;
                 }
             }];
             
@@ -452,7 +491,7 @@
 
 // 如果日记内容为空, 弹出提示框
 - (void)tipOfNoneDairyContent {
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"请输入内容" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"请输入内容" message:nil preferredStyle:UIAlertControllerStyleAlert];
     
     UIAlertAction *executeAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         
@@ -630,13 +669,26 @@
             
             [assets enumerateObjectsUsingBlock:^(ALAsset *asset, NSUInteger idx, BOOL * _Nonnull stop) {
                 
+                //获取缓存路径
+                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+                
+                NSString *path = [paths objectAtIndex:0];
+                
+                //图片的绝对路径
+                NSString *imagePath = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"pic%ld",idx]];
+                
                 UIImage *img = [UIImage imageWithCGImage:asset.defaultRepresentation.fullScreenImage];
+                
+//                SDImageCache *imageCache = [SDImageCache sharedImageCache];
+//                
+//                [imageCache storeImage:img forKey:imagePath];
                 
                 NSData *imageData = UIImagePNGRepresentation(img);
                 
                 AVFile *imageFile = [AVFile fileWithData:imageData];
                 
-                [self.photoArray addObject:imageFile];
+                [self.photoArrayInternet addObject:imageFile];
+                [self.photoArrayLocal addObject:img];
             }];
             
             // MARK: !!! 此处将所获取的图片上传至网络 缓存到本地

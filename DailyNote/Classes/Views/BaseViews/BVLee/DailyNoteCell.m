@@ -36,6 +36,25 @@
     
     self.dateLabel.text = [NSString nt_monthAndYearFromDate:createdDate];
     
+    //图片解析
+    NSArray *photoArray = model.photoArray;
+    
+    if (photoArray != nil && photoArray.count != 0) {
+        if ([photoArray[0] isKindOfClass:[AVFile class]]) {
+            AVFile *file = photoArray[0];
+            
+            [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
+                NSURL *url = [NSURL URLWithString:file.url];
+                [self.noteImage sd_setImageWithURL:url];
+            }];
+        } else {
+            UIImage *image = photoArray[0];
+            
+            self.noteImage.image = image;
+        }
+    }
+    
+    
     // 计算：1 获取要计算的字符串
     NSString *temp = self.contentLabel.text;
     // 计算：2 准备工作
@@ -61,7 +80,7 @@
     
     CGFloat height = 20.287109;
 
-    if (model.imageUrl == nil) {
+    if (model.photoArray == nil) {
         
         if (rect.size.height <= height + 1) {
             return height + 28 + 40;
@@ -72,11 +91,11 @@
         }
     } else {
         if (rect.size.height <= height + 1) {
-            return height + 28 + 40 + 50;
+            return height + 28 + 40 + 200;
         } else if (rect.size.height <= 2 * height + 2 && rect.size.height > height + 1){
-            return 2 * height + 28 + 40 + 50;
+            return 2 * height + 28 + 40 + 200;
         } else {
-            return 3 * height + 28 + 40 + 50;
+            return 3 * height + 28 + 40 + 200;
         }
     }
 }

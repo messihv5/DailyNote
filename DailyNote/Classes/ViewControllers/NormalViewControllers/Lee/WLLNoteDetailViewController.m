@@ -22,8 +22,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *contentLabel;
 /* 日记-控制翻页 */
 @property (nonatomic, assign) NSInteger indexs;
-/* 编辑页面 */
-@property (nonatomic, strong) EditNoteViewController *EditVC;
 /* 背景 */
 @property (weak, nonatomic) IBOutlet UIView *contentView;
 @property (weak, nonatomic) IBOutlet UIImageView *noteImage;
@@ -39,11 +37,6 @@
 #pragma mark - View Load
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    
-    // 从Xib获取编辑页面
-    self.EditVC = [[EditNoteViewController alloc] initWithNibName:@"EditNoteViewController"
-                                                           bundle:[NSBundle mainBundle]];
     // 标题
     self.navigationItem.title = @"Time Line";
 }
@@ -80,7 +73,6 @@
 
 // 将日志页面的值赋给详情页面
 - (void)dataFromNoteDaily {
-    
     //日记内容赋值
     self.contentLabel.text = self.passedObject.content;
     
@@ -94,40 +86,44 @@
     
     self.monthAndYearLabel.text = dateString;
     
-//    self.weekDayLabel.text = self.model.weekLabel;
-//    self.timeLabel.text = self.model.time;
+    //通过传过来的model查询AVObject、
+    AVObject *object = [AVObject objectWithClassName:@"Diary" objectId:self.passedObject.diaryId];
     
-    //背景颜色赋值
-    
-    self.contentView.backgroundColor = self.passedObject.backColor;
-    
-    //字体颜色解析
-    
-    UIColor *fontColor = self.passedObject.fontColor;
-    
-    //字体解析
-    NSString *fontNumberString = self.passedObject.fontNumber;
-    float fontNumber = [fontNumberString floatValue];
-    UIFont *font = [UIFont systemFontOfSize:fontNumber];
-    
-    if (fontColor == nil) {
-        fontColor = [UIColor blackColor];
-    }
-    
-    if (fontNumber ==  0) {
-        font = [UIFont systemFontOfSize:15];
-    }
-    // 富文本
-    NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:self.contentLabel.text];
-    [attrStr addAttribute:NSForegroundColorAttributeName
-                    value:fontColor
-                    range:NSMakeRange(0, self.contentLabel.text.length)];
-    
-    [attrStr addAttribute:NSFontAttributeName
-                    value:font
-                    range:NSMakeRange(0, self.contentLabel.text.length)];
-    
-    self.contentLabel.attributedText = attrStr;
+    [object fetchInBackgroundWithBlock:^(AVObject *object, NSError *error) {
+        //背景颜色赋值
+        NSData *backColorData = [object objectForKey:@"backColor"];
+        NSKeyedUnarchiver *backColorUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:backColorData];
+        self.contentView.backgroundColor = [backColorUnarchiver decodeObjectForKey:@"backColor"];
+        
+        //字体颜色解析
+        NSData *fontColorData = [object objectForKey:@"fontColor"];
+        NSKeyedUnarchiver *fontColorUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:fontColorData];
+        UIColor *fontColor = [fontColorUnarchiver decodeObjectForKey:@"fontColor"];
+        
+        //字体解析
+        NSString *fontNumberString = [object objectForKey:@"fontNumber"];
+        float fontNumber = [fontNumberString floatValue];
+        UIFont *font = [UIFont systemFontOfSize:fontNumber];
+        
+        if (fontColor == nil) {
+            fontColor = [UIColor blackColor];
+        }
+        
+        if (fontNumber ==  0) {
+            font = [UIFont systemFontOfSize:15];
+        }
+        // 富文本
+        NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:self.contentLabel.text];
+        [attrStr addAttribute:NSForegroundColorAttributeName
+                        value:fontColor
+                        range:NSMakeRange(0, self.contentLabel.text.length)];
+        
+        [attrStr addAttribute:NSFontAttributeName
+                        value:font
+                        range:NSMakeRange(0, self.contentLabel.text.length)];
+        
+        self.contentLabel.attributedText = attrStr;
+    }];
 }
 
 #pragma mark - 导航栏左右键响应
@@ -137,14 +133,11 @@
 }
 
 - (void)editDaily:(UIBarButtonItem *)button {
-    self.EditVC.indexPath = self.indexPath;
-    self.EditVC.passedObject = self.passedObject;
+    EditNoteViewController *editVC = [[EditNoteViewController alloc] initWithNibName:@"EditNoteViewController" bundle:[NSBundle mainBundle]];
+    editVC.indexPath = self.indexPath;
+    editVC.passedObject = self.passedObject;
     
-//    __weak WLLNoteDetailViewController *weakSelf = self;
-//    self.EditVC.block = ^ (NoteDetail *passedObject){
-//        weakSelf.passedObject = passedObject;
-//    };
-    [self.navigationController pushViewController:self.EditVC animated:YES];
+    [self.navigationController pushViewController:editVC animated:YES];
 }
 
 
