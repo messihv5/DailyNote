@@ -10,6 +10,7 @@
             <connections>
                 <outlet property="contentLabel" destination="AvE-M5-Y7y" id="F9K-Ml-QcY"/>
                 <outlet property="contentView" destination="Dt1-yy-Jw1" id="bt1-E9-6I7"/>
+                <outlet property="contentViewHeight" destination="bpW-MI-YSN" id="f4b-oW-jt2"/>
                 <outlet property="monthAndYearLabel" destination="d4O-2n-gC8" id="fqv-Yk-5Oi"/>
                 <outlet property="scrollView" destination="ELB-Hg-edf" id="dEw-EJ-BVf"/>
                 <outlet property="timeLabel" destination="pQk-sw-w1m" id="mHn-Eu-J2W"/>
