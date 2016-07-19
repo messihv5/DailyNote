@@ -662,7 +662,7 @@
             
             [assets enumerateObjectsUsingBlock:^(ALAsset *asset, NSUInteger idx, BOOL * _Nonnull stop) {
                 
-                NSString *imagePath = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"image%ld.png", index]];
+                NSString *imagePath = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"%ldimage%ld.png", self.numberOfDiary, index]];
                 
                 NSLog(@"%@", imagePath);
                 

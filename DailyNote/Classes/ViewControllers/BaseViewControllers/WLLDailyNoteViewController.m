@@ -548,6 +548,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
 // 写新日记
 - (void)newDaily:(UIBarButtonItem *)button {
     EditNoteViewController *editVC = [[EditNoteViewController alloc] initWithNibName:@"EditNoteViewController" bundle:[NSBundle mainBundle]];
+    editVC.numberOfDiary = self.data.count;
     __weak WLLDailyNoteViewController *weakSelf = self;
     editVC.block = ^ (NoteDetail *passedObject) {
         weakSelf.passedObject = passedObject;

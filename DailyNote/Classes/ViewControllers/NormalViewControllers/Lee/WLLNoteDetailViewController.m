@@ -82,24 +82,23 @@
             self.noteImage.frame = CGRectMake(10+(kWidth-30)/2*j+10*j, y+0.2*kHeight*i+10*i, (kWidth-30)/2, 0.2*kHeight);
             self.noteImage.backgroundColor = [UIColor orangeColor];
             
-            imageV.layer.masksToBounds = YES;
-            imageV.layer.cornerRadius = 10.0f;
-            [self.contentView addSubview:imageV];
-            self.noteImage = imageV;
+            self.noteImage.layer.masksToBounds = YES;
+            self.noteImage.layer.cornerRadius = 5.0f;
+            [self.contentView addSubview:self.noteImage];
             
             if (self.photoArray != nil && index < countOfarray) {
                 if ([self.photoArray[index] isKindOfClass:[AVFile class]]) {
                     AVFile *file = self.photoArray[index];
                     [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
-                        [imageV sd_setImageWithURL:[NSURL URLWithString:file.url]];
+                        [self.noteImage sd_setImageWithURL:[NSURL URLWithString:file.url]];
                     }];
                 } else {
                     NSString *path = self.photoArray[index];
-                    imageV.image = [UIImage imageWithContentsOfFile:path];
+                    self.noteImage.image = [UIImage imageWithContentsOfFile:path];
                 }
             }
             index++;
-            NSLog(@"---%f", imageV.y);
+            NSLog(@"---%f", self.noteImage.y);
         }
     }
     NSLog(@"%f", y);
