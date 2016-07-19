@@ -16,6 +16,7 @@
 #import "WLLMoodView.h"
 #import "WLLNoteBackgroundChoice.h"
 #import <CoreLocation/CoreLocation.h>
+#import "SDImageCache.h"
 
 #import "WLLAssetPickerController.h"
 #import "WLLAssetPickerState.h"
@@ -61,6 +62,7 @@
 @property (assign, nonatomic) BOOL backFromEditNoteVC;
 /* 选中照片数 */
 @property (weak, nonatomic) IBOutlet UILabel *photoCount;
+@property (strong, nonatomic) UIImage *choosedImage;
 
 @end
 
@@ -356,14 +358,11 @@
                 [object setObject:fontColor forKey:@"fontColor"];
                 
                 //保存图片数组
-                NSMutableArray *photoArray = [object objectForKey:@"photoArray"];
+                NSMutableArray *localPhotoArray = self.passedObject.photoArray;
+                [localPhotoArray addObjectsFromArray:self.photoArrayLocal];
+                self.passedObject.photoArray = localPhotoArray;
                 
-                if (photoArray == nil) {
-                    NSMutableArray *photoArray = [NSMutableArray arrayWithCapacity:10];
-                    [photoArray addObjectsFromArray:self.photoArrayInternet];
-                }
-                
-                [object setObject:photoArray forKey:@"photoArray"];
+                [object addObjectsFromArray:self.photoArrayInternet forKey:@"photoArray"];
                 
                 object.fetchWhenSave = YES;
                 
@@ -453,15 +452,7 @@
             model.fontColor = self.contentText.textColor;
             
             //保存图片数组
-            NSMutableArray *photoArray = [object objectForKey:@"photoArray"];
-            
-            if (photoArray == nil) {
-                photoArray = [NSMutableArray arrayWithCapacity:10];
-                [photoArray addObjectsFromArray:self.photoArrayInternet];
-            } else {
-                [photoArray addObjectsFromArray:self.photoArrayInternet];
-            }
-            [object addObjectsFromArray:photoArray forKey:@"photoArray"];
+            [object addObjectsFromArray:self.photoArrayInternet forKey:@"photoArray"];
             model.photoArray = self.photoArrayLocal;
             
             //给model日期赋值
@@ -661,35 +652,41 @@
             
             NSArray *assets = [info objectForKey:WLLAssetPickerSelectedAssets];
             
+            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+            
+            NSString *path = [paths objectAtIndex:0];
+            
+            __block NSInteger index = 0;
             
             self.photoCount.text = [NSString stringWithFormat:@"为日记中添加 %ld 张图片", assets.count];
             
             [assets enumerateObjectsUsingBlock:^(ALAsset *asset, NSUInteger idx, BOOL * _Nonnull stop) {
                 
-                //获取缓存路径
-                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+                NSString *imagePath = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"image%ld.png", index]];
                 
-                NSString *path = [paths objectAtIndex:0];
+                NSLog(@"%@", imagePath);
                 
-                //图片的绝对路径
-                NSString *imagePath = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"pic%ld",idx]];
+                self.choosedImage = [UIImage imageWithCGImage:asset.defaultRepresentation.fullResolutionImage] ;
                 
-                UIImage *img = [UIImage imageWithCGImage:asset.defaultRepresentation.fullScreenImage];
+                NSData *data = UIImageJPEGRepresentation(self.choosedImage, 0);
                 
-//                SDImageCache *imageCache = [SDImageCache sharedImageCache];
-//                
-//                [imageCache storeImage:img forKey:imagePath];
+                [data writeToFile:imagePath atomically:YES];
                 
-                NSData *imageData = UIImagePNGRepresentation(img);
+                NSData *imageData = nil;
+                if (UIImageJPEGRepresentation(self.choosedImage, 1)) {
+                    imageData = UIImageJPEGRepresentation(self.choosedImage, 1);
+                } else if (UIImagePNGRepresentation(self.choosedImage)) {
+                    imageData = UIImagePNGRepresentation(self.choosedImage);
+                }
                 
                 AVFile *imageFile = [AVFile fileWithData:imageData];
                 
                 [self.photoArrayInternet addObject:imageFile];
-                [self.photoArrayLocal addObject:img];
+                
+                [self.photoArrayLocal addObject:imagePath];
+                
+                index++;
             }];
-            
-            // MARK: !!! 此处将所获取的图片上传至网络 缓存到本地
-            
         }];
         
     } canceled:^{
@@ -730,7 +727,31 @@
     
 }
 
++ (UIImage*)imageWithImageSimple:(UIImage*)image scaledToSize:(CGSize)newSize
+{
+    // Create a graphics image context
+    UIGraphicsBeginImageContext(newSize);
+    
+    // Tell the old image to draw in this new context, with the desired
+    // new size
+    [image drawInRect:CGRectMake(0,0,newSize.width,newSize.height)];
+    
+    // Get the new image from the context
+    UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
+    
+    // End the context
+    UIGraphicsEndImageContext();
+    
+    // Return the new image.
+    return newImage;
+}
+
+//移除观察着
 #pragma mark - 辅助工具栏按钮响应
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"change" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillChangeFrameNotification object:nil];
+}
 
 
 @end

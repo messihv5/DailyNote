@@ -48,9 +48,10 @@
                 [self.noteImage sd_setImageWithURL:url];
             }];
         } else {
-            UIImage *image = photoArray[0];
             
-            self.noteImage.image = image;
+            NSString *path = photoArray[0];
+            
+            self.noteImage.image = [UIImage imageWithContentsOfFile:path];
         }
     }
     
@@ -89,6 +90,14 @@
         } else {
             return 3 * height + 28 + 40;
         }
+    } else if (model.photoArray.count == 0){
+        if (rect.size.height <= height + 1) {
+            return height + 28 + 40;
+        } else if (rect.size.height <= 2 * height + 2 && rect.size.height > height + 1){
+            return 2 * height + 28 + 40;
+        } else {
+            return 3 * height + 28 + 40;
+        }
     } else {
         if (rect.size.height <= height + 1) {
             return height + 28 + 40 + 200;
@@ -97,6 +106,7 @@
         } else {
             return 3 * height + 28 + 40 + 200;
         }
+
     }
 }
 

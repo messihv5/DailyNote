@@ -29,6 +29,8 @@
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 
 @property (nonatomic, strong) NoteDetail *model;
+/*图片数组*/
+@property (strong, nonatomic) NSMutableArray *photoArray;
 
 @end
 
@@ -42,8 +44,18 @@
     // 标题
     self.navigationItem.title = @"Time Line";
     
+    self.photoArray = self.passedObject.photoArray;
+    
 //    [self addNoteImages];
     
+}
+
+//图片数组懒加载
+- (NSMutableArray *)photoArray {
+    if (_photoArray == nil) {
+        _photoArray = [NSMutableArray arrayWithCapacity:10];
+    }
+    return _photoArray;
 }
 
 - (void)addNoteImages {
@@ -55,8 +67,13 @@
     
     CGFloat y = CGRectGetMaxY(self.contentLabel.frame) + 10;
     
+    NSInteger index = 0;
+    
+    NSInteger countOfarray = self.photoArray.count;
+    
     for (int i = 0; i < 5; i++) {
         for (int j = 0; j < 2; j++) {
+            
             UIImageView *imageV = [[UIImageView alloc] init];
             imageV.frame = CGRectMake(10+(kWidth-30)/2*j+10*j, y+0.2*kHeight*i+10*i, (kWidth-30)/2, 0.2*kHeight);
             imageV.backgroundColor = [UIColor orangeColor];
@@ -65,6 +82,19 @@
             imageV.layer.cornerRadius = 10.0f;
             [self.contentView addSubview:imageV];
             self.noteImage = imageV;
+            
+            if (self.photoArray != nil && index < countOfarray) {
+                if ([self.photoArray[index] isKindOfClass:[AVFile class]]) {
+                    AVFile *file = self.photoArray[index];
+                    [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
+                        [imageV sd_setImageWithURL:[NSURL URLWithString:file.url]];
+                    }];
+                } else {
+                    NSString *path = self.photoArray[index];
+                    imageV.image = [UIImage imageWithContentsOfFile:path];
+                }
+            }
+            index++;
             NSLog(@"---%f", imageV.y);
         }
     }
@@ -123,7 +153,7 @@
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidAppear:animated];
+    [super viewDidDisappear:animated];
     
     [self.noteImage removeFromSuperview];
 }

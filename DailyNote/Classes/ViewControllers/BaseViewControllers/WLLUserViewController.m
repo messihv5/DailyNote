@@ -110,9 +110,7 @@
 
     self.theBackgroundImageView = [[UIImageView alloc] initWithFrame:viewRect];
     self.theBackgroundImageView.backgroundColor = [UIColor cyanColor];
-    
-    NSString *nickName = [self.theCurrentUser objectForKey:@"nickName"];
-    
+        
     AVFile *theBackgroundImageFile = [self.theCurrentUser objectForKey:@"theBackgroundImage"];
     
     [self.theBackgroundImageView sd_setImageWithURL:[NSURL URLWithString:theBackgroundImageFile.url]];
@@ -454,18 +452,41 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker
 didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
+    UIImage *pickedImage = info[UIImagePickerControllerOriginalImage];
+
+    NSData *imageData = nil;
+    NSString *string = nil;
+    if (UIImageJPEGRepresentation(pickedImage, 1)) {
+        imageData = UIImageJPEGRepresentation(pickedImage, 1);
+        string = @".jpg";
+    } else if (UIImagePNGRepresentation(pickedImage)) {
+        imageData = UIImagePNGRepresentation(pickedImage);
+        string = @".png";
+    }
     
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    
+    NSString *path = [paths objectAtIndex:0];
+
     //判断是点击背景图片还是图像图片
     if (self.isTheBackgroundImageView == YES) {
-        self.theBackgroundImageView.image = info[UIImagePickerControllerOriginalImage];
-        NSData *data = UIImagePNGRepresentation(self.theBackgroundImageView.image);
-        AVFile *file = [AVFile fileWithData:data];
+        NSString *imagePath = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"theBackgroundImage%@", string]];
+        
+        [imageData writeToFile:imagePath atomically:YES];
+        
+        self.theBackgroundImageView.image = [UIImage imageWithContentsOfFile:imagePath];
+        
+        AVFile *file = [AVFile fileWithData:imageData];
+        
         [self.theCurrentUser setObject:file forKey:@"theBackgroundImage"];
         self.isTheBackgroundImageView = NO;
     } else if (self.isHeadImageView == YES) {
-        self.headImageView.image = info[UIImagePickerControllerOriginalImage];
-        NSData *data = UIImagePNGRepresentation(self.headImageView.image);
-        AVFile *file = [AVFile fileWithData:data];
+        NSString *imagePath = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"headImage%@", string]];
+        
+        [imageData writeToFile:imagePath atomically:YES];
+
+        self.headImageView.image = [UIImage imageWithContentsOfFile:imagePath];
+        AVFile *file = [AVFile fileWithData:imageData];
         [self.theCurrentUser setObject:file forKey:@"headImage"];
         self.isHeadImageView = NO;
     }

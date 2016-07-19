@@ -193,8 +193,10 @@ static WLLDailyNoteDataManager *manager = nil;
         //获取日期
         model.date = [object objectForKey:@"createdAt"];
         
+        //日记内容
         model.content = [object objectForKey:@"content"];
         
+        //图片数组
         model.photoArray = [object objectForKey:@"photoArray"];
         [self.noteData addObject:model];
     }

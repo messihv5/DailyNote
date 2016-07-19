@@ -9,6 +9,7 @@
 #import "WLLLogInViewController.h"
 #import "WLLLogUpViewController.h"
 #import "WLLResetPasswordViewController.h"
+#import "WLLDailyNoteDataManager.h"
 
 @interface WLLLogInViewController ()<UITextFieldDelegate>
 
@@ -53,24 +54,38 @@
 #pragma mark - 登录操作
 
 - (IBAction)logInAction:(UIButton *)sender {
-    [AVUser logInWithUsernameInBackground:self.emailTextField.text
-                                 password:self.passwordTextField.text
-                                    block:^(AVUser *user, NSError *error) {
-        if (user != nil) {
-            self.isBackFromLoginController = YES;
-            [self dismissViewControllerAnimated:YES completion:nil];
-        } else {
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"邮箱或密码有误"
-                                                                           message:@"" preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive
-                                                           handler:^(UIAlertAction * _Nonnull action) {
-                
-            }];
-            [alert addAction:action];
-            [self presentViewController:alert animated:YES completion:nil];
-            
-        }
-    }];
+    BOOL isNetworkAvailble = [WLLDailyNoteDataManager sharedInstance].isNetworkAvailable;
+    if (isNetworkAvailble == YES) {
+        [AVUser logInWithUsernameInBackground:self.emailTextField.text
+                                     password:self.passwordTextField.text
+                                        block:^(AVUser *user, NSError *error) {
+                                            if (error == nil) {
+                                                self.isBackFromLoginController = YES;
+                                                [self dismissViewControllerAnimated:YES completion:nil];
+                                            } else {
+                                                UIAlertController *alert;
+                                                alert = [UIAlertController alertControllerWithTitle:@"邮箱或密码有误"
+                                                                                            message:nil
+                                                                                     preferredStyle:UIAlertControllerStyleAlert];
+                                                UIAlertAction *action;
+                                                action = [UIAlertAction actionWithTitle:@"确定"
+                                                                                  style:UIAlertActionStyleDestructive
+                                                                                handler:^(UIAlertAction * _Nonnull action) {
+                                                                                }];
+                                                [alert addAction:action];
+                                                [self presentViewController:alert animated:YES completion:nil];
+                                            }
+                                        }];
+
+    } else {
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"请检查网络"
+                                                                       message:nil preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive
+                                                       handler:^(UIAlertAction * _Nonnull action) {
+                                                       }];
+        [alert addAction:action];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
 }
 
 
