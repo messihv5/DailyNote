@@ -81,6 +81,7 @@ static WLLDailyNoteDataManager *manager = nil;
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         [self getDataFromArray:objects];
         finished();
+        [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
     }];
 }
 
@@ -113,6 +114,7 @@ static WLLDailyNoteDataManager *manager = nil;
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         [self getDataFromArray:objects];
         finished();
+        [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
     }];
 }
 
@@ -144,6 +146,7 @@ static WLLDailyNoteDataManager *manager = nil;
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         [self getDataFromArray:objects];
         finished();
+        [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
     }];
 }
 
@@ -164,8 +167,10 @@ static WLLDailyNoteDataManager *manager = nil;
         } else {
             [self getDataFromArray:objects];
             finished();
+            [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
         }
     }];
+    [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
 }
 
 //下拉刷新dailyNoteViewcontroller主页面的5篇日记
@@ -181,6 +186,7 @@ static WLLDailyNoteDataManager *manager = nil;
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         [self getDataFromArray:objects];
         finished();
+        [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
     }];
 }
 - (void)getDataFromArray:(NSArray <AVObject *>*)array {
@@ -199,6 +205,7 @@ static WLLDailyNoteDataManager *manager = nil;
         //图片数组
         model.photoArray = [object objectForKey:@"photoArray"];
         [self.noteData addObject:model];
+        [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
     }
 }
 
@@ -220,6 +227,7 @@ static WLLDailyNoteDataManager *manager = nil;
         } else {
             [self getDataFromShareArray:objects];
             finished();
+            [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
         }
     }];
 }
@@ -303,6 +311,7 @@ static WLLDailyNoteDataManager *manager = nil;
             model.headImageUrl = [NSURL URLWithString:headImage.url];
         }];
         [self.noteData addObject:model];
+        [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
     }
 }
 
@@ -317,6 +326,7 @@ static WLLDailyNoteDataManager *manager = nil;
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         [self getDataFromShareArray:objects];
         finished();
+        [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
     }];
 }
 
@@ -336,6 +346,7 @@ static WLLDailyNoteDataManager *manager = nil;
     [relationQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         [self getDataFromShareArray:objects];
         finished();
+        [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
     }];
 }
 //刷新5篇收藏的日记
@@ -352,6 +363,7 @@ static WLLDailyNoteDataManager *manager = nil;
     [relationQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         [self getDataFromShareArray:objects];
         finished();
+        [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
     }];
 }
 
