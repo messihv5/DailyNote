@@ -24,13 +24,18 @@
 @property (nonatomic, assign) NSInteger indexs;
 /* 背景 */
 @property (weak, nonatomic) IBOutlet UIView *contentView;
-@property (weak, nonatomic) UIImageView *noteImage;
+@property (strong, nonatomic) UIImageView *noteImage;
 
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 
 @property (nonatomic, strong) NoteDetail *model;
 /*图片数组*/
 @property (strong, nonatomic) NSMutableArray *photoArray;
+
+
+
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *contentViewHeight;
+
 
 @end
 
@@ -73,34 +78,32 @@
     
     for (int i = 0; i < 5; i++) {
         for (int j = 0; j < 2; j++) {
+            self.noteImage = [[UIImageView alloc] init];
+            self.noteImage.frame = CGRectMake(10+(kWidth-30)/2*j+10*j, y+0.2*kHeight*i+10*i, (kWidth-30)/2, 0.2*kHeight);
+            self.noteImage.backgroundColor = [UIColor orangeColor];
             
-            UIImageView *imageV = [[UIImageView alloc] init];
-            imageV.frame = CGRectMake(10+(kWidth-30)/2*j+10*j, y+0.2*kHeight*i+10*i, (kWidth-30)/2, 0.2*kHeight);
-            imageV.backgroundColor = [UIColor orangeColor];
-            
-            imageV.layer.masksToBounds = YES;
-            imageV.layer.cornerRadius = 10.0f;
-            [self.contentView addSubview:imageV];
-            self.noteImage = imageV;
+            self.noteImage.layer.masksToBounds = YES;
+            self.noteImage.layer.cornerRadius = 5.0f;
+            [self.contentView addSubview:self.noteImage];
             
             if (self.photoArray != nil && index < countOfarray) {
                 if ([self.photoArray[index] isKindOfClass:[AVFile class]]) {
                     AVFile *file = self.photoArray[index];
                     [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
-                        [imageV sd_setImageWithURL:[NSURL URLWithString:file.url]];
+                        [self.noteImage sd_setImageWithURL:[NSURL URLWithString:file.url]];
                     }];
                 } else {
                     NSString *path = self.photoArray[index];
-                    imageV.image = [UIImage imageWithContentsOfFile:path];
+                    self.noteImage.image = [UIImage imageWithContentsOfFile:path];
                 }
             }
             index++;
-            NSLog(@"---%f", imageV.y);
+            NSLog(@"---%f", self.noteImage.y);
         }
     }
     NSLog(@"%f", y);
-    self.scrollView.contentSize = CGSizeMake(kWidth, 3000);
-    self.contentView.height = self.scrollView.height;
+    self.contentViewHeight.constant = y+5*0.2*kHeight+50-kHeight;
+    NSLog(@"const %@", self.contentViewHeight);
 }
 
 
@@ -152,10 +155,13 @@
     
 }
 
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-    
-    [self.noteImage removeFromSuperview];
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    for (int i = 0; i < 10; i++) {
+        [self.noteImage removeFromSuperview];
+
+    }
+    NSLog(@"%@", self.contentView.subviews);
 }
 
 // 将日志页面的值赋给详情页面

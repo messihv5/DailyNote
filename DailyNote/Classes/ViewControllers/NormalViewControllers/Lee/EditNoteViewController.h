@@ -22,7 +22,7 @@ typedef void(^Block)(NoteDetail *passedToDailyNote);
 
 //接收从详情页面传过来的AVObject
 @property (strong, nonatomic) NoteDetail *passedObject;
-
+/*反向给dailyNOte页面传个对象*/
 @property (copy, nonatomic) Block block;
 /*把第一页面数组的个数传过来*/
 @property (assign, nonatomic) NSInteger numberOfModelInArray;

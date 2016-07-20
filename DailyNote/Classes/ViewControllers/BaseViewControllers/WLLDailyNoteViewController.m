@@ -115,7 +115,6 @@ static NSString  *const reuseIdentifier = @"note_cell";
 
 //加载10篇日记
 - (void)loadTenDiaries {
-
     NSDate *cacheDate = [[AVUser currentUser] objectForKey:@"cacheDate"];
     
     NSDate *date = [NSDate date];
@@ -576,7 +575,6 @@ static NSString  *const reuseIdentifier = @"note_cell";
     
     [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
 
-
     return cell;
 }
 
@@ -598,9 +596,5 @@ static NSString  *const reuseIdentifier = @"note_cell";
 //移除通知
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"readyToUpdateNewNote" object:nil];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
 }
 @end
