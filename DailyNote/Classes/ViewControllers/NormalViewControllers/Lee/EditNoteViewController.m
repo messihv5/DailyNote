@@ -394,11 +394,6 @@
         // 收回font view
         self.fontView.frame = CGRectMake(0, kHeight, kWidth, 0.4*kHeight);
         
-        
-        if (_modelDelegate && [_modelDelegate respondsToSelector:@selector(sendEditModel:)]) {
-            [_modelDelegate sendEditModel:self.model];
-        }
-        
         //保存日记到网络
         AVObject *object = [AVObject objectWithClassName:@"Diary"];
         
@@ -646,9 +641,10 @@
 
 // 图片来自相册
 - (void)pictureFromLibrary {
+    __weak typeof(self) weakSelf = self;
     WLLAssetPickerController *assetPicker = [WLLAssetPickerController pickerWithCompletion:^(NSDictionary *info) {
         
-        [self dismissViewControllerAnimated:YES completion:^{
+        [weakSelf dismissViewControllerAnimated:YES completion:^{
             
             NSArray *assets = [info objectForKey:WLLAssetPickerSelectedAssets];
             
@@ -658,44 +654,44 @@
             
             __block NSInteger index = 0;
             
-            self.photoCount.text = [NSString stringWithFormat:@"为日记中添加 %ld 张图片", assets.count];
+            NSInteger numberOFModelInArray = weakSelf.numberOfModelInArray;
+            
+            weakSelf.photoCount.text = [NSString stringWithFormat:@"为日记中添加 %ld 张图片", assets.count];
             
             [assets enumerateObjectsUsingBlock:^(ALAsset *asset, NSUInteger idx, BOOL * _Nonnull stop) {
                 
-                NSString *imagePath = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"image%ld.png", index]];
+                NSString *imagePath;
                 
-                NSLog(@"%@", imagePath);
-                
-                self.choosedImage = [UIImage imageWithCGImage:asset.defaultRepresentation.fullResolutionImage] ;
-                
-                NSData *data = UIImageJPEGRepresentation(self.choosedImage, 0);
-                
-                [data writeToFile:imagePath atomically:YES];
+                weakSelf.choosedImage = [UIImage imageWithCGImage:asset.defaultRepresentation.fullResolutionImage] ;
                 
                 NSData *imageData = nil;
-                if (UIImageJPEGRepresentation(self.choosedImage, 1)) {
-                    imageData = UIImageJPEGRepresentation(self.choosedImage, 1);
-                } else if (UIImagePNGRepresentation(self.choosedImage)) {
-                    imageData = UIImagePNGRepresentation(self.choosedImage);
+                if (UIImageJPEGRepresentation(weakSelf.choosedImage, 1)) {
+                    imageData = UIImageJPEGRepresentation(weakSelf.choosedImage, 1);
+                    imagePath = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"%ldimage%ld.jpg",numberOFModelInArray, index]];
+                } else if (UIImagePNGRepresentation(weakSelf.choosedImage)) {
+                    imageData = UIImagePNGRepresentation(weakSelf.choosedImage);
+                    imagePath = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"image%ld.png", index]];
                 }
+                
+                [imageData writeToFile:imagePath atomically:YES];
                 
                 AVFile *imageFile = [AVFile fileWithData:imageData];
                 
-                [self.photoArrayInternet addObject:imageFile];
+                [weakSelf.photoArrayInternet addObject:imageFile];
                 
-                [self.photoArrayLocal addObject:imagePath];
+                [weakSelf.photoArrayLocal addObject:imagePath];
                 
                 index++;
             }];
         }];
         
     } canceled:^{
-        [self dismissViewControllerAnimated:YES completion:nil];
+        [weakSelf dismissViewControllerAnimated:YES completion:nil];
     }];
     
     assetPicker.selectionLimit = 10;
     
-    [self presentViewController:assetPicker animated:YES completion:nil];
+    [weakSelf presentViewController:assetPicker animated:YES completion:nil];
 }
 
 #pragma mark - 定位代理方法

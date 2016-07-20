@@ -115,6 +115,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
 
 //加载10篇日记
 - (void)loadTenDiaries {
+
     NSDate *cacheDate = [[AVUser currentUser] objectForKey:@"cacheDate"];
     
     NSDate *date = [NSDate date];
@@ -123,6 +124,8 @@ static NSString  *const reuseIdentifier = @"note_cell";
         NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
         [self.data addObjectsFromArray:array];
         [self.notesTableView reloadData];
+        [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
+
         
         [[AVUser currentUser] setObject:date forKey:@"cacheDate"];
         [[AVUser currentUser] saveInBackground];
@@ -131,6 +134,8 @@ static NSString  *const reuseIdentifier = @"note_cell";
             NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
             [self.data addObjectsFromArray:array];
             [self.notesTableView reloadData];
+            [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
+
             self.upLabel.hidden = YES;
         } error:^{
             //添加网络错误的代码
@@ -321,7 +326,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
         return;
     }
     
-    if (self.data.count < 10 ) {
+    if (self.data.count < 5) {
 
         if (networkAvailable == NO) {
             if (offset > -50 ) {
@@ -354,6 +359,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
             self.upLabel.text = @"日记已加载完";
             //调用加载方法
             [self loadTenMoreDiaries];
+
         } else {
             self.isLoading = YES;
             self.upLabel.hidden = NO;
@@ -436,6 +442,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:YES];
+    
     //进入app时，弹出登录界面，如果用户没有退出系统，再进入时不用弹出登录界面
     if (![AVUser currentUser]) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -448,11 +455,6 @@ static NSString  *const reuseIdentifier = @"note_cell";
             [self.parentViewController.navigationController presentViewController:naviController animated:NO completion:nil];
         });
     }
-    
-//    //从viewDidLoad第一次进入页面时，不刷新，后面每次进入页面都刷新
-//    if ([AVUser currentUser] && self.isLoadedFromViewDidLoad == NO) {
-//        [self refreshAction:nil];
-//    }
     
     //进入日记，从viewDidLoad进入时，加载一次日记
     if ([AVUser currentUser] && self.isFromCalendar == NO && self.isLoadedFromViewDidLoad == YES) {
@@ -548,6 +550,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
 // 写新日记
 - (void)newDaily:(UIBarButtonItem *)button {
     EditNoteViewController *editVC = [[EditNoteViewController alloc] initWithNibName:@"EditNoteViewController" bundle:[NSBundle mainBundle]];
+    editVC.numberOfModelInArray = self.data.count;
     __weak WLLDailyNoteViewController *weakSelf = self;
     editVC.block = ^ (NoteDetail *passedObject) {
         weakSelf.passedObject = passedObject;
@@ -564,11 +567,15 @@ static NSString  *const reuseIdentifier = @"note_cell";
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+    [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
+
     DailyNoteCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier
                                                           forIndexPath:indexPath];
    
     cell.model = self.data[indexPath.row];
+    
+    [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
+
 
     return cell;
 }
@@ -591,5 +598,9 @@ static NSString  *const reuseIdentifier = @"note_cell";
 //移除通知
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"readyToUpdateNewNote" object:nil];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
 }
 @end

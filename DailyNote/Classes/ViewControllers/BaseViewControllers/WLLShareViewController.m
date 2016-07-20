@@ -138,6 +138,7 @@
                         NSIndexSet *set = [NSIndexSet indexSetWithIndexesInRange:range];
                         [self.data insertObjects:array atIndexes:set];
                         [self.shareTableView reloadData];
+
                     } else {
                     }
                     [refreshControl endRefreshing];
@@ -154,6 +155,7 @@
                         NSIndexSet *set = [NSIndexSet indexSetWithIndexesInRange:range];
                         [self.data insertObjects:array atIndexes:set];
                         [self.shareTableView reloadData];
+
                     } else {
                     }
                     [refreshControl endRefreshing];
@@ -171,6 +173,7 @@
                     if (array != 0) {
                         [self.data addObjectsFromArray:array];
                         [self.shareTableView reloadData];
+
                     } else {
                     }
                     [refreshControl endRefreshing];
@@ -184,6 +187,7 @@
                     if (array.count != 0) {
                         [self.data addObjectsFromArray:array];
                         [self.shareTableView reloadData];
+
                     } else {
                     }
                     [refreshControl endRefreshing];
@@ -307,6 +311,7 @@
             if (array.count != 0) {
                 [self.data addObjectsFromArray:array];
                 [self.shareTableView reloadData];
+
             }
             self.isLoading = NO;
         } error:^{
@@ -343,6 +348,7 @@
             if (array.count != 0) {
                 [self.data addObjectsFromArray:array];
                 [self.shareTableView reloadData];
+
                 [[AVUser currentUser] setObject:todayDate forKey:@"shareCacheDate"];
                 [[AVUser currentUser]  saveInBackground];
             } else {
@@ -497,6 +503,7 @@
     AVObject *object = notification.userInfo[@"passedObject"];
     [self.data removeObject:object];
     [self.shareTableView reloadData];
+
 }
 
 //使uplabel消失

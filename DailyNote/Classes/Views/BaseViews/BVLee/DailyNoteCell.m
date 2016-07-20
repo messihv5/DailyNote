@@ -23,7 +23,7 @@
 @implementation DailyNoteCell
 
 - (void)setModel:(NoteDetail *)model {
-    
+    [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
     _model = model;
     
     self.contentLabel.text = model.content;
@@ -38,20 +38,22 @@
     
     //图片解析
     NSArray *photoArray = model.photoArray;
-    
+    __weak DailyNoteCell* weakSelf = self;
+
     if (photoArray != nil && photoArray.count != 0) {
         if ([photoArray[0] isKindOfClass:[AVFile class]]) {
             AVFile *file = photoArray[0];
-            
             [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
                 NSURL *url = [NSURL URLWithString:file.url];
-                [self.noteImage sd_setImageWithURL:url];
+                [weakSelf.noteImage sd_setImageWithURL:url];
+                [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
             }];
         } else {
             
             NSString *path = photoArray[0];
             
             self.noteImage.image = [UIImage imageWithContentsOfFile:path];
+            [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
         }
     }
     

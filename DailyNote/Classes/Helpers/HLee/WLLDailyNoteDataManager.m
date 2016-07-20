@@ -76,11 +76,12 @@ static WLLDailyNoteDataManager *manager = nil;
     query.cachePolicy = kAVCachePolicyCacheElseNetwork;
     query.maxCacheAge = 24 * 60 * 60;
     [query orderByDescending:@"createdAt"];
-    query.limit = 10;
+    query.limit = 5;
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         [self getDataFromArray:objects];
         finished();
+        [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
     }];
 }
 
@@ -105,7 +106,7 @@ static WLLDailyNoteDataManager *manager = nil;
     
     AVQuery *query = [AVQuery andQueryWithSubqueries:@[zeroDateQuery, dateQuery]];
     
-    query.limit = 10;
+    query.limit = 5;
     query.cachePolicy = kAVCachePolicyCacheElseNetwork;
     query.maxCacheAge = 24 * 60 * 60;
     [query orderByDescending:@"createdAt"];
@@ -113,10 +114,11 @@ static WLLDailyNoteDataManager *manager = nil;
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         [self getDataFromArray:objects];
         finished();
+        [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
     }];
 }
 
-//下拉刷新指定日期的10篇日记
+//下拉刷新指定日期的5篇日记
 - (void)refreshTenDiriesOfTheCurrentUserByDateString:(NSString *)dateString dateFromLoadDiary:(NSDate *)date finished:(void (^)())finished {
     [self.noteData removeAllObjects];
     
@@ -138,23 +140,24 @@ static WLLDailyNoteDataManager *manager = nil;
     
     AVQuery *query = [AVQuery andQueryWithSubqueries:@[twentyfourDateQuery, dateQuery]];
     
-    query.limit = 10;
+    query.limit = 5;
     [query orderByDescending:@"createdAt"];
     [query whereKey:@"belong" equalTo:[AVUser currentUser]];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         [self getDataFromArray:objects];
         finished();
+        [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
     }];
 }
 
-//加载dailyNoteViewcontroller主页面的10篇日记
+//加载dailyNoteViewcontroller主页面的5篇日记
 - (void)loadTenDiariesOfTheCurrentUserByDate:(NSDate *)date finished:(void (^)())finished error:(void (^)())hasError{
     [self.noteData removeAllObjects];
     AVQuery *query = [AVQuery queryWithClassName:@"Diary"];
     
     query.cachePolicy = kAVCachePolicyCacheElseNetwork;
     query.maxCacheAge = 24 * 60 * 60;
-    query.limit = 10;
+    query.limit = 5;
     [query whereKey:@"belong" equalTo:[AVUser currentUser]];
     [query orderByDescending:@"createdAt"];
     [query whereKey:@"createdAt" lessThan:date];
@@ -164,23 +167,26 @@ static WLLDailyNoteDataManager *manager = nil;
         } else {
             [self getDataFromArray:objects];
             finished();
+            [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
         }
     }];
+    [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
 }
 
-//下拉刷新dailyNoteViewcontroller主页面的10篇日记
+//下拉刷新dailyNoteViewcontroller主页面的5篇日记
 - (void)refreshTenDiariesOfTheCurrentUserByDate:(NSDate *)date finished:(void (^)())finished {
     [self.noteData removeAllObjects];
     
     AVQuery *query = [AVQuery queryWithClassName:@"Diary"];
     
-    query.limit = 10;
+    query.limit = 5;
     [query whereKey:@"belong" equalTo:[AVUser currentUser]];
     [query whereKey:@"createdAt" greaterThan:date];
     [query orderByDescending:@"createdAt"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         [self getDataFromArray:objects];
         finished();
+        [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
     }];
 }
 - (void)getDataFromArray:(NSArray <AVObject *>*)array {
@@ -199,16 +205,17 @@ static WLLDailyNoteDataManager *manager = nil;
         //图片数组
         model.photoArray = [object objectForKey:@"photoArray"];
         [self.noteData addObject:model];
+        [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
     }
 }
 
 
-//加载10篇分享的日记
+//加载5篇分享的日记
 - (void)loadTenDiariesOfSharingByDate:(NSDate *)date finished:(void (^)())finished error:(void (^)())hasError{
     [self.noteData removeAllObjects];
     AVQuery *query = [AVQuery queryWithClassName:@"Diary"];
     
-    query.limit = 10;
+    query.limit = 5;
     query.cachePolicy = kAVCachePolicyCacheElseNetwork;
     query.maxCacheAge = 24 * 60 * 60;
     [query orderByDescending:@"createdAt"];
@@ -220,6 +227,7 @@ static WLLDailyNoteDataManager *manager = nil;
         } else {
             [self getDataFromShareArray:objects];
             finished();
+            [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
         }
     }];
 }
@@ -303,24 +311,26 @@ static WLLDailyNoteDataManager *manager = nil;
             model.headImageUrl = [NSURL URLWithString:headImage.url];
         }];
         [self.noteData addObject:model];
+        [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
     }
 }
 
-//刷新10篇分享的日记
+//刷新5篇分享的日记
 - (void)refreshTenDiariesOfSharingByDate:(NSDate *)date finished:(void (^)())finished {
     [self.noteData removeAllObjects];
     AVQuery *query = [AVQuery queryWithClassName:@"Diary"];
     
-    query.limit = 10;
+    query.limit = 5;
     [query orderByDescending:@"createdAt"];
     [query whereKey:@"createdAt" greaterThan:date];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         [self getDataFromShareArray:objects];
         finished();
+        [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
     }];
 }
 
-//加载10篇收藏的日记
+//加载5篇收藏的日记
 - (void)loadTenDiariesOfCollectionByDate:(NSDate *)date finished:(void (^)())finished {
     [self.noteData removeAllObjects];
     
@@ -328,7 +338,7 @@ static WLLDailyNoteDataManager *manager = nil;
     
     AVQuery *relationQuery = [collectionRelation query];
     
-    relationQuery.limit = 10;
+    relationQuery.limit = 5;
     relationQuery.cachePolicy = kAVCachePolicyCacheElseNetwork;
     relationQuery.maxCacheAge = 24 * 60 * 60;
     [relationQuery orderByDescending:@"createdAt"];
@@ -336,9 +346,10 @@ static WLLDailyNoteDataManager *manager = nil;
     [relationQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         [self getDataFromShareArray:objects];
         finished();
+        [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
     }];
 }
-//刷新10篇收藏的日记
+//刷新5篇收藏的日记
 - (void)refreshTenDiariesOfCollectionByDate:(NSDate *)date finished:(void (^)())finished {
     [self.noteData removeAllObjects];
     
@@ -346,12 +357,13 @@ static WLLDailyNoteDataManager *manager = nil;
     
     AVQuery *relationQuery = [collectionRelation query];
     
-    relationQuery.limit = 10;
+    relationQuery.limit = 5;
     [relationQuery orderByDescending:@"createdAt"];
     [relationQuery whereKey:@"createdAt" greaterThan:date];
     [relationQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         [self getDataFromShareArray:objects];
         finished();
+        [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
     }];
 }
 

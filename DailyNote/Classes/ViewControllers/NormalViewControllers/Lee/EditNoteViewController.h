@@ -14,29 +14,17 @@
 
 typedef void(^Block)(NoteDetail *passedToDailyNote);
 
-// 由未经indexPath进入而获取的model, 修改后传至DailyNote页面
-@protocol SendEditModelDelegate <NSObject>
-
-/**
- *  由未经indexPath进入而获取的model, 修改后传至DailyNote页面
- *
- *  @param model 修改后model
- */
-- (void)sendEditModel:(NoteDetail *)model;
-
-@end
-
 @interface EditNoteViewController : UIViewController
 /* 传入detail页面cell下标 */
 @property (nonatomic, strong) NSIndexPath *indexPath;
 
 @property (nonatomic, copy) NSString *eTitle;
 
-@property (nonatomic, assign) id <SendEditModelDelegate> modelDelegate;
-
 //接收从详情页面传过来的AVObject
 @property (strong, nonatomic) NoteDetail *passedObject;
 
 @property (copy, nonatomic) Block block;
+/*把第一页面数组的个数传过来*/
+@property (assign, nonatomic) NSInteger numberOfModelInArray;
 
 @end
