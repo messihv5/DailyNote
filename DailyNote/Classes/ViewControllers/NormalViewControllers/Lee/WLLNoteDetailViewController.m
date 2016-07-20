@@ -32,8 +32,6 @@
 /*图片数组*/
 @property (strong, nonatomic) NSMutableArray *photoArray;
 
-
-
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *contentViewHeight;
 
 
@@ -50,9 +48,6 @@
     self.navigationItem.title = @"Time Line";
     
     self.photoArray = self.passedObject.photoArray;
-    
-//    [self addNoteImages];
-    
 }
 
 //图片数组懒加载
@@ -70,7 +65,7 @@
     frame.size.height = rect.size.height;
     self.contentLabel.frame = frame;
     
-    CGFloat y = CGRectGetMaxY(self.contentLabel.frame) + 10;
+    float y = CGRectGetMaxY(self.contentLabel.frame) + 20;
     
     NSInteger index = 0;
     
@@ -88,7 +83,7 @@
         for (int j = 0; j < 2; j++) {
             UIImageView *imageV = [[UIImageView alloc] init];
             imageV.frame = CGRectMake(10+(kWidth-30)/2*j+10*j, y+0.2*kHeight*i+10*i, (kWidth-30)/2, 0.2*kHeight);
-            imageV.backgroundColor = [UIColor orangeColor];
+            imageV.backgroundColor = [UIColor whiteColor];
             
             imageV.layer.masksToBounds = YES;
             imageV.layer.cornerRadius = 5.0f;
@@ -108,9 +103,7 @@
             index++;
         }
     }
-    NSLog(@"%f", y);
     self.contentViewHeight.constant = y+5*0.2*kHeight+50-kHeight;
-    NSLog(@"const %@", self.contentViewHeight);
 }
 
 
@@ -159,16 +152,17 @@
     [self dataFromNoteDaily];
     
     [self addNoteImages];
-    
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    for (int i = 0; i < 10; i++) {
-        [self.noteImage removeFromSuperview];
-
+    NSArray *views = [self.contentView subviews];
+    
+    for (UIView *view in views) {
+        if ([view isKindOfClass:[UIImageView class]]) {
+            [view removeFromSuperview];
+        }
     }
-    NSLog(@"%@", self.contentView.subviews);
 }
 
 // 将日志页面的值赋给详情页面
