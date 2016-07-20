@@ -23,7 +23,6 @@
 @implementation DailyNoteCell
 
 - (void)setModel:(NoteDetail *)model {
-    [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
     _model = model;
     
     self.contentLabel.text = model.content;
@@ -46,14 +45,12 @@
             [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
                 NSURL *url = [NSURL URLWithString:file.url];
                 [weakSelf.noteImage sd_setImageWithURL:url];
-                [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
             }];
         } else {
             
             NSString *path = photoArray[0];
             
             self.noteImage.image = [UIImage imageWithContentsOfFile:path];
-            [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
         }
     }
     

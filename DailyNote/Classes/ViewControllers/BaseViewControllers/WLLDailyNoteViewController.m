@@ -123,8 +123,6 @@ static NSString  *const reuseIdentifier = @"note_cell";
         NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
         [self.data addObjectsFromArray:array];
         [self.notesTableView reloadData];
-        [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
-
         
         [[AVUser currentUser] setObject:date forKey:@"cacheDate"];
         [[AVUser currentUser] saveInBackground];
@@ -133,7 +131,6 @@ static NSString  *const reuseIdentifier = @"note_cell";
             NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
             [self.data addObjectsFromArray:array];
             [self.notesTableView reloadData];
-            [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
 
             self.upLabel.hidden = YES;
         } error:^{
@@ -566,15 +563,12 @@ static NSString  *const reuseIdentifier = @"note_cell";
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
 
     DailyNoteCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier
                                                           forIndexPath:indexPath];
    
     cell.model = self.data[indexPath.row];
     
-    [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
-
     return cell;
 }
 

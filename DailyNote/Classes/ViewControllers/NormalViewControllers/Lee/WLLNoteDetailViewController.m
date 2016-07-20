@@ -74,31 +74,38 @@
     
     NSInteger index = 0;
     
+    NSInteger numberOfRow = 0;
+    
     NSInteger countOfarray = self.photoArray.count;
     
-    for (int i = 0; i < 5; i++) {
+    if (countOfarray % 2 == 0) {
+        numberOfRow = countOfarray / 2;
+    } else {
+        numberOfRow = countOfarray / 2 + 1;
+    }
+    
+    for (int i = 0; i < numberOfRow; i++) {
         for (int j = 0; j < 2; j++) {
-            self.noteImage = [[UIImageView alloc] init];
-            self.noteImage.frame = CGRectMake(10+(kWidth-30)/2*j+10*j, y+0.2*kHeight*i+10*i, (kWidth-30)/2, 0.2*kHeight);
-            self.noteImage.backgroundColor = [UIColor orangeColor];
+            UIImageView *imageV = [[UIImageView alloc] init];
+            imageV.frame = CGRectMake(10+(kWidth-30)/2*j+10*j, y+0.2*kHeight*i+10*i, (kWidth-30)/2, 0.2*kHeight);
+            imageV.backgroundColor = [UIColor orangeColor];
             
-            self.noteImage.layer.masksToBounds = YES;
-            self.noteImage.layer.cornerRadius = 5.0f;
-            [self.contentView addSubview:self.noteImage];
+            imageV.layer.masksToBounds = YES;
+            imageV.layer.cornerRadius = 5.0f;
+            [self.contentView addSubview:imageV];
             
             if (self.photoArray != nil && index < countOfarray) {
                 if ([self.photoArray[index] isKindOfClass:[AVFile class]]) {
                     AVFile *file = self.photoArray[index];
                     [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
-                        [self.noteImage sd_setImageWithURL:[NSURL URLWithString:file.url]];
+                        [imageV sd_setImageWithURL:[NSURL URLWithString:file.url]];
                     }];
                 } else {
                     NSString *path = self.photoArray[index];
-                    self.noteImage.image = [UIImage imageWithContentsOfFile:path];
+                    imageV.image = [UIImage imageWithContentsOfFile:path];
                 }
             }
             index++;
-            NSLog(@"---%f", self.noteImage.y);
         }
     }
     NSLog(@"%f", y);
