@@ -48,7 +48,7 @@
 @property (copy, nonatomic) NSString *imageUrl;
 /*存放日记里面的图片*/
 @property (strong, nonatomic) NSMutableArray *photoArray;
-
-
+/*存放图片url的数组*/
+@property (strong, nonatomic) NSMutableArray *photoUrlArray;
 
 @end

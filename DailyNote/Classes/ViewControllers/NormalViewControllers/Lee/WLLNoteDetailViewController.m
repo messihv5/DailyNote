@@ -31,9 +31,10 @@
 @property (nonatomic, strong) NoteDetail *model;
 /*图片数组*/
 @property (strong, nonatomic) NSMutableArray *photoArray;
+/*图片url数组*/
+@property (strong, nonatomic) NSMutableArray *photoUrlArray;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *contentViewHeight;
-
 
 @end
 
@@ -48,6 +49,8 @@
     self.navigationItem.title = @"Time Line";
     
     self.photoArray = self.passedObject.photoArray;
+    
+    self.photoUrlArray = self.passedObject.photoUrlArray;
 }
 
 //图片数组懒加载
@@ -89,15 +92,23 @@
             imageV.layer.cornerRadius = 5.0f;
             [self.contentView addSubview:imageV];
             
-            if (self.photoArray != nil && index < countOfarray) {
-                if ([self.photoArray[index] isKindOfClass:[AVFile class]]) {
-                    AVFile *file = self.photoArray[index];
-                    [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
-                        [imageV sd_setImageWithURL:[NSURL URLWithString:file.url]];
-                    }];
-                } else {
-                    NSString *path = self.photoArray[index];
-                    imageV.image = [UIImage imageWithContentsOfFile:path];
+            if ([WLLDailyNoteDataManager sharedInstance].isNetworkAvailable) {
+                if (self.photoArray != nil && index < countOfarray &&self.photoArray.count != 0) {
+                    if ([self.photoArray[index] isKindOfClass:[AVFile class]]) {
+                        AVFile *file = self.photoArray[index];
+                        [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
+                            [imageV sd_setImageWithURL:[NSURL URLWithString:file.url]];
+                                                    }];
+                    } else {
+                        NSString *path = self.photoArray[index];
+                        imageV.image = [UIImage imageWithContentsOfFile:path];
+                    }
+                }
+
+            } else {
+                if (self.photoUrlArray != nil && index < self.photoUrlArray.count && self.photoUrlArray.count != 0) {
+                    NSURL *url = [NSURL URLWithString:self.photoUrlArray[index]];
+                    [imageV sd_setImageWithURL:url];
                 }
             }
             index++;

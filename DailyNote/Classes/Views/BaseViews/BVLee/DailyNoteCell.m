@@ -7,6 +7,7 @@
 //
 
 #import "DailyNoteCell.h"
+#import "WLLDailyNoteDataManager.h"
 
 @interface DailyNoteCell ()
 
@@ -25,6 +26,7 @@
 - (void)setModel:(NoteDetail *)model {
     _model = model;
     
+
     self.contentLabel.text = model.content;
     
     NSDate *createdDate = model.date;
@@ -36,21 +38,34 @@
     self.dateLabel.text = [NSString nt_monthAndYearFromDate:createdDate];
     
     //图片解析
+    
     NSArray *photoArray = model.photoArray;
+    
+    NSArray *photoUrlArray = model.photoUrlArray;
+    
+    
     __weak DailyNoteCell* weakSelf = self;
 
-    if (photoArray != nil && photoArray.count != 0) {
-        if ([photoArray[0] isKindOfClass:[AVFile class]]) {
-            AVFile *file = photoArray[0];
-            [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
-                NSURL *url = [NSURL URLWithString:file.url];
-                [weakSelf.noteImage sd_setImageWithURL:url];
-            }];
-        } else {
-            
-            NSString *path = photoArray[0];
-            
-            self.noteImage.image = [UIImage imageWithContentsOfFile:path];
+    if ([WLLDailyNoteDataManager sharedInstance].isNetworkAvailable) {
+        if (photoArray != nil && photoArray.count != 0) {
+            if ([photoArray[0] isKindOfClass:[AVFile class]]) {
+                AVFile *file = photoArray[0];
+                [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
+                    NSURL *url = [NSURL URLWithString:file.url];
+                    [weakSelf.noteImage sd_setImageWithURL:url];
+                }];
+            } else {
+                
+                NSString *path = photoArray[0];
+                
+                self.noteImage.image = [UIImage imageWithContentsOfFile:path];
+            }
+        }
+
+    } else {
+        if (photoUrlArray != nil && photoUrlArray.count != 0) {
+            NSString *urlString = photoUrlArray[0];
+            [weakSelf.noteImage sd_setImageWithURL:[NSURL URLWithString:urlString]];
         }
     }
     

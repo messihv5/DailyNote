@@ -368,6 +368,9 @@
                 
                 //保存日记的作者为当前用户
                 [object saveInBackground];
+                
+                [self.navigationController popViewControllerAnimated:YES];
+
             }
         } else {
             UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"请稍后保存，正在处理网络" message:nil preferredStyle:UIAlertControllerStyleAlert];
@@ -467,9 +470,8 @@
             }];
             
         }
+        [self.navigationController popViewControllerAnimated:YES];
     }
-    
-    [self.navigationController popViewControllerAnimated:YES];
 }
 
 // 如果日记内容为空, 弹出提示框

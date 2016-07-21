@@ -325,24 +325,25 @@ static NSString  *const reuseIdentifier = @"note_cell";
     if (self.data.count < 5) {
 
         if (networkAvailable == NO) {
-            if (offset > -50 ) {
+            if (offset > -64 && offset <= 200) {
                 self.upLabel.hidden = NO;
                 self.upLabel.text = @"网络出错";
-            } else if (offset == -64) {
+            } else {
                 self.upLabel.hidden = YES;
             }
+            self.isLoading = NO;
             return;
         } else {
-            if (offset > -50 ) {
+            if (offset > -64 && offset <= 200) {
                 self.upLabel.hidden = NO;
                 self.upLabel.text = @"日记已加载完";
-            } else if (offset == -64) {
+            } else {
                 self.upLabel.hidden = YES;
             }
+            self.isLoading = NO;
             return;
         }
     }
-    
     
     //contentsize减去scrollView的height + 富余量10
     CGFloat loadDataContentOffset = scrollView.contentSize.height - self.notesTableView.height + 10;
@@ -391,7 +392,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
                 [self.data addObjectsFromArray:array];
                 [self.notesTableView reloadData];
             } else {
-                            
+                self.isLoading = NO;
             }
             self.isLoading = NO;
         } error:^{

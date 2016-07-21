@@ -167,6 +167,38 @@ static WLLDailyNoteDataManager *manager = nil;
         } else {
             [self getDataFromArray:objects];
             finished();
+            if ([WLLDailyNoteDataManager sharedInstance].isNetworkAvailable) {
+                for (AVObject *object in objects) {
+                    
+                    NSArray *photoArray = [object objectForKey:@"photoArray"];
+                    
+                    NSArray *photoUrlArray = [object objectForKey:@"photoUrlArray"];
+                    
+                    NSMutableArray *tempArray = [NSMutableArray array];
+                    
+                    if (photoArray != nil && photoArray.count != 0) {
+                        for (AVFile *file in photoArray) {
+                            [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
+                                NSString *urlString = file.url;
+                                if ([photoUrlArray containsObject:urlString]) {
+                                    
+                                } else {
+                                    [tempArray addObject:file.url];
+                                    
+                                    if (tempArray.count == photoArray.count) {
+                                        [object addObjectsFromArray:tempArray forKey:@"photoUrlArray"];
+                                        object.fetchWhenSave = YES;
+                                        [object saveInBackground];
+                                    }
+                                    
+                                }
+                            }];
+                        }
+                    }
+                    
+                }
+
+            }
             [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
         }
     }];
@@ -184,7 +216,8 @@ static WLLDailyNoteDataManager *manager = nil;
     [query whereKey:@"createdAt" greaterThan:date];
     [query orderByDescending:@"createdAt"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        [self getDataFromArray:objects];
+        
+                [self getDataFromArray:objects];
         finished();
         [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
     }];
@@ -203,8 +236,14 @@ static WLLDailyNoteDataManager *manager = nil;
         model.content = [object objectForKey:@"content"];
         
         //图片数组
-        model.photoArray = [object objectForKey:@"photoArray"];
+        NSMutableArray *photoArray = [object objectForKey:@"photoArray"];
+        
+        model.photoArray = photoArray;
+        
+        model.photoUrlArray = [object objectForKey:@"photoUrlArray"];
+
         [self.noteData addObject:model];
+
         [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
     }
 }
