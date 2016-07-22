@@ -10,14 +10,21 @@
 
 #import <UIKit/UIKit.h>
 
+typedef void(^DeleteDiaryBlock)();
+
 @class NoteDetail;
 
 @interface WLLNoteDetailViewController : UIViewController
-/* NoteDetail 模型 */
+/*接受从主页面传过来的日记*/
 @property (nonatomic, strong) NoteDetail *passedObject;
 /* 将cell下标传给Edit页面 */
 @property (nonatomic, assign) NSIndexPath *indexPath;
 
 @property (nonatomic, copy) NSString *title;
+
+/**
+ *  删除日记block，在详情页面删除日记，执行block，dailyNoteViewcontroller删除对应的日记model
+ */
+@property (copy, nonatomic) DeleteDiaryBlock deleteDiary;
 
 @end

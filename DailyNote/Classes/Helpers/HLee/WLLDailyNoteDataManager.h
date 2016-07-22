@@ -20,6 +20,10 @@
 
 /*判断网络是否连接*/
 @property (assign, nonatomic) BOOL isNetworkAvailable;
+/**
+ *  用于在dailyNoteController中，判断是不是加载recycle的5篇日记，YES加载recycle5篇日记
+ */
+@property (assign, nonatomic) BOOL isBackFromRecycle;
 
 
 
@@ -54,4 +58,11 @@
 
 //刷新10篇收藏的日记
 - (void)refreshTenDiariesOfCollectionByDate:(NSDate *)date finished:(void (^)())finished;
+/**
+ *  加载五篇回收站的日记
+ *
+ *  @param date     当前的日期
+ *  @param finished block，返回主页面刷新的block
+ */
+- (void)loadFiveDiariesOfRecycleByDate:(NSDate *)date finished:(void (^)())finished;
 @end

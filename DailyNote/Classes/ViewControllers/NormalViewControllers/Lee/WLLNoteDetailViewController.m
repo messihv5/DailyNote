@@ -46,11 +46,69 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // 标题
-    self.navigationItem.title = @"Time Line";
+    self.navigationItem.title = @"日记详情";
     
     self.photoArray = self.passedObject.photoArray;
     
     self.photoUrlArray = self.passedObject.photoUrlArray;
+    
+    // 将日志页面cell下标赋给控制详情页面翻页
+    self.indexs = self.indexPath.row;
+    
+    //添加导航栏按钮
+    [self addNavigationButtons];
+}
+
+//删除日记方法
+- (void)deleteDiary:(UIBarButtonItem *)sender {
+    if (self.passedObject.diaryId != nil) {
+        AVObject *object = [AVObject objectWithClassName:@"Diary" objectId:self.passedObject.diaryId];
+        
+        [object setObject:@"YES" forKey:@"wasDeleted"];
+        [object saveInBackground];
+        
+        //让dailyNote页面执行删除日记操作
+        self.deleteDiary();
+        
+        [self.navigationController popViewControllerAnimated:YES];
+    } else {
+        [self addTipNote];
+    }
+}
+
+/**
+ *  当日记还没有保存好时，弹出提示框
+ */
+- (void)addTipNote {
+    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"网络忙，请稍后尝试谢谢!" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *alertAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        
+    }];
+    
+    [alertVC addAction:alertAction];
+    [self.navigationController presentViewController:alertVC animated:YES completion:nil];
+}
+
+//添加导航栏按钮
+- (void)addNavigationButtons {
+    // 左边按钮
+    UIBarButtonItem *left = [[UIBarButtonItem alloc] initWithTitle:@"返回"
+                                                             style:UIBarButtonItemStylePlain
+                                                            target:self
+                                                            action:@selector(backToFront)];
+    
+    self.navigationItem.leftBarButtonItem = left;
+    
+    // 右边
+    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"newNote"]
+                                                                  style:UIBarButtonItemStylePlain
+                                                                 target:self
+                                                                 action:@selector(editDaily:)];
+    
+    UIBarButtonItem *deleteDiary = [[UIBarButtonItem alloc] initWithTitle:@"删除日记" style:UIBarButtonItemStylePlain target:self action:@selector(deleteDiary:)];
+    
+    self.navigationItem.rightBarButtonItems = @[rightItem, deleteDiary];
 }
 
 //图片数组懒加载
@@ -140,25 +198,6 @@
     
     [super viewWillAppear:YES];
 
-    // 左边按钮
-    UIBarButtonItem *left = [[UIBarButtonItem alloc] initWithTitle:@"返回"
-                                                             style:UIBarButtonItemStylePlain
-                                                            target:self
-                                                            action:@selector(backToFront)];
-    
-    self.navigationItem.leftBarButtonItem = left;
-    
-    // 右边
-    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"newNote"]
-                                                                  style:UIBarButtonItemStylePlain
-                                                                 target:self
-                                                                 action:@selector(editDaily:)];
-    self.navigationItem.rightBarButtonItem = rightItem;
-    
-    self.navigationItem.rightBarButtonItem.tintColor = [UIColor grayColor];
-    
-    // 将日志页面cell下标赋给控制详情页面翻页
-    self.indexs = self.indexPath.row;
     // 本页数据加载自日志页面
     [self dataFromNoteDaily];
     

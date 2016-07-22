@@ -157,9 +157,11 @@ static WLLDailyNoteDataManager *manager = nil;
     
     query.cachePolicy = kAVCachePolicyCacheElseNetwork;
     query.maxCacheAge = 24 * 60 * 60;
+    
     query.limit = 5;
     [query whereKey:@"belong" equalTo:[AVUser currentUser]];
     [query orderByDescending:@"createdAt"];
+    [query whereKey:@"wasDeleted" notEqualTo:@"YES"];
     [query whereKey:@"createdAt" lessThan:date];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (error) {
@@ -212,6 +214,7 @@ static WLLDailyNoteDataManager *manager = nil;
     AVQuery *query = [AVQuery queryWithClassName:@"Diary"];
     
     query.limit = 5;
+    [query whereKey:@"wasDeleted" notEqualTo:@"YES"];
     [query whereKey:@"belong" equalTo:[AVUser currentUser]];
     [query whereKey:@"createdAt" greaterThan:date];
     [query orderByDescending:@"createdAt"];
@@ -234,6 +237,9 @@ static WLLDailyNoteDataManager *manager = nil;
         
         //日记内容
         model.content = [object objectForKey:@"content"];
+        
+        //日记更新时间
+        model.updatedDate = object.updatedAt;
         
         //图片数组
         NSMutableArray *photoArray = [object objectForKey:@"photoArray"];
@@ -404,6 +410,33 @@ static WLLDailyNoteDataManager *manager = nil;
         finished();
         [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
     }];
+}
+
+/**
+ *  加载五篇回收站的日记
+ *
+ *  @param date     当前的日期
+ *  @param finished block，返回主页面刷新的block
+ */
+- (void)loadFiveDiariesOfRecycleByDate:(NSDate *)date finished:(void (^)())finished {
+    [self.noteData removeAllObjects];
+    AVQuery *query = [AVQuery queryWithClassName:@"Diary"];
+    
+    query.limit = 5;
+    [query whereKey:@"belong" equalTo:[AVUser currentUser]];
+    [query orderByDescending:@"createdAt"];
+    [query whereKey:@"wasDeleted" equalTo:@"YES"];
+    [query whereKey:@"createdAt" lessThan:date];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (error) {
+            
+        } else {
+            [self getDataFromArray:objects];
+            finished();
+            [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
+        }
+    }];
+    [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
 }
 
 @end

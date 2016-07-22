@@ -50,5 +50,9 @@
 @property (strong, nonatomic) NSMutableArray *photoArray;
 /*存放图片url的数组*/
 @property (strong, nonatomic) NSMutableArray *photoUrlArray;
+/**
+ *  日记的更新时间，主要用于记录日记删除的时间
+ */
+@property (strong, nonatomic) NSDate *updatedDate;
 
 @end

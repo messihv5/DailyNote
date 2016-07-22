@@ -9,6 +9,8 @@
 #import "WLLFunctionController.h"
 #import "SystemModel.h"
 #import "WLLSetReminderTimeViewController.h"
+#import "WLLDailyNoteViewController.h"
+#import "WLLDailyNoteDataManager.h"
 
 @interface WLLFunctionController ()<UITableViewDelegate, UITableViewDataSource>
 
@@ -105,6 +107,12 @@
             [tableView cellForRowAtIndexPath:indexPath].detailTextLabel.text = string;
         };
         [self.navigationController pushViewController:reminderController animated:YES];
+    } else if (indexPath.section == 1) {
+        WLLDailyNoteViewController *dailyNoteVC;
+        dailyNoteVC = [[WLLDailyNoteViewController alloc] initWithNibName:@"WLLDailyNoteViewController"
+                                                                   bundle:[NSBundle mainBundle]];
+        [WLLDailyNoteDataManager sharedInstance].isBackFromRecycle = YES;
+        [self.navigationController pushViewController:dailyNoteVC animated:YES];
     }
     
 }
