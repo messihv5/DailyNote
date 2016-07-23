@@ -35,6 +35,14 @@
 @property (strong, nonatomic) NSMutableArray *photoUrlArray;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *contentViewHeight;
+/**
+ *  用于计算回到上篇日记
+ */
+@property (assign, nonatomic) NSInteger lastDiary;
+/**
+ *  用于计算到下一篇日记
+ */
+@property (assign, nonatomic) NSInteger nextDiary;
 
 @end
 
@@ -45,6 +53,11 @@
 #pragma mark - View Load
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.lastDiary = self.indexPath.row;
+    
+    self.nextDiary = self.indexPath.row;
+    
     // 标题
     self.navigationItem.title = @"日记详情";
     
@@ -151,12 +164,13 @@
             [self.contentView addSubview:imageV];
             
             if ([WLLDailyNoteDataManager sharedInstance].isNetworkAvailable) {
+                //有网络的时候，网络加载图片
                 if (self.photoArray != nil && index < countOfarray &&self.photoArray.count != 0) {
                     if ([self.photoArray[index] isKindOfClass:[AVFile class]]) {
                         AVFile *file = self.photoArray[index];
                         [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
                             [imageV sd_setImageWithURL:[NSURL URLWithString:file.url]];
-                                                    }];
+                        }];
                     } else {
                         NSString *path = self.photoArray[index];
                         imageV.image = [UIImage imageWithContentsOfFile:path];
@@ -164,11 +178,13 @@
                 }
 
             } else {
+                //没有网络的时候，如果有缓存，加载缓存，没有缓存，为空
                 if (self.photoUrlArray != nil && index < self.photoUrlArray.count && self.photoUrlArray.count != 0) {
                     NSURL *url = [NSURL URLWithString:self.photoUrlArray[index]];
                     [imageV sd_setImageWithURL:url];
                 }
             }
+            
             index++;
         }
     }
@@ -199,13 +215,19 @@
     [super viewWillAppear:YES];
 
     // 本页数据加载自日志页面
-    [self dataFromNoteDaily];
+//    [self dataFromNoteDaily];
+    [self dataFromNoteDailyModel:self.passedObject];
     
     [self addNoteImages];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    
+    [self removeAllImageView];
+}
+
+- (void)removeAllImageView {
     NSArray *views = [self.contentView subviews];
     
     for (UIView *view in views) {
@@ -213,15 +235,70 @@
             [view removeFromSuperview];
         }
     }
+
 }
 
 // 将日志页面的值赋给详情页面
-- (void)dataFromNoteDaily {
+//- (void)dataFromNoteDaily {
+//    //日记内容赋值
+//    self.contentLabel.text = self.passedObject.content;
+//    
+//    //日记日期赋值
+//    NSDate *createdAt = self.passedObject.date;
+//    
+//    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+//    [formatter setDateFormat:@"MM月dd日 H:mm"];
+//    
+//    NSString *dateString = [formatter stringFromDate:createdAt];
+//    
+//    self.monthAndYearLabel.text = dateString;
+//    
+//    //通过传过来的model查询AVObject、
+//    AVObject *object = [AVObject objectWithClassName:@"Diary" objectId:self.passedObject.diaryId];
+//    
+//    [object fetchInBackgroundWithBlock:^(AVObject *object, NSError *error) {
+//        //背景颜色赋值
+//        NSData *backColorData = [object objectForKey:@"backColor"];
+//        NSKeyedUnarchiver *backColorUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:backColorData];
+//        self.contentView.backgroundColor = [backColorUnarchiver decodeObjectForKey:@"backColor"];
+//        
+//        //字体颜色解析
+//        NSData *fontColorData = [object objectForKey:@"fontColor"];
+//        NSKeyedUnarchiver *fontColorUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:fontColorData];
+//        UIColor *fontColor = [fontColorUnarchiver decodeObjectForKey:@"fontColor"];
+//        
+//        //字体解析
+//        NSString *fontNumberString = [object objectForKey:@"fontNumber"];
+//        float fontNumber = [fontNumberString floatValue];
+//        UIFont *font = [UIFont systemFontOfSize:fontNumber];
+//        
+//        if (fontColor == nil) {
+//            fontColor = [UIColor blackColor];
+//        }
+//        
+//        if (fontNumber ==  0) {
+//            font = [UIFont systemFontOfSize:15];
+//        }
+//        // 富文本
+//        NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:self.contentLabel.text];
+//        [attrStr addAttribute:NSForegroundColorAttributeName
+//                        value:fontColor
+//                        range:NSMakeRange(0, self.contentLabel.text.length)];
+//        
+//        [attrStr addAttribute:NSFontAttributeName
+//                        value:font
+//                        range:NSMakeRange(0, self.contentLabel.text.length)];
+//        
+//        self.contentLabel.attributedText = attrStr;
+//    }];
+//}
+
+- (void)dataFromNoteDailyModel:(NoteDetail *)model {
     //日记内容赋值
-    self.contentLabel.text = self.passedObject.content;
+    self.contentLabel.text = model.content;
     
     //日记日期赋值
-    NSDate *createdAt = self.passedObject.date;
+    NSDate *createdAt = model.date;
     
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"MM月dd日 H:mm"];
@@ -231,7 +308,7 @@
     self.monthAndYearLabel.text = dateString;
     
     //通过传过来的model查询AVObject、
-    AVObject *object = [AVObject objectWithClassName:@"Diary" objectId:self.passedObject.diaryId];
+    AVObject *object = [AVObject objectWithClassName:@"Diary" objectId:model.diaryId];
     
     [object fetchInBackgroundWithBlock:^(AVObject *object, NSError *error) {
         //背景颜色赋值
@@ -288,6 +365,53 @@
 #pragma mark - 分享到三方
 - (IBAction)sharedToThirdParty:(UIButton *)sender {
 
+}
+
+- (IBAction)lastDiaryAction:(UIButton *)sender {
+    
+    if (self.lastDiary > 0) {
+        [self removeAllImageView];
+        self.lastDiary--;
+        self.nextDiary--;
+        self.lastDiaryBlock(self.lastDiary);
+        self.photoArray = self.passedObject.photoArray;
+        self.photoUrlArray = self.passedObject.photoUrlArray;
+        [self dataFromNoteDailyModel:self.passedObject];
+        [self addNoteImages];
+    } else {
+        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"没有上篇日记" message:nil preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            
+        }];
+        
+        [alertVC addAction:action];
+        [self.navigationController presentViewController:alertVC animated:YES completion:nil];
+    }
+}
+
+- (IBAction)nextDiaryAction:(UIButton *)sender {
+    
+    if (self.nextDiary < self.numberOfDiary - 1) {
+        [self removeAllImageView];
+        self.nextDiary++;
+        self.lastDiary++;
+        self.nextDiaryBlock(self.nextDiary);
+        self.photoArray = self.passedObject.photoArray;
+        self.photoUrlArray = self.passedObject.photoUrlArray;
+        [self dataFromNoteDailyModel:self.passedObject];
+        [self addNoteImages];
+    } else {
+        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"没有下篇日记" message:nil preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            
+        }];
+        
+        [alertVC addAction:action];
+        [self.navigationController presentViewController:alertVC animated:YES completion:nil];
+    }
+    
 }
 
 

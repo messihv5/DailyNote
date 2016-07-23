@@ -680,10 +680,24 @@ static NSString  *const reuseIdentifier = @"note_cell";
     if ([WLLDailyNoteDataManager sharedInstance].isBackFromRecycle == NO) {
         WLLNoteDetailViewController *noteDetailVC;
         noteDetailVC = [[WLLNoteDetailViewController alloc] initWithNibName:@"WLLNoteDetailViewController"
-                                                                        bundle:[NSBundle mainBundle]];
+        
+                                                                     bundle:[NSBundle mainBundle]];
+        //正向传model
         noteDetailVC.passedObject = self.data[indexPath.row];
         noteDetailVC.indexPath = indexPath;
-           
+        noteDetailVC.numberOfDiary = self.data.count;
+        
+        //上下篇日记翻页block
+        __weak WLLNoteDetailViewController *weakNoteDetailVC = noteDetailVC;
+        noteDetailVC.lastDiaryBlock = ^ (NSInteger lastDiary) {
+            weakNoteDetailVC.passedObject = self.data[lastDiary];
+        };
+        
+        noteDetailVC.nextDiaryBlock = ^ (NSInteger nextDiaty) {
+            weakNoteDetailVC.passedObject = self.data[nextDiaty];
+        };
+        
+        //notedetail页面删除日记
         noteDetailVC.deleteDiary = ^ {
             [self.data removeObjectAtIndex:indexPath.row];
             [self.notesTableView reloadData];

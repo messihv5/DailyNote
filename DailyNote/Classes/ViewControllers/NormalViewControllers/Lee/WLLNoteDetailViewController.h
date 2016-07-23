@@ -11,6 +11,8 @@
 #import <UIKit/UIKit.h>
 
 typedef void(^DeleteDiaryBlock)();
+typedef void(^LastDiaryBlock)(NSInteger lastDiary);
+typedef void(^NextDiaryBlock)(NSInteger nextDiary);
 
 @class NoteDetail;
 
@@ -26,5 +28,14 @@ typedef void(^DeleteDiaryBlock)();
  *  删除日记block，在详情页面删除日记，执行block，dailyNoteViewcontroller删除对应的日记model
  */
 @property (copy, nonatomic) DeleteDiaryBlock deleteDiary;
+/**
+ *  让dailynote页面传递上一个model，加载日记
+ */
+@property (copy, nonatomic) LastDiaryBlock lastDiaryBlock;
+/**
+ *  让dailyNote页面传递下一个model，加载日记
+ */
+@property (copy, nonatomic) NextDiaryBlock nextDiaryBlock;
+@property (assign, nonatomic) NSInteger numberOfDiary;
 
 @end

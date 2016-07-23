@@ -94,14 +94,14 @@
                             <rect key="frame" x="167" y="4" width="22" height="22"/>
                             <state key="normal" image="left"/>
                             <connections>
-                                <action selector="clickToBackward:" destination="-1" eventType="touchUpInside" id="rGg-uA-5jy"/>
+                                <action selector="lastDiaryAction:" destination="-1" eventType="touchUpInside" id="QK2-R6-jF9"/>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eXk-gT-qGc">
                             <rect key="frame" x="411" y="4" width="22" height="22"/>
                             <state key="normal" image="right"/>
                             <connections>
-                                <action selector="clickToForward:" destination="-1" eventType="touchUpInside" id="djW-zN-aYd"/>
+                                <action selector="nextDiaryAction:" destination="-1" eventType="touchUpInside" id="m3y-gA-bgH"/>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0oC-YJ-hGC">
@@ -117,8 +117,8 @@
                         <constraint firstItem="0oC-YJ-hGC" firstAttribute="centerX" secondItem="xWk-hu-IuB" secondAttribute="centerX" id="FsO-EP-a5X"/>
                         <constraint firstItem="eXk-gT-qGc" firstAttribute="leading" secondItem="0oC-YJ-hGC" secondAttribute="trailing" constant="100" id="Hoe-t5-zIf"/>
                         <constraint firstItem="eXk-gT-qGc" firstAttribute="centerY" secondItem="0oC-YJ-hGC" secondAttribute="centerY" id="L1y-a1-2Js"/>
+                        <constraint firstItem="0oC-YJ-hGC" firstAttribute="leading" secondItem="dXO-kY-z5a" secondAttribute="trailing" constant="100" id="U0T-gl-awD"/>
                         <constraint firstItem="dXO-kY-z5a" firstAttribute="top" secondItem="0oC-YJ-hGC" secondAttribute="top" id="V07-3Z-wHE"/>
-                        <constraint firstItem="dXO-kY-z5a" firstAttribute="leading" secondItem="xWk-hu-IuB" secondAttribute="leading" constant="167" id="enX-xe-uZZ"/>
                         <constraint firstItem="0oC-YJ-hGC" firstAttribute="centerY" secondItem="xWk-hu-IuB" secondAttribute="centerY" id="iDy-eR-NSE"/>
                     </constraints>
                 </view>
