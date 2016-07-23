@@ -59,6 +59,8 @@
 		4D7AD7C11D18CBDC005237DC /* reportImage2.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D7AD7C01D18CBDC005237DC /* reportImage2.png */; };
 		4D7AD7C71D1918EF005237DC /* WLLShareDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D7AD7C51D1918EF005237DC /* WLLShareDetailViewController.m */; };
 		4D7AD7C81D1918EF005237DC /* WLLShareDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D7AD7C61D1918EF005237DC /* WLLShareDetailViewController.xib */; };
+		4D80937E1D431A0E00024742 /* WLLPictureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D80937C1D431A0E00024742 /* WLLPictureViewController.m */; };
+		4D80937F1D431A0E00024742 /* WLLPictureViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D80937D1D431A0E00024742 /* WLLPictureViewController.xib */; };
 		4D83E3391D0C5C9B003D5756 /* darkButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D83E3381D0C5C9B003D5756 /* darkButton.png */; };
 		4D83E33B1D0C5D20003D5756 /* dark_selectedButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D83E33A1D0C5D20003D5756 /* dark_selectedButton.png */; };
 		4D83E33D1D0C5F83003D5756 /* redButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D83E33C1D0C5F83003D5756 /* redButton.png */; };
@@ -240,6 +242,9 @@
 		4D7AD7C41D1918EF005237DC /* WLLShareDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLShareDetailViewController.h; sourceTree = "<group>"; };
 		4D7AD7C51D1918EF005237DC /* WLLShareDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLShareDetailViewController.m; sourceTree = "<group>"; };
 		4D7AD7C61D1918EF005237DC /* WLLShareDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WLLShareDetailViewController.xib; sourceTree = "<group>"; };
+		4D80937B1D431A0E00024742 /* WLLPictureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLPictureViewController.h; sourceTree = "<group>"; };
+		4D80937C1D431A0E00024742 /* WLLPictureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLPictureViewController.m; sourceTree = "<group>"; };
+		4D80937D1D431A0E00024742 /* WLLPictureViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WLLPictureViewController.xib; sourceTree = "<group>"; };
 		4D83E3381D0C5C9B003D5756 /* darkButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = darkButton.png; sourceTree = "<group>"; };
 		4D83E33A1D0C5D20003D5756 /* dark_selectedButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dark_selectedButton.png; sourceTree = "<group>"; };
 		4D83E33C1D0C5F83003D5756 /* redButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = redButton.png; sourceTree = "<group>"; };
@@ -513,6 +518,9 @@
 				4D7AD7C41D1918EF005237DC /* WLLShareDetailViewController.h */,
 				4D7AD7C51D1918EF005237DC /* WLLShareDetailViewController.m */,
 				4D7AD7C61D1918EF005237DC /* WLLShareDetailViewController.xib */,
+				4D80937B1D431A0E00024742 /* WLLPictureViewController.h */,
+				4D80937C1D431A0E00024742 /* WLLPictureViewController.m */,
+				4D80937D1D431A0E00024742 /* WLLPictureViewController.xib */,
 			);
 			name = WChao;
 			sourceTree = "<group>";
@@ -1137,6 +1145,7 @@
 				4D1C30F41CF88B6F00C675D7 /* changeUserInformation.png in Resources */,
 				4D1C30F61CF88B7300C675D7 /* encourage.png in Resources */,
 				4D1C30E41CF87A7E00C675D7 /* wanting.png in Resources */,
+				4D80937F1D431A0E00024742 /* WLLPictureViewController.xib in Resources */,
 				4DBEE30A1D0268CA0082F306 /* cleanCache.png in Resources */,
 				4D70E7621D0A930900C44B66 /* WLLTopicViewController.xib in Resources */,
 				4D83E33D1D0C5F83003D5756 /* redButton.png in Resources */,
@@ -1221,6 +1230,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F37AFD241D3532FC00802BD4 /* WLLAssetPickerState.m in Sources */,
+				4D80937E1D431A0E00024742 /* WLLPictureViewController.m in Sources */,
 				4DD519421D2772A300745AA1 /* WLLDailyNoteDataManager.m in Sources */,
 				4DD28D161D04F37500ADA78D /* WLLSettingViewController.m in Sources */,
 				4D48D1C21CF5678600D9E4F1 /* WLLLogUpViewController.m in Sources */,

@@ -10,6 +10,7 @@
 #import "EditNoteViewController.h"
 #import "WLLDailyNoteDataManager.h"
 #import "WLLSharedView.h"
+#import "WLLPictureViewController.h"
 
 @interface WLLNoteDetailViewController ()
 /* 日记-年月标签 */
@@ -133,7 +134,6 @@
 }
 
 - (void)addNoteImages {
-    
     CGRect rect = [self heightForContentLabel];
     CGRect frame = self.contentLabel.frame;
     frame.size.height = rect.size.height;
@@ -155,42 +155,65 @@
     
     for (int i = 0; i < numberOfRow; i++) {
         for (int j = 0; j < 2; j++) {
-            UIImageView *imageV = [[UIImageView alloc] init];
-            imageV.frame = CGRectMake(10+(kWidth-30)/2*j+10*j, y+0.2*kHeight*i+10*i, (kWidth-30)/2, 0.2*kHeight);
-            imageV.backgroundColor = [UIColor whiteColor];
-            
-            imageV.layer.masksToBounds = YES;
-            imageV.layer.cornerRadius = 5.0f;
-            [self.contentView addSubview:imageV];
-            
-            if ([WLLDailyNoteDataManager sharedInstance].isNetworkAvailable) {
-                //有网络的时候，网络加载图片
-                if (self.photoArray != nil && index < countOfarray &&self.photoArray.count != 0) {
-                    if ([self.photoArray[index] isKindOfClass:[AVFile class]]) {
-                        AVFile *file = self.photoArray[index];
-                        [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
-                            [imageV sd_setImageWithURL:[NSURL URLWithString:file.url]];
-                        }];
-                    } else {
-                        NSString *path = self.photoArray[index];
-                        imageV.image = [UIImage imageWithContentsOfFile:path];
+            if (index < self.photoArray.count) {
+                UIImageView *imageV = [[UIImageView alloc] init];
+                imageV.frame = CGRectMake(10+(kWidth-30)/2*j+10*j, y+0.2*kHeight*i+10*i, (kWidth-30)/2, 0.2*kHeight);
+                imageV.backgroundColor = [UIColor cyanColor];
+                imageV.tag = index;
+                
+                //给imageView添加点击事件
+                imageV.userInteractionEnabled = YES;
+                UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(presentPictureAction:)];
+                [imageV addGestureRecognizer:tapGesture];
+                
+                imageV.layer.masksToBounds = YES;
+                imageV.layer.cornerRadius = 5.0f;
+                [self.contentView addSubview:imageV];
+                
+                if ([WLLDailyNoteDataManager sharedInstance].isNetworkAvailable) {
+                    //有网络的时候，网络加载图片
+                    if (self.photoArray != nil &&self.photoArray.count != 0) {
+                        if ([self.photoArray[index] isKindOfClass:[AVFile class]]) {
+                            AVFile *file = self.photoArray[index];
+                            [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
+                                [imageV sd_setImageWithURL:[NSURL URLWithString:file.url]];
+                            }];
+                        } else {
+                            NSString *path = self.photoArray[index];
+                            imageV.image = [UIImage imageWithContentsOfFile:path];
+                        }
+                    }
+                } else {
+                    //没有网络的时候，如果有缓存，加载缓存，没有缓存，为空
+                    if (self.photoUrlArray != nil && self.photoUrlArray.count != 0) {
+                        NSURL *url = [NSURL URLWithString:self.photoUrlArray[index]];
+                        [imageV sd_setImageWithURL:url];
                     }
                 }
-
-            } else {
-                //没有网络的时候，如果有缓存，加载缓存，没有缓存，为空
-                if (self.photoUrlArray != nil && index < self.photoUrlArray.count && self.photoUrlArray.count != 0) {
-                    NSURL *url = [NSURL URLWithString:self.photoUrlArray[index]];
-                    [imageV sd_setImageWithURL:url];
-                }
+                
+                index++;
             }
-            
-            index++;
         }
     }
     self.contentViewHeight.constant = y+5*0.2*kHeight+50-kHeight;
 }
 
+/**
+ *  点击图片手势，执行的方法
+ *
+ *  @param tap 轻击手势
+ */
+- (void)presentPictureAction:(UITapGestureRecognizer *)tap {
+    WLLPictureViewController *pictureVC = [[WLLPictureViewController alloc] initWithNibName:@"WLLPictureViewController"
+                                                                                     bundle:[NSBundle mainBundle]];
+    pictureVC.numberOfPicture = self.passedObject.photoArray.count;
+    pictureVC.tagOfImageView = tap.view.tag;
+    pictureVC.passedObject = self.passedObject;
+    
+    UINavigationController *navi = [[UINavigationController alloc] initWithRootViewController:pictureVC];
+    
+    [self.navigationController presentViewController:navi animated:YES completion:nil];
+}
 
 - (CGRect)heightForContentLabel {
     
@@ -238,61 +261,11 @@
 
 }
 
-// 将日志页面的值赋给详情页面
-//- (void)dataFromNoteDaily {
-//    //日记内容赋值
-//    self.contentLabel.text = self.passedObject.content;
-//    
-//    //日记日期赋值
-//    NSDate *createdAt = self.passedObject.date;
-//    
-//    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-//    [formatter setDateFormat:@"MM月dd日 H:mm"];
-//    
-//    NSString *dateString = [formatter stringFromDate:createdAt];
-//    
-//    self.monthAndYearLabel.text = dateString;
-//    
-//    //通过传过来的model查询AVObject、
-//    AVObject *object = [AVObject objectWithClassName:@"Diary" objectId:self.passedObject.diaryId];
-//    
-//    [object fetchInBackgroundWithBlock:^(AVObject *object, NSError *error) {
-//        //背景颜色赋值
-//        NSData *backColorData = [object objectForKey:@"backColor"];
-//        NSKeyedUnarchiver *backColorUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:backColorData];
-//        self.contentView.backgroundColor = [backColorUnarchiver decodeObjectForKey:@"backColor"];
-//        
-//        //字体颜色解析
-//        NSData *fontColorData = [object objectForKey:@"fontColor"];
-//        NSKeyedUnarchiver *fontColorUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:fontColorData];
-//        UIColor *fontColor = [fontColorUnarchiver decodeObjectForKey:@"fontColor"];
-//        
-//        //字体解析
-//        NSString *fontNumberString = [object objectForKey:@"fontNumber"];
-//        float fontNumber = [fontNumberString floatValue];
-//        UIFont *font = [UIFont systemFontOfSize:fontNumber];
-//        
-//        if (fontColor == nil) {
-//            fontColor = [UIColor blackColor];
-//        }
-//        
-//        if (fontNumber ==  0) {
-//            font = [UIFont systemFontOfSize:15];
-//        }
-//        // 富文本
-//        NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:self.contentLabel.text];
-//        [attrStr addAttribute:NSForegroundColorAttributeName
-//                        value:fontColor
-//                        range:NSMakeRange(0, self.contentLabel.text.length)];
-//        
-//        [attrStr addAttribute:NSFontAttributeName
-//                        value:font
-//                        range:NSMakeRange(0, self.contentLabel.text.length)];
-//        
-//        self.contentLabel.attributedText = attrStr;
-//    }];
-//}
-
+/**
+ *  从dailyNote页面获取model，并加载detail页面的内容
+ *
+ *  @param model 日记model
+ */
 - (void)dataFromNoteDailyModel:(NoteDetail *)model {
     //日记内容赋值
     self.contentLabel.text = model.content;
