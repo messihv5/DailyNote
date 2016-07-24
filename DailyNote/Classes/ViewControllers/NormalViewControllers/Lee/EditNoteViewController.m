@@ -60,8 +60,7 @@
 /*传给第一页面存放图片数组*/
 @property (strong, nonatomic) NSMutableArray *photoArrayLocal;
 @property (assign, nonatomic) BOOL backFromEditNoteVC;
-/* 选中照片数 */
-@property (weak, nonatomic) IBOutlet UILabel *photoCount;
+
 @property (strong, nonatomic) UIImage *choosedImage;
 
 @end
@@ -219,7 +218,7 @@
         self.noteBackgroundColor.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.3);
         self.choiceView.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.05);
         
-        self.mood.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.3);
+        self.mood.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.4);
     }];
     
     return 1;
@@ -257,8 +256,6 @@
     // 工具条跟随键盘收放
     [UIView animateWithDuration:duration animations:^{
         self.toolView.transform = CGAffineTransformMakeTranslation(0, frame.origin.y - kHeight);
-        self.photoCount.transform = CGAffineTransformMakeTranslation(0, frame.origin.y - self.toolView.height - kHeight);
-        self.photoCount.text = [NSString stringWithFormat:@"日记中未添加图片"];
     }];
 }
 
@@ -301,7 +298,7 @@
         self.choiceView.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.05);
         
         // 收回心情视图
-        self.mood.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.3);
+        self.mood.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.4);
         
         //修改传过来的日记，并保存在网络
         //通过model获取日记
@@ -392,7 +389,7 @@
         self.choiceView.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.05);
         
         // 收回心情视图
-        self.mood.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.3);
+        self.mood.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.4);
         
         // 收回font view
         self.fontView.frame = CGRectMake(0, kHeight, kWidth, 0.4*kHeight);
@@ -507,7 +504,7 @@
     self.noteBackgroundColor.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.3);
     self.choiceView.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.05);
     // 收回心情视图
-    self.mood.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.3);
+    self.mood.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.4);
 
     [self.navigationController popViewControllerAnimated:YES];
 }
@@ -596,7 +593,7 @@
     [self.view bringSubviewToFront:self.mood];
     
     [UIView animateWithDuration:0.5 animations:^{
-        self.mood.frame = CGRectMake(0, kHeight-self.mood.height, kWidth, kHeight*0.3);
+        self.mood.frame = CGRectMake(0, kHeight-self.mood.height, kWidth, kHeight*0.4);
     }];
 }
 
@@ -657,8 +654,6 @@
             __block NSInteger index = 0;
             
             NSInteger numberOFModelInArray = weakSelf.numberOfModelInArray;
-            
-            weakSelf.photoCount.text = [NSString stringWithFormat:@"为日记中添加 %ld 张图片", assets.count];
             
             [assets enumerateObjectsUsingBlock:^(ALAsset *asset, NSUInteger idx, BOOL * _Nonnull stop) {
                 
