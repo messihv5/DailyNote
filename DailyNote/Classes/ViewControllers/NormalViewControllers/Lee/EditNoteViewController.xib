@@ -39,8 +39,12 @@
                 <constraint firstAttribute="trailing" secondItem="csS-rw-Bvx" secondAttribute="trailing" constant="10" id="S2p-Wq-Xmq"/>
                 <constraint firstItem="csS-rw-Bvx" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="69" id="k3m-xO-FRj"/>
             </constraints>
+<<<<<<< HEAD
+            <point key="canvasLocation" x="498" y="-29"/>
+=======
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina55"/>
             <point key="canvasLocation" x="545" y="6"/>
+>>>>>>> 84d8c0d066c500c12efea0635427222853b94462
         </view>
     </objects>
 </document>

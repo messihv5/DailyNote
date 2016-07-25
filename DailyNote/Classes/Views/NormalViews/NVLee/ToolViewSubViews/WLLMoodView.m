@@ -7,6 +7,7 @@
 //
 
 #import "WLLMoodView.h"
+#import "WLLWeatherCell.h"
 
 @interface WLLMoodView ()<UICollectionViewDelegate, UICollectionViewDataSource>
 
@@ -26,27 +27,26 @@ static NSString *const reuseIdentifier = @"weather_item";
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier
+    WLLWeatherCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier
                                                                            forIndexPath:indexPath];
     if (indexPath.row == 0) {
-        cell.backgroundView = (UIView *)[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"label2"]];
         
-    } else {
+        UIImage *image = [UIImage imageNamed:@"mood"];
+        UIImage *highlightedImage = [UIImage imageNamed:@"label2"];
         
-        cell.backgroundColor = [UIColor redColor];
+        cell.weatherIcon = [[UIImageView alloc] initWithImage:image highlightedImage:highlightedImage];
+        
     }
+    cell.backgroundColor = [UIColor whiteColor];
     
-    [cell.backgroundView sizeToFit];
     return cell;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier
+    WLLWeatherCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier
                                                                            forIndexPath:indexPath];
-    
-    UIView *view = [[UIView alloc] init];
-    view = cell.backgroundView;
-    NSLog(@"%@", cell.backgroundView);
+
+    NSLog(@"%@", cell.weatherIcon);
     
 }
 
@@ -55,12 +55,12 @@ static NSString *const reuseIdentifier = @"weather_item";
     CGRect frame = CGRectMake(0, kHeight, kWidth, kHeight*0.4);
     self.frame = frame;
     
-    [self.weatherIcon registerClass:[UICollectionViewCell class]
-         forCellWithReuseIdentifier:reuseIdentifier];
+    [self.weatherIcon registerClass:[WLLWeatherCell class] forCellWithReuseIdentifier:reuseIdentifier];
     
     self.weatherIcon.dataSource = self;
     self.weatherIcon.delegate = self;
     
+    // cell 布局
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
     
     layout.sectionInset = UIEdgeInsetsMake(10, 5, 10, 5);
