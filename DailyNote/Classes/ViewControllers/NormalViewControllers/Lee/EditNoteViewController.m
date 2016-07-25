@@ -17,6 +17,7 @@
 #import "WLLNoteBackgroundChoice.h"
 #import <CoreLocation/CoreLocation.h>
 #import "SDImageCache.h"
+#import "WLLPictureViewController.h"
 
 #import "WLLAssetPickerController.h"
 #import "WLLAssetPickerState.h"
@@ -48,9 +49,9 @@
 @property (nonatomic, weak) UIColor *fontColor;
 @property (nonatomic, weak) UIFont *contentFont;
 /* 遮盖view */
+@property (strong, nonatomic) UIView *coverView;
 
 //Wangchao
-@property (strong, nonatomic) UIView *coverView;
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) CLGeocoder *geoCoder;
 @property (strong, nonatomic) NSString *theString;
@@ -60,8 +61,21 @@
 /*传给第一页面存放图片数组*/
 @property (strong, nonatomic) NSMutableArray *photoArrayLocal;
 @property (assign, nonatomic) BOOL backFromEditNoteVC;
-
 @property (strong, nonatomic) UIImage *choosedImage;
+/**
+ *  显示图片的scrollView
+ */
+@property (strong, nonatomic) UIScrollView *pictureScrollView;
+/**
+ *  编辑页面图片总数
+ */
+@property (assign, nonatomic) NSInteger numberOfPictures;
+/**
+ *  从编辑图片页面传过来的，被删除图片的偏移量
+ */
+@property (assign, nonatomic) NSInteger OffsetByInteger;
+@property (strong, nonatomic) NSMutableArray *localCopyArrayOfModelPhotoArray;
+@property (strong, nonatomic) NSMutableArray *internetCopyArrayOfModelPhotoArray;
 
 @end
 
@@ -70,6 +84,21 @@
 #pragma mark - Load View
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    //添加pictureScroll
+    [self addPictureScrollView];
+    
+    //创建一个本地图片数组
+    [self.localCopyArrayOfModelPhotoArray addObjectsFromArray:self.passedObject.photoArray];
+    
+    //创建一个保存网络图片的数组
+    AVObject *object = [AVObject objectWithClassName:@"Diary" objectId:self.passedObject.diaryId];
+    
+    [object fetchInBackgroundWithBlock:^(AVObject *object, NSError *error) {
+        NSArray *photoArray = [object objectForKey:@"photoArray"];
+        
+        [self.internetCopyArrayOfModelPhotoArray addObjectsFromArray:photoArray];
+    }];
     
     // 设置代理
     self.contentText.delegate = self;
@@ -110,7 +139,32 @@
     }
     
     self.geoCoder = [[CLGeocoder alloc] init];
+    
+    // 加载来自详情页面数据
+    [self dataFromDetail];
 }
+
+- (void)addPictureScrollView {
+    CGRect pictureScrollViewRect = CGRectMake(0, kHeight - 144, kWidth, 80);
+    self.pictureScrollView = [[UIScrollView alloc] initWithFrame:pictureScrollViewRect];
+    [self.view addSubview:self.pictureScrollView];
+    self.pictureScrollView.alwaysBounceHorizontal = YES;
+}
+
+- (NSMutableArray *)localCopyArrayOfModelPhotoArray {
+    if (_localCopyArrayOfModelPhotoArray == nil) {
+        _localCopyArrayOfModelPhotoArray = [NSMutableArray array];
+    }
+    return _localCopyArrayOfModelPhotoArray;
+}
+
+- (NSMutableArray *)internetCopyArrayOfModelPhotoArray {
+    if (_internetCopyArrayOfModelPhotoArray == nil) {
+        _internetCopyArrayOfModelPhotoArray = [NSMutableArray array];
+    }
+    return _internetCopyArrayOfModelPhotoArray;
+}
+
 
 //网络存放图片数组懒加载
 - (NSMutableArray *)photoArrayInternet {
@@ -143,8 +197,7 @@
                                                              target:self
                                                              action:@selector(saveNote:)];
     self.navigationItem.rightBarButtonItem = right;
-    // 加载来自详情页面数据
-    [self dataFromDetail];
+   
 }
 
 // 数据加载自上一页面
@@ -184,6 +237,45 @@
             self.contentText.textColor = fontColor;
         }
         
+        //添加图片
+        self.numberOfPictures = self.localCopyArrayOfModelPhotoArray.count;
+        
+        NSMutableArray *photoArray = self.localCopyArrayOfModelPhotoArray;
+        
+        self.pictureScrollView.contentSize = CGSizeMake(self.numberOfPictures * 60, 80);
+        
+        if (photoArray != nil && photoArray.count != 0) {
+            for (NSInteger i = 0; i < self.numberOfPictures; i++) {
+                CGRect imageVRect = CGRectMake(60 * i, 0, 60, 80);
+                
+                UIImageView *imageV = [[UIImageView alloc] initWithFrame:imageVRect];
+                
+                imageV.tag = i;
+                [self.pictureScrollView addSubview:imageV];
+                
+                //添加手势
+                UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction:)];
+                
+                [imageV addGestureRecognizer:tap];
+                
+                imageV.userInteractionEnabled = YES;
+                
+                if ([photoArray[i] isKindOfClass:[AVFile class]]) {
+                    AVFile *file = photoArray[i];
+                    
+                    [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
+                        NSString *urlString = file.url;
+                        
+                        [imageV sd_setImageWithURL:[NSURL URLWithString:urlString]];
+                    }];
+                } else {
+                    NSString *urlString = photoArray[i];
+                    
+                    imageV.image = [UIImage imageWithContentsOfFile:urlString];
+                }
+            }
+        }
+        
     } else {    // 否则为创建新日记, 弹出键盘
         
         // 加载toolView, 键盘隐藏
@@ -192,6 +284,58 @@
         [self.contentText becomeFirstResponder];
     }
 }
+
+/**
+ *  轻击图片响应方法
+ *
+ *  @param tap 图片tap事件
+ */
+- (void)tapAction:(UITapGestureRecognizer *)tap {
+    WLLPictureViewController *pictureVC = [[WLLPictureViewController alloc] initWithNibName:@"WLLPictureViewController"
+                                                                                     bundle:[NSBundle mainBundle]];
+    pictureVC.tagOfImageView = tap.view.tag;
+    
+    pictureVC.localPictureArray = self.localCopyArrayOfModelPhotoArray;
+    pictureVC.internetPictureArray = self.internetCopyArrayOfModelPhotoArray;
+    
+    NSArray *imageViewS = self.pictureScrollView.subviews;
+    
+    pictureVC.contentOffsetBlock = ^ (NSInteger offsetByInteger){
+        self.OffsetByInteger = offsetByInteger;
+        
+        if (offsetByInteger < self.localCopyArrayOfModelPhotoArray.count - 1) {
+            for (UIImageView *imageV in imageViewS) {
+                if (imageV.tag == offsetByInteger) {
+                    [imageV removeFromSuperview];
+                    self.numberOfPictures--;
+                    self.pictureScrollView.contentSize = CGSizeMake(self.numberOfPictures * 60, 80);
+                }
+                
+                if (imageV.tag > offsetByInteger) {
+                    imageV.tag--;
+                    CGRect frame = imageV.frame;
+                    frame.origin.x = frame.origin.x - 60;
+                    imageV.frame = frame;
+                }
+            }
+        } else {
+            for (UIImageView *imageV in imageViewS) {
+                if (imageV.tag == self.localCopyArrayOfModelPhotoArray.count - 1) {
+                    [imageV removeFromSuperview];
+                }
+            }
+            self.numberOfPictures--;
+            self.pictureScrollView.contentSize = CGSizeMake(self.numberOfPictures * 60, 80);
+        }
+    };
+    
+    [WLLDailyNoteDataManager sharedInstance].isFromDetailViewController = NO;
+    
+    UINavigationController *naviController = [[UINavigationController alloc] initWithRootViewController:pictureVC];
+    
+    [self.navigationController presentViewController:naviController animated:YES completion:nil];
+}
+
 // view出现后 加载分类页面初始位置
 - (void)viewDidAppear:(BOOL)animated {
     
@@ -354,18 +498,22 @@
                 self.passedObject.fontColor = self.contentText.textColor;
                 [object setObject:fontColor forKey:@"fontColor"];
                 
-                //保存图片数组
-                NSMutableArray *localPhotoArray = self.passedObject.photoArray;
-                [localPhotoArray addObjectsFromArray:self.photoArrayLocal];
-                self.passedObject.photoArray = localPhotoArray;
+                //保存模型图片数组
+                self.passedObject.photoArray = self.localCopyArrayOfModelPhotoArray;
                 
-                [object addObjectsFromArray:self.photoArrayInternet forKey:@"photoArray"];
+                //保存数据库图片数组
+                [object fetchInBackgroundWithBlock:^(AVObject *object, NSError *error) {
+                    [object removeObjectForKey:@"photoArray"];
                 
-                object.fetchWhenSave = YES;
+                    [object addObjectsFromArray:self.internetCopyArrayOfModelPhotoArray forKey:@"photoArray"];
+                    
+                    object.fetchWhenSave = YES;
+                    
+                    //保存日记的作者为当前用户
+                    [object saveInBackground];
+                }];
                 
-                //保存日记的作者为当前用户
-                [object saveInBackground];
-                
+        
                 [self.navigationController popViewControllerAnimated:YES];
 
             }
@@ -489,15 +637,6 @@
     // 移除遮盖view
     [self.coverView removeFromSuperview];
 
-    // 取消时将原值赋回
-//    self.model.backColor = self.backColor;
-//    self.model.fontColor = self.fontColor;
-//    self.model.contentFont = self.contentFont;
-
-//    [self.contentText resignFirstResponder];
-
-    // 隐藏选择分类页面
-
     // 收回font view
     self.fontView.frame = CGRectMake(0, kHeight, kWidth, 0.4*kHeight);
     // 收回选择背景色视图
@@ -577,9 +716,7 @@
 
 // 取消选择背景色
 - (void)cancelChoice {
-
     self.contentText.backgroundColor = [UIColor whiteColor];
-//    self.model.backColor = self.contentText.backgroundColor;
 }
 
 // 选择心情视图
@@ -651,8 +788,6 @@
             
             NSString *path = [paths objectAtIndex:0];
             
-            __block NSInteger index = 0;
-            
             NSInteger numberOFModelInArray = weakSelf.numberOfModelInArray;
             
             [assets enumerateObjectsUsingBlock:^(ALAsset *asset, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -664,11 +799,32 @@
                 NSData *imageData = nil;
                 if (UIImageJPEGRepresentation(weakSelf.choosedImage, 1)) {
                     imageData = UIImageJPEGRepresentation(weakSelf.choosedImage, 1);
-                    imagePath = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"%ldimage%ld.jpg",numberOFModelInArray, index]];
+                    imagePath = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"%ldimage%ld.jpg",numberOFModelInArray, idx]];
                 } else if (UIImagePNGRepresentation(weakSelf.choosedImage)) {
                     imageData = UIImagePNGRepresentation(weakSelf.choosedImage);
-                    imagePath = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"image%ld.png", index]];
+                    imagePath = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"%ldimage%ld.png", numberOFModelInArray, idx]];
                 }
+                
+                //重新设定contentsize
+                weakSelf.numberOfPictures = weakSelf.numberOfPictures +1;
+                
+                weakSelf.pictureScrollView.contentSize = CGSizeMake(weakSelf.numberOfPictures * 60, 80);
+                
+                CGRect imageVRect = CGRectMake((weakSelf.numberOfPictures - 1) * 60, 0, 60, 80);
+                
+                UIImageView *imageV = [[UIImageView alloc] initWithFrame:imageVRect];
+                
+                [weakSelf.pictureScrollView addSubview:imageV];
+                
+                imageV.tag = weakSelf.numberOfPictures - 1;
+                
+                imageV.image = weakSelf.choosedImage;
+                
+                UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction:)];
+                
+                [imageV addGestureRecognizer:tap];
+                
+                imageV.userInteractionEnabled = YES;
                 
                 [imageData writeToFile:imagePath atomically:YES];
                 
@@ -677,9 +833,12 @@
                 [weakSelf.photoArrayInternet addObject:imageFile];
                 
                 [weakSelf.photoArrayLocal addObject:imagePath];
-                
-                index++;
             }];
+            [self.localCopyArrayOfModelPhotoArray addObjectsFromArray:self.photoArrayLocal];
+            [self.photoArrayLocal removeAllObjects];
+            [self.internetCopyArrayOfModelPhotoArray addObjectsFromArray:self.photoArrayInternet];
+            [self.photoArrayInternet removeAllObjects];
+
         }];
         
     } canceled:^{
