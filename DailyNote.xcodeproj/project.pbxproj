@@ -152,6 +152,7 @@
 		F37AFD271D3532FC00802BD4 /* WLLAssetViewColumn.m in Sources */ = {isa = PBXBuildFile; fileRef = F37AFD1F1D3532FC00802BD4 /* WLLAssetViewColumn.m */; };
 		F37AFD281D3532FC00802BD4 /* WLLAssetWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = F37AFD211D3532FC00802BD4 /* WLLAssetWrapper.m */; };
 		F37AFD2A1D35354A00802BD4 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F37AFD291D35354A00802BD4 /* AssetsLibrary.framework */; };
+		F3A5D8F81D460BDC0010006E /* WLLWeatherCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F3A5D8F71D460BDC0010006E /* WLLWeatherCell.m */; };
 		F3DFB41C1D2CDB1900898765 /* WLLCalendarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F3DFB41B1D2CDB1900898765 /* WLLCalendarView.xib */; };
 		F3DFB4251D2CE24700898765 /* WLLView.m in Sources */ = {isa = PBXBuildFile; fileRef = F3DFB4241D2CE24700898765 /* WLLView.m */; };
 		F3DFB42E1D2CF4E900898765 /* NSDate+WLLDate.m in Sources */ = {isa = PBXBuildFile; fileRef = F3DFB42D1D2CF4E900898765 /* NSDate+WLLDate.m */; };
@@ -387,6 +388,8 @@
 		F37AFD201D3532FC00802BD4 /* WLLAssetWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLAssetWrapper.h; sourceTree = "<group>"; };
 		F37AFD211D3532FC00802BD4 /* WLLAssetWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLAssetWrapper.m; sourceTree = "<group>"; };
 		F37AFD291D35354A00802BD4 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
+		F3A5D8F61D460BDC0010006E /* WLLWeatherCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLWeatherCell.h; sourceTree = "<group>"; };
+		F3A5D8F71D460BDC0010006E /* WLLWeatherCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLWeatherCell.m; sourceTree = "<group>"; };
 		F3DFB41B1D2CDB1900898765 /* WLLCalendarView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WLLCalendarView.xib; sourceTree = "<group>"; };
 		F3DFB4231D2CE24700898765 /* WLLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLView.h; sourceTree = "<group>"; };
 		F3DFB4241D2CE24700898765 /* WLLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLView.m; sourceTree = "<group>"; };
@@ -881,6 +884,8 @@
 				4DD5195F1D27747F00745AA1 /* WLLMoodView.h */,
 				4DD519601D27747F00745AA1 /* WLLMoodView.m */,
 				4DD519611D27747F00745AA1 /* WLLMoodView.xib */,
+				F3A5D8F61D460BDC0010006E /* WLLWeatherCell.h */,
+				F3A5D8F71D460BDC0010006E /* WLLWeatherCell.m */,
 				4DD519621D27747F00745AA1 /* WLLNoteBackgroundChoice.h */,
 				4DD519631D27747F00745AA1 /* WLLNoteBackgroundChoice.m */,
 				4DD519641D27747F00745AA1 /* WLLNoteBackgroundChoice.xib */,
@@ -1244,6 +1249,7 @@
 				4DD519591D27744100745AA1 /* DailyNoteCell.m in Sources */,
 				4DD519541D2773B400745AA1 /* UIView+WLLExtension.m in Sources */,
 				4DD519521D2773B400745AA1 /* NSString+WeekDay.m in Sources */,
+				F3A5D8F81D460BDC0010006E /* WLLWeatherCell.m in Sources */,
 				4D8A3EFD1CF3D14D000C2D42 /* DailyNote.xcdatamodeld in Sources */,
 				4D6E2DB81D0EB01E00AB8271 /* WLLSetReminderTimeViewController.m in Sources */,
 				4DD519821D27747F00745AA1 /* WLLSharedView.m in Sources */,
