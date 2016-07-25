@@ -10,6 +10,11 @@
 
 @implementation WLLCalendarCell
 
+/**
+ *  lazy loading dateLabel
+ *
+ *  @return dateLabel
+ */
 - (UILabel *)dateLabel
 {
     if (!_dateLabel) {

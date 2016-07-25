@@ -362,7 +362,7 @@
         self.noteBackgroundColor.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.3);
         self.choiceView.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.05);
         
-        self.mood.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.3);
+        self.mood.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.4);
     }];
     
     return 1;
@@ -400,8 +400,6 @@
     // 工具条跟随键盘收放
     [UIView animateWithDuration:duration animations:^{
         self.toolView.transform = CGAffineTransformMakeTranslation(0, frame.origin.y - kHeight);
-//        self.photoCount.transform = CGAffineTransformMakeTranslation(0, frame.origin.y - self.toolView.height - kHeight);
-//        self.photoCount.text = [NSString stringWithFormat:@"日记中未添加图片"];
     }];
 }
 
@@ -444,7 +442,7 @@
         self.choiceView.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.05);
         
         // 收回心情视图
-        self.mood.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.3);
+        self.mood.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.4);
         
         //修改传过来的日记，并保存在网络
         //通过model获取日记
@@ -539,7 +537,7 @@
         self.choiceView.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.05);
         
         // 收回心情视图
-        self.mood.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.3);
+        self.mood.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.4);
         
         // 收回font view
         self.fontView.frame = CGRectMake(0, kHeight, kWidth, 0.4*kHeight);
@@ -645,7 +643,7 @@
     self.noteBackgroundColor.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.3);
     self.choiceView.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.05);
     // 收回心情视图
-    self.mood.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.3);
+    self.mood.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.4);
 
     [self.navigationController popViewControllerAnimated:YES];
 }
@@ -732,7 +730,7 @@
     [self.view bringSubviewToFront:self.mood];
     
     [UIView animateWithDuration:0.5 animations:^{
-        self.mood.frame = CGRectMake(0, kHeight-self.mood.height, kWidth, kHeight*0.3);
+        self.mood.frame = CGRectMake(0, kHeight-self.mood.height, kWidth, kHeight*0.4);
     }];
 }
 
