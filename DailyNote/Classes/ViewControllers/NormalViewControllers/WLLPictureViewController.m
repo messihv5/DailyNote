@@ -26,6 +26,10 @@
  *  删除提示标签
  */
 @property (strong, nonatomic) UILabel *reminderLabel;
+/**
+ *  scrollView的contentView
+ */
+@property (strong ,nonatomic) UIView *contentView;
 
 @end
 
@@ -100,13 +104,13 @@
     
     CGRect contentViewRect = CGRectMake(0, 0, width, height);
 
-    UIView *contentView = [[UIView alloc] initWithFrame:contentViewRect];
+    self.contentView = [[UIView alloc] initWithFrame:contentViewRect];
 
-    contentView.backgroundColor = [UIColor greenColor];
+    self.contentView.backgroundColor = [UIColor greenColor];
     
     self.pictureScrollView.contentSize = CGSizeMake(width, height);
     
-    [self.pictureScrollView addSubview:contentView];
+    [self.pictureScrollView addSubview:self.contentView];
     
     NSArray *photoArray = nil;
     
@@ -126,7 +130,7 @@
         CGRect imageViewRect = CGRectMake(0, 0, kWidth, height);
         UIImageView *imageV = [[UIImageView alloc] initWithFrame:imageViewRect];
         imageV.contentMode = UIViewContentModeScaleAspectFit;
-        [contentView addSubview:scrollView];
+        [self.contentView addSubview:scrollView];
         [scrollView addSubview:imageV];
         scrollView.tag = i - 1;
         scrollView.bounces = NO;
@@ -158,9 +162,8 @@
  *  @param scrollView scrollView
  */
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    UIView *contentView = [scrollView.subviews objectAtIndex:0];
     
-    NSArray *scrollViews = [contentView subviews];
+    NSArray *scrollViews = [self.contentView subviews];
     
     float offset = scrollView.contentOffset.x;
     
@@ -234,9 +237,39 @@
 - (void)backAction:(UIBarButtonItem *)item {
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
+
+/**
+ *  保存图片到手机
+ *
+ *  @param sender 保存按钮
+ */
 - (IBAction)savePictureAction:(UIButton *)sender {
+    self.reminderLabel.hidden = NO;
+    self.reminderLabel.text = @"保存成功";
+    
+    float offset = self.pictureScrollView.contentOffset.x;
+    
+    NSInteger offsetByInteger = offset / kWidth;
+    
+    NSArray *scrollViews = self.contentView.subviews;
+    
+    for (UIScrollView *scrollView in scrollViews) {
+        if (scrollView.tag == offsetByInteger) {
+            UIImageView *imageV = [scrollView.subviews firstObject];
+            
+            UIImageWriteToSavedPhotosAlbum(imageV.image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+        }
+    }
 }
 
+- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
+    if (error == nil) {
+        NSLog(@"保存成功");
+    } else {
+        NSLog(@"保存失败");
+        
+    }
+}
 /**
  *  删除图片
  *
