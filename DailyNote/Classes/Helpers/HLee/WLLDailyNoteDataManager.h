@@ -24,6 +24,11 @@
  *  用于在dailyNoteController中，判断是不是加载recycle的5篇日记，YES加载recycle5篇日记
  */
 @property (assign, nonatomic) BOOL isBackFromRecycle;
+/**
+ *  标记是否是从detailViewcontroller进入pictureController，YES是从detailViewcontroller进入，NO从
+ editNoteViewcontroller进入
+ */
+@property (assign, nonatomic) BOOL isFromDetailViewController;
 
 
 

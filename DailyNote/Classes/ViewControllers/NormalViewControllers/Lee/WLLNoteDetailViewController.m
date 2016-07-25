@@ -62,10 +62,6 @@
     // 标题
     self.navigationItem.title = @"日记详情";
     
-    self.photoArray = self.passedObject.photoArray;
-    
-    self.photoUrlArray = self.passedObject.photoUrlArray;
-    
     // 将日志页面cell下标赋给控制详情页面翻页
     self.indexs = self.indexPath.row;
     
@@ -134,12 +130,17 @@
 }
 
 - (void)addNoteImages {
+    
+    //照片数组
+    self.photoArray = self.passedObject.photoArray;
+    self.photoUrlArray = self.passedObject.photoUrlArray;
+    
     CGRect rect = [self heightForContentLabel];
     CGRect frame = self.contentLabel.frame;
     frame.size.height = rect.size.height;
     self.contentLabel.frame = frame;
     
-    float y = CGRectGetMaxY(self.contentLabel.frame) + 20;
+    float y = CGRectGetMaxY(self.contentLabel.frame) + 10;
     
     NSInteger index = 0;
     
@@ -157,7 +158,7 @@
         for (int j = 0; j < 2; j++) {
             if (index < self.photoArray.count) {
                 UIImageView *imageV = [[UIImageView alloc] init];
-                imageV.frame = CGRectMake(10+(kWidth-30)/2*j+10*j, y+0.2*kHeight*i+10*i, (kWidth-30)/2, 0.2*kHeight);
+                imageV.frame = CGRectMake(10 + (kWidth - 30) / 2 * j + 10 * j, y + 0.2 * kHeight * i + 10 * i, (kWidth - 30) / 2, 0.2 * kHeight);
                 imageV.backgroundColor = [UIColor cyanColor];
                 imageV.tag = index;
                 
@@ -195,7 +196,11 @@
             }
         }
     }
-    self.contentViewHeight.constant = y+5*0.2*kHeight+50-kHeight;
+    if (numberOfRow <= 4) {
+        self.contentViewHeight.constant = 0;
+    } else {
+        self.contentViewHeight.constant = (numberOfRow - 4) * (0.2 * kHeight + 20);
+    }
 }
 
 /**
@@ -206,9 +211,10 @@
 - (void)presentPictureAction:(UITapGestureRecognizer *)tap {
     WLLPictureViewController *pictureVC = [[WLLPictureViewController alloc] initWithNibName:@"WLLPictureViewController"
                                                                                      bundle:[NSBundle mainBundle]];
-    pictureVC.numberOfPicture = self.passedObject.photoArray.count;
     pictureVC.tagOfImageView = tap.view.tag;
     pictureVC.passedObject = self.passedObject;
+    
+    [WLLDailyNoteDataManager sharedInstance].isFromDetailViewController = YES;
     
     UINavigationController *navi = [[UINavigationController alloc] initWithRootViewController:pictureVC];
     
