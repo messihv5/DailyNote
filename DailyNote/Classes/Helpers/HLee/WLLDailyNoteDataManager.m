@@ -201,10 +201,8 @@ static WLLDailyNoteDataManager *manager = nil;
                 }
 
             }
-            [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
         }
     }];
-    [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
 }
 
 //下拉刷新dailyNoteViewcontroller主页面的5篇日记
@@ -219,10 +217,8 @@ static WLLDailyNoteDataManager *manager = nil;
     [query whereKey:@"createdAt" greaterThan:date];
     [query orderByDescending:@"createdAt"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        
-                [self getDataFromArray:objects];
+        [self getDataFromArray:objects];
         finished();
-        [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
     }];
 }
 - (void)getDataFromArray:(NSArray <AVObject *>*)array {
@@ -247,10 +243,19 @@ static WLLDailyNoteDataManager *manager = nil;
         model.photoArray = photoArray;
         
         model.photoUrlArray = [object objectForKey:@"photoUrlArray"];
-
+        
+        //图片解析出来
+        AVFile *file = photoArray[0];
+        
+        [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
+            NSString *urlString = file.url;
+            
+            model.imageUrl = urlString;
+        }];
+        
         [self.noteData addObject:model];
 
-        [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
+//        [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
     }
 }
 

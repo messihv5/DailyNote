@@ -71,26 +71,35 @@
 
 //删除日记方法
 - (void)deleteDiary:(UIBarButtonItem *)sender {
-    if (self.passedObject.diaryId != nil) {
-        AVObject *object = [AVObject objectWithClassName:@"Diary" objectId:self.passedObject.diaryId];
-        
-        [object setObject:@"YES" forKey:@"wasDeleted"];
-        [object saveInBackground];
-        
-        //让dailyNote页面执行删除日记操作
-        self.deleteDiary();
-        
-        [self.navigationController popViewControllerAnimated:YES];
+    if ([WLLDailyNoteDataManager sharedInstance].isNetworkAvailable == NO) {
+        [self addTipNoteToButton:sender];
     } else {
-        [self addTipNote];
+        if (self.passedObject.diaryId != nil) {
+            AVObject *object = [AVObject objectWithClassName:@"Diary" objectId:self.passedObject.diaryId];
+            
+            [object setObject:@"YES" forKey:@"wasDeleted"];
+            [object saveInBackground];
+            
+            //让dailyNote页面执行删除日记操作
+            self.deleteDiary();
+            
+            [self.navigationController popViewControllerAnimated:YES];
+        } else {
+            [self addTipNoteToButton:sender];
+        }
     }
 }
 
 /**
- *  当日记还没有保存好时，弹出提示框
+ *  当日记还没有保存好及网络错误时，弹出提示框
  */
-- (void)addTipNote {
-    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"网络忙，请稍后尝试谢谢!" message:nil preferredStyle:UIAlertControllerStyleAlert];
+- (void)addTipNoteToButton:(UIBarButtonItem *)button {
+    UIAlertController *alertVC;
+    if ([WLLDailyNoteDataManager sharedInstance].isNetworkAvailable ) {
+         alertVC = [UIAlertController alertControllerWithTitle:@"网络忙，请稍后尝试谢谢!" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    } else {
+        alertVC = [UIAlertController alertControllerWithTitle:@"网络错误，不能编辑" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    }
     
     UIAlertAction *alertAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
         
@@ -333,17 +342,23 @@
 }
 
 - (void)editDaily:(UIBarButtonItem *)button {
-    EditNoteViewController *editVC = [[EditNoteViewController alloc] initWithNibName:@"EditNoteViewController" bundle:[NSBundle mainBundle]];
-    editVC.indexPath = self.indexPath;
-    editVC.passedObject = self.passedObject;
-    
-    [self.navigationController pushViewController:editVC animated:YES];
+    if ([WLLDailyNoteDataManager sharedInstance].isNetworkAvailable == NO) {
+        [self addTipNoteToButton:button];
+    } else {
+        EditNoteViewController *editVC = [[EditNoteViewController alloc] initWithNibName:@"EditNoteViewController" bundle:[NSBundle mainBundle]];
+        editVC.indexPath = self.indexPath;
+        editVC.passedObject = self.passedObject;
+        
+        [self.navigationController pushViewController:editVC animated:YES];
+    }
 }
 
 
 #pragma mark - 分享到三方
 - (IBAction)sharedToThirdParty:(UIButton *)sender {
-
+    if ([WLLDailyNoteDataManager sharedInstance].isNetworkAvailable == NO) {
+        [self addTipNoteToButton:nil];
+    }
 }
 
 - (IBAction)lastDiaryAction:(UIButton *)sender {

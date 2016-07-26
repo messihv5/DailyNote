@@ -26,6 +26,10 @@
  *  删除提示标签
  */
 @property (strong, nonatomic) UILabel *reminderLabel;
+/**
+ *  scrollView的contentView
+ */
+@property (strong ,nonatomic) UIView *contentView;
 
 @end
 
@@ -100,15 +104,16 @@
     
     CGRect contentViewRect = CGRectMake(0, 0, width, height);
 
-    UIView *contentView = [[UIView alloc] initWithFrame:contentViewRect];
+    self.contentView = [[UIView alloc] initWithFrame:contentViewRect];
 
-    contentView.backgroundColor = [UIColor greenColor];
+    self.contentView.backgroundColor = [UIColor greenColor];
     
     self.pictureScrollView.contentSize = CGSizeMake(width, height);
     
-    [self.pictureScrollView addSubview:contentView];
+    [self.pictureScrollView addSubview:self.contentView];
     
     NSArray *photoArray = nil;
+    NSArray *photoUrlArray = self.passedObject.photoUrlArray;
     
     if ([WLLDailyNoteDataManager sharedInstance].isFromDetailViewController) {
         photoArray = self.passedObject.photoArray;
@@ -126,20 +131,26 @@
         CGRect imageViewRect = CGRectMake(0, 0, kWidth, height);
         UIImageView *imageV = [[UIImageView alloc] initWithFrame:imageViewRect];
         imageV.contentMode = UIViewContentModeScaleAspectFit;
-        [contentView addSubview:scrollView];
+        [self.contentView addSubview:scrollView];
         [scrollView addSubview:imageV];
         scrollView.tag = i - 1;
         scrollView.bounces = NO;
         
-        if ([photoArray[i - 1] isKindOfClass:[AVFile class]]) {
-            AVFile *file = photoArray[i - 1];
-            [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
-                NSString *urlString = file.url;
-                [imageV sd_setImageWithURL:[NSURL URLWithString:urlString]];
-            }];
+        if (photoUrlArray != nil && photoUrlArray.count != 0) {
+            NSString *urlString = photoUrlArray[i - 1];
+            
+            [imageV sd_setImageWithURL:[NSURL URLWithString:urlString]];
         } else {
-            NSString *urlString = photoArray[i - 1];
-            imageV.image = [UIImage imageWithContentsOfFile:urlString];
+            if ([photoArray[i - 1] isKindOfClass:[AVFile class]]) {
+                AVFile *file = photoArray[i - 1];
+                [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
+                    NSString *urlString = file.url;
+                    [imageV sd_setImageWithURL:[NSURL URLWithString:urlString]];
+                }];
+            } else {
+                NSString *urlString = photoArray[i - 1];
+                imageV.image = [UIImage imageWithContentsOfFile:urlString];
+            }
         }
         
         UITapGestureRecognizer *oneTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hiddenOrResumeNavigationBar:)];
@@ -158,9 +169,8 @@
  *  @param scrollView scrollView
  */
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    UIView *contentView = [scrollView.subviews objectAtIndex:0];
     
-    NSArray *scrollViews = [contentView subviews];
+    NSArray *scrollViews = [self.contentView subviews];
     
     float offset = scrollView.contentOffset.x;
     
@@ -234,9 +244,38 @@
 - (void)backAction:(UIBarButtonItem *)item {
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
+
+/**
+ *  保存图片到手机
+ *
+ *  @param sender 保存按钮
+ */
 - (IBAction)savePictureAction:(UIButton *)sender {
+    self.reminderLabel.hidden = NO;
+    self.reminderLabel.text = @"保存成功";
+    self.reminderLabel.textColor = [UIColor whiteColor];
+    
+    float offset = self.pictureScrollView.contentOffset.x;
+    
+    NSInteger offsetByInteger = offset / kWidth;
+    
+    NSArray *scrollViews = self.contentView.subviews;
+    
+    for (UIScrollView *scrollView in scrollViews) {
+        if (scrollView.tag == offsetByInteger) {
+            UIImageView *imageV = [scrollView.subviews firstObject];
+            
+            UIImageWriteToSavedPhotosAlbum(imageV.image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+        }
+    }
 }
 
+- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
+    if (error == nil) {
+        [self hideReminderLabel:nil];
+    } else {        
+    }
+}
 /**
  *  删除图片
  *

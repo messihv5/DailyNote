@@ -426,31 +426,130 @@
 #pragma mark - 导航栏左右键响应
 // 保存
 - (void)saveNote:(UIBarButtonItem *)button {
-    if (_indexPath) {   // 如果是由点击DailyNote页面cell 进入，就是编辑
-        
-        // 移除遮盖view
-        [self.coverView removeFromSuperview];
-        
-        // 注销第一响应
-        [self.contentText resignFirstResponder];
-        
-        // 收回font view
-        self.fontView.frame = CGRectMake(0, kHeight, kWidth, 0.4*kHeight);
-        
-        // 收回选择背景色视图
-        self.noteBackgroundColor.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.3);
-        self.choiceView.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.05);
-        
-        // 收回心情视图
-        self.mood.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.4);
-        
-        //修改传过来的日记，并保存在网络
-        //通过model获取日记
-        
-        NSString *objectId = self.passedObject.diaryId;
-        
-        if (objectId != nil) {
-            AVObject *object = [AVObject objectWithClassName:@"Diary" objectId:self.passedObject.diaryId];
+    if ([WLLDailyNoteDataManager sharedInstance].isNetworkAvailable == NO) {
+        [self tipOfNoneDairyContent];
+    } else {
+        if (_indexPath) {   // 如果是由点击DailyNote页面cell 进入，就是编辑
+            
+            // 移除遮盖view
+            [self.coverView removeFromSuperview];
+            
+            // 注销第一响应
+            [self.contentText resignFirstResponder];
+            
+            // 收回font view
+            self.fontView.frame = CGRectMake(0, kHeight, kWidth, 0.4*kHeight);
+            
+            // 收回选择背景色视图
+            self.noteBackgroundColor.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.3);
+            self.choiceView.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.05);
+            
+            // 收回心情视图
+            self.mood.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.4);
+            
+            //修改传过来的日记，并保存在网络
+            //通过model获取日记
+            
+            NSString *objectId = self.passedObject.diaryId;
+            
+            if (objectId != nil) {
+                AVObject *object = [AVObject objectWithClassName:@"Diary" objectId:self.passedObject.diaryId];
+                
+                //保存日记内容,确保作者的内容不为空
+                NSCharacterSet *set = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+                
+                NSString *string = [self.contentText.text stringByTrimmingCharactersInSet:set];
+                
+                if (self.contentText.text == nil || string.length == 0) {
+                    
+                    //日记内容为空，弹出提示框
+                    [self tipOfNoneDairyContent];
+                    
+                } else {
+                    
+                    //日记内容不为空，保存日记
+                    self.passedObject.content = self.contentText.text;
+                    [object setObject:self.contentText.text forKey:@"content"];
+                    
+                    //保存背景颜色
+                    NSMutableData *data = [[NSMutableData alloc] init];
+                    NSKeyedArchiver *archiverBackColor = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
+                    [archiverBackColor encodeObject:self.contentText.backgroundColor forKey:@"backColor"];
+                    [archiverBackColor finishEncoding];
+                    
+                    self.passedObject.backColor = self.contentText.backgroundColor;
+                    [object setObject:data forKey:@"backColor"];
+                    
+                    //保存字体大小
+                    //从详情页面传过来的object中解析的字体
+                    NSString *passedFontNumber = self.passedObject.fontNumber;
+                    if (self.fontNumber != nil) {
+                        self.passedObject.fontNumber = self.fontNumber;
+                        [object setObject:self.fontNumber forKey:@"fontNumber"];
+                    } else {
+                        self.passedObject.fontNumber = passedFontNumber;
+                        [object setObject:passedFontNumber forKey:@"fontNumber"];
+                    }
+                    
+                    //保存字体的颜色
+                    NSMutableData *fontColor = [[NSMutableData alloc] init];
+                    
+                    NSKeyedArchiver *archiverFontColor = [[NSKeyedArchiver alloc] initForWritingWithMutableData:fontColor];
+                    [archiverFontColor encodeObject:self.contentText.textColor forKey:@"fontColor"];
+                    [archiverFontColor finishEncoding];
+                    
+                    self.passedObject.fontColor = self.contentText.textColor;
+                    [object setObject:fontColor forKey:@"fontColor"];
+                    
+                    //保存模型图片数组
+                    self.passedObject.photoArray = self.localCopyArrayOfModelPhotoArray;
+                    
+                    //保存数据库图片数组
+                    [object fetchInBackgroundWithBlock:^(AVObject *object, NSError *error) {
+                        [object removeObjectForKey:@"photoArray"];
+                        
+                        [object addObjectsFromArray:self.internetCopyArrayOfModelPhotoArray forKey:@"photoArray"];
+                        
+                        object.fetchWhenSave = YES;
+                        
+                        //保存日记的作者为当前用户
+                        [object saveInBackground];
+                    }];
+                    
+                    
+                    [self.navigationController popViewControllerAnimated:YES];
+                    
+                }
+            } else {
+                UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"请稍后保存，正在处理网络" message:nil preferredStyle:UIAlertControllerStyleAlert];
+                
+                UIAlertAction *alertAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                }];
+                
+                [alertVC addAction:alertAction];
+                [self.navigationController presentViewController:alertVC animated:YES completion:nil];
+            }
+        } else {
+            // 如果是由DailyNote页面直接点击添加进入，就是添加
+            
+            // 移除遮盖view
+            [self.coverView removeFromSuperview];
+            
+            // 收回选择背景色视图
+            self.noteBackgroundColor.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.3);
+            self.choiceView.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.05);
+            
+            // 收回心情视图
+            self.mood.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.4);
+            
+            // 收回font view
+            self.fontView.frame = CGRectMake(0, kHeight, kWidth, 0.4*kHeight);
+            
+            //保存日记到网络
+            AVObject *object = [AVObject objectWithClassName:@"Diary"];
+            
+            //创建model，传给第一页面
+            NoteDetail *model = [[NoteDetail alloc] init];
             
             //保存日记内容,确保作者的内容不为空
             NSCharacterSet *set = [NSCharacterSet whitespaceAndNewlineCharacterSet];
@@ -465,27 +564,26 @@
             } else {
                 
                 //日记内容不为空，保存日记
-                self.passedObject.content = self.contentText.text;
                 [object setObject:self.contentText.text forKey:@"content"];
+                model.content = self.contentText.text;
                 
                 //保存背景颜色
                 NSMutableData *data = [[NSMutableData alloc] init];
+                
                 NSKeyedArchiver *archiverBackColor = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
                 [archiverBackColor encodeObject:self.contentText.backgroundColor forKey:@"backColor"];
                 [archiverBackColor finishEncoding];
                 
-                self.passedObject.backColor = self.contentText.backgroundColor;
                 [object setObject:data forKey:@"backColor"];
+                model.backColor = self.contentText.backgroundColor;
                 
                 //保存字体大小
-                //从详情页面传过来的object中解析的字体
-                NSString *passedFontNumber = self.passedObject.fontNumber;
                 if (self.fontNumber != nil) {
-                    self.passedObject.fontNumber = self.fontNumber;
                     [object setObject:self.fontNumber forKey:@"fontNumber"];
+                    model.fontNumber = self.fontNumber;
                 } else {
-                    self.passedObject.fontNumber = passedFontNumber;
-                    [object setObject:passedFontNumber forKey:@"fontNumber"];
+                    [object setObject:@"15" forKey:@"fontNumber"];
+                    model.fontNumber = @"15";
                 }
                 
                 //保存字体的颜色
@@ -495,133 +593,44 @@
                 [archiverFontColor encodeObject:self.contentText.textColor forKey:@"fontColor"];
                 [archiverFontColor finishEncoding];
                 
-                self.passedObject.fontColor = self.contentText.textColor;
                 [object setObject:fontColor forKey:@"fontColor"];
+                model.fontColor = self.contentText.textColor;
                 
-                //保存模型图片数组
-                self.passedObject.photoArray = self.localCopyArrayOfModelPhotoArray;
+                //保存图片数组
+                [object addObjectsFromArray:self.internetCopyArrayOfModelPhotoArray forKey:@"photoArray"];
+                model.photoArray = self.photoArrayLocal;
                 
-                //保存数据库图片数组
-                [object fetchInBackgroundWithBlock:^(AVObject *object, NSError *error) {
-                    [object removeObjectForKey:@"photoArray"];
+                //给model日期赋值
+                model.date = [NSDate date];
                 
-                    [object addObjectsFromArray:self.internetCopyArrayOfModelPhotoArray forKey:@"photoArray"];
-                    
-                    object.fetchWhenSave = YES;
-                    
-                    //保存日记的作者为当前用户
-                    [object saveInBackground];
+                self.block(model);
+                
+                //保存日记的作者为当前用户
+                [object setObject:[AVUser currentUser] forKey:@"belong"];
+                
+                object.fetchWhenSave = YES;
+                
+                [object saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                    if (succeeded) {
+                        model.diaryId = object.objectId;
+                    }
                 }];
                 
-        
-                [self.navigationController popViewControllerAnimated:YES];
-
             }
-        } else {
-            UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"请稍后保存，正在处理网络" message:nil preferredStyle:UIAlertControllerStyleAlert];
-            
-            UIAlertAction *alertAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            }];
-            
-            [alertVC addAction:alertAction];
-            [self.navigationController presentViewController:alertVC animated:YES completion:nil];
+            [self.navigationController popViewControllerAnimated:YES];
         }
-    } else {
-        // 如果是由DailyNote页面直接点击添加进入，就是添加
-        
-        // 移除遮盖view
-        [self.coverView removeFromSuperview];
-      
-        // 收回选择背景色视图
-        self.noteBackgroundColor.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.3);
-        self.choiceView.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.05);
-        
-        // 收回心情视图
-        self.mood.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.4);
-        
-        // 收回font view
-        self.fontView.frame = CGRectMake(0, kHeight, kWidth, 0.4*kHeight);
-        
-        //保存日记到网络
-        AVObject *object = [AVObject objectWithClassName:@"Diary"];
-        
-        //创建model，传给第一页面
-        NoteDetail *model = [[NoteDetail alloc] init];
-        
-        //保存日记内容,确保作者的内容不为空
-        
-        NSCharacterSet *set = [NSCharacterSet whitespaceAndNewlineCharacterSet];
-        
-        NSString *string = [self.contentText.text stringByTrimmingCharactersInSet:set];
-        
-        if (self.contentText.text == nil || string.length == 0) {
-            
-            //日记内容为空，弹出提示框
-            [self tipOfNoneDairyContent];
-            
-        } else {
-            
-            //日记内容不为空，保存日记
-            [object setObject:self.contentText.text forKey:@"content"];
-            model.content = self.contentText.text;
-            
-            //保存背景颜色
-            NSMutableData *data = [[NSMutableData alloc] init];
-            
-            NSKeyedArchiver *archiverBackColor = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
-            [archiverBackColor encodeObject:self.contentText.backgroundColor forKey:@"backColor"];
-            [archiverBackColor finishEncoding];
-            
-            [object setObject:data forKey:@"backColor"];
-            model.backColor = self.contentText.backgroundColor;
-            
-            //保存字体大小
-            if (self.fontNumber != nil) {
-                [object setObject:self.fontNumber forKey:@"fontNumber"];
-                model.fontNumber = self.fontNumber;
-            } else {
-                [object setObject:@"15" forKey:@"fontNumber"];
-                model.fontNumber = @"15";
-            }
-            
-            //保存字体的颜色
-            NSMutableData *fontColor = [[NSMutableData alloc] init];
-            
-            NSKeyedArchiver *archiverFontColor = [[NSKeyedArchiver alloc] initForWritingWithMutableData:fontColor];
-            [archiverFontColor encodeObject:self.contentText.textColor forKey:@"fontColor"];
-            [archiverFontColor finishEncoding];
-            
-            [object setObject:fontColor forKey:@"fontColor"];
-            model.fontColor = self.contentText.textColor;
-            
-            //保存图片数组
-            [object addObjectsFromArray:self.photoArrayInternet forKey:@"photoArray"];
-            model.photoArray = self.photoArrayLocal;
-            
-            //给model日期赋值
-            model.date = [NSDate date];
-            
-            self.block(model);
-            
-            //保存日记的作者为当前用户
-            [object setObject:[AVUser currentUser] forKey:@"belong"];
-            
-            object.fetchWhenSave = YES;
-            
-            [object saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                if (succeeded) {
-                    model.diaryId = object.objectId;
-                }
-            }];
-            
-        }
-        [self.navigationController popViewControllerAnimated:YES];
     }
 }
 
 // 如果日记内容为空, 弹出提示框
 - (void)tipOfNoneDairyContent {
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"请输入内容" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alertController;
+    
+    if ([WLLDailyNoteDataManager sharedInstance].isNetworkAvailable == NO) {
+        alertController = [UIAlertController alertControllerWithTitle:@"网络故障，保存失败" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    } else {
+        alertController = [UIAlertController alertControllerWithTitle:@"日记内容不能为空" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    }
     
     UIAlertAction *executeAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         
