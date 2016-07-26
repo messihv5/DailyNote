@@ -43,32 +43,24 @@
     
     NSArray *photoUrlArray = model.photoUrlArray;
     
-    
-    __weak DailyNoteCell* weakSelf = self;
-
-    if ([WLLDailyNoteDataManager sharedInstance].isNetworkAvailable) {
+    if (photoUrlArray != nil && photoUrlArray.count != 0) {
+        NSString *urlString = photoUrlArray[0];
+        [self.noteImage sd_setImageWithURL:[NSURL URLWithString:urlString]];
+    } else {
         if (photoArray != nil && photoArray.count != 0) {
             if ([photoArray[0] isKindOfClass:[AVFile class]]) {
                 AVFile *file = photoArray[0];
                 [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
                     NSURL *url = [NSURL URLWithString:file.url];
-                    [weakSelf.noteImage sd_setImageWithURL:url];
+                    [self.noteImage sd_setImageWithURL:url];
                 }];
             } else {
-                
                 NSString *path = photoArray[0];
                 
                 self.noteImage.image = [UIImage imageWithContentsOfFile:path];
             }
         }
-
-    } else {
-        if (photoUrlArray != nil && photoUrlArray.count != 0) {
-            NSString *urlString = photoUrlArray[0];
-            [weakSelf.noteImage sd_setImageWithURL:[NSURL URLWithString:urlString]];
-        }
     }
-    
     
     // 计算：1 获取要计算的字符串
     NSString *temp = self.contentLabel.text;

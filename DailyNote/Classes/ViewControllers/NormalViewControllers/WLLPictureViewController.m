@@ -113,6 +113,7 @@
     [self.pictureScrollView addSubview:self.contentView];
     
     NSArray *photoArray = nil;
+    NSArray *photoUrlArray = self.passedObject.photoUrlArray;
     
     if ([WLLDailyNoteDataManager sharedInstance].isFromDetailViewController) {
         photoArray = self.passedObject.photoArray;
@@ -135,15 +136,21 @@
         scrollView.tag = i - 1;
         scrollView.bounces = NO;
         
-        if ([photoArray[i - 1] isKindOfClass:[AVFile class]]) {
-            AVFile *file = photoArray[i - 1];
-            [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
-                NSString *urlString = file.url;
-                [imageV sd_setImageWithURL:[NSURL URLWithString:urlString]];
-            }];
+        if (photoUrlArray != nil && photoUrlArray.count != 0) {
+            NSString *urlString = photoUrlArray[i - 1];
+            
+            [imageV sd_setImageWithURL:[NSURL URLWithString:urlString]];
         } else {
-            NSString *urlString = photoArray[i - 1];
-            imageV.image = [UIImage imageWithContentsOfFile:urlString];
+            if ([photoArray[i - 1] isKindOfClass:[AVFile class]]) {
+                AVFile *file = photoArray[i - 1];
+                [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
+                    NSString *urlString = file.url;
+                    [imageV sd_setImageWithURL:[NSURL URLWithString:urlString]];
+                }];
+            } else {
+                NSString *urlString = photoArray[i - 1];
+                imageV.image = [UIImage imageWithContentsOfFile:urlString];
+            }
         }
         
         UITapGestureRecognizer *oneTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hiddenOrResumeNavigationBar:)];
@@ -246,6 +253,7 @@
 - (IBAction)savePictureAction:(UIButton *)sender {
     self.reminderLabel.hidden = NO;
     self.reminderLabel.text = @"保存成功";
+    self.reminderLabel.textColor = [UIColor whiteColor];
     
     float offset = self.pictureScrollView.contentOffset.x;
     
@@ -264,10 +272,8 @@
 
 - (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
     if (error == nil) {
-        NSLog(@"保存成功");
-    } else {
-        NSLog(@"保存失败");
-        
+        [self hideReminderLabel:nil];
+    } else {        
     }
 }
 /**

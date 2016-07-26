@@ -195,7 +195,6 @@ static NSString  *const reuseIdentifier = @"note_cell";
 
 }
 
-
 //加载5篇日记
 - (void)loadTenDiaries {
     NSDate *cacheDate = [[AVUser currentUser] objectForKey:@"cacheDate"];
@@ -246,16 +245,17 @@ static NSString  *const reuseIdentifier = @"note_cell";
 - (void)refreshAction:(UIRefreshControl *)refreshControl {
     [refreshControl beginRefreshing];
     
-//    self.isLoading = YES;
-//    
-//    BOOL networkAvailable = [WLLDailyNoteDataManager sharedInstance].isNetworkAvailable;
-//    
-//    if (networkAvailable == NO) {
-//        self.upLabel.hidden = NO;
-//        self.upLabel.text = @"网络错误";
-//        [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(dismissAlertVC:) userInfo:self.upLabel repeats:NO];
-//        [refreshControl endRefreshing];
-//    } else {
+    self.isLoading = YES;
+
+    BOOL networkAvailable = [WLLDailyNoteDataManager sharedInstance].isNetworkAvailable;
+
+    if (networkAvailable == NO) {
+        self.upLabel.hidden = NO;
+        self.upLabel.text = @"网络错误";
+        [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(dismissAlertVC:) userInfo:self.upLabel repeats:NO];
+        [refreshControl endRefreshing];
+    }
+    /*
 //        if (self.isFromCalendar) {
 //            
 //            //从calender点击过来的刷新
@@ -353,7 +353,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
 //                }];
 //            }
 //        }
-//    }
+//    } */
     [refreshControl endRefreshing];
 }
 
@@ -502,7 +502,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:YES];
     
-    [self.notesTableView reloadData];
+//    [self.notesTableView reloadData];
     
     self.parentViewController.navigationItem.title = @"Time Line";
     
@@ -649,16 +649,22 @@ static NSString  *const reuseIdentifier = @"note_cell";
 
 // 写新日记
 - (void)newDaily:(UIBarButtonItem *)button {
-    EditNoteViewController *editVC = [[EditNoteViewController alloc] initWithNibName:@"EditNoteViewController" bundle:[NSBundle mainBundle]];
-    editVC.numberOfModelInArray = self.data.count;
-    __weak WLLDailyNoteViewController *weakSelf = self;
-    editVC.block = ^ (NoteDetail *passedObject) {
-        weakSelf.passedObject = passedObject;
-        [weakSelf.data insertObject:passedObject atIndex:0];
-        [weakSelf.notesTableView reloadData];
-    };
-
-    [self.navigationController pushViewController:editVC animated:YES];
+    if ([WLLDailyNoteDataManager sharedInstance].isNetworkAvailable == NO) {
+        self.upLabel.hidden = NO;
+        self.upLabel.text = @"网络故障，不能编辑";
+        [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(dismissAlertVC:) userInfo:self.upLabel repeats:NO];
+    } else {
+        EditNoteViewController *editVC = [[EditNoteViewController alloc] initWithNibName:@"EditNoteViewController" bundle:[NSBundle mainBundle]];
+        editVC.numberOfModelInArray = self.data.count;
+        __weak WLLDailyNoteViewController *weakSelf = self;
+        editVC.block = ^ (NoteDetail *passedObject) {
+            weakSelf.passedObject = passedObject;
+            [weakSelf.data insertObject:passedObject atIndex:0];
+            [weakSelf.notesTableView reloadData];
+        };
+        
+        [self.navigationController pushViewController:editVC animated:YES];
+    }
 }
 
 #pragma mark - UITableView 代理方法
