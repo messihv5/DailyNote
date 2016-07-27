@@ -62,6 +62,7 @@
     
     //设置返回键名字，使下一页面的返回键显示“返回”
     UIBarButtonItem *theBarButtonItem = [[UIBarButtonItem alloc] init];
+    
     theBarButtonItem.title = @"返回";
     self.parentViewController.navigationItem.backBarButtonItem = theBarButtonItem;
     
@@ -77,7 +78,7 @@
     
     //计算用户获得的总赞数
     AVQuery *query = [AVQuery queryWithClassName:@"Diary"];
-//    [query whereKey:@"isPrivate" equalTo:@"public"];
+//    [query whereKey:@"sharedDate" notEqualTo:nil];
     [query whereKey:@"belong" equalTo:self.theCurrentUser];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         NSInteger totalStar = 0;
@@ -91,13 +92,11 @@
         [self.theCurrentUser setObject:self.starNumberLabel.text forKey:@"starNumber"];
         [self.theCurrentUser saveInBackground];
     }];
-    
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     self.navigationController.navigationBar.hidden = NO;
-    
 }
 
 #pragma mark - 设置tableHeaderView
@@ -113,7 +112,9 @@
         
     AVFile *theBackgroundImageFile = [self.theCurrentUser objectForKey:@"theBackgroundImage"];
     
-    [self.theBackgroundImageView sd_setImageWithURL:[NSURL URLWithString:theBackgroundImageFile.url]];
+    [AVFile getFileWithObjectId:theBackgroundImageFile.objectId withBlock:^(AVFile *file, NSError *error) {
+        [self.theBackgroundImageView sd_setImageWithURL:[NSURL URLWithString:file.url]];
+    }];
     
     UITapGestureRecognizer *tapGestureRecognizer;
     tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
@@ -128,8 +129,11 @@
     self.headImageView.backgroundColor = [UIColor purpleColor];
     
     AVFile *headImageFile = [self.theCurrentUser objectForKey:@"headImage"];
-
-    [self.headImageView sd_setImageWithURL:[NSURL URLWithString:headImageFile.url]];
+    
+    [AVFile getFileWithObjectId:headImageFile.objectId withBlock:^(AVFile *file, NSError *error) {
+        [self.headImageView sd_setImageWithURL:[NSURL URLWithString:file.url]];
+    }];
+    
     self.headImageView.layer.cornerRadius = kHeight / 18;
     self.headImageView.layer.masksToBounds = YES;
     
@@ -181,7 +185,6 @@
 }
 
 #pragma mark - tableView代理方法设置
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [self.data[section] count];
 }
@@ -291,7 +294,6 @@
 }
 
 #pragma mark - 数组添加数据
-
 - (void)addData {
     self.data = [NSMutableArray array];
     NSMutableArray *firstSection = [NSMutableArray array];
@@ -330,12 +332,9 @@
     [thirdSection addObject:settingModel];
     [thirdSection addObject:shareModel];
     [self.data addObject:thirdSection];
-    
-    
 }
 
 #pragma mark - 退出系统
-
 - (void)logOutAction:(UIButton *)sender {
     [AVUser logOut];
     
@@ -343,7 +342,6 @@
 }
 
 #pragma mark - tableview下拉滚动视图
-
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     
     CGFloat offset = scrollView.contentOffset.y;
@@ -380,11 +378,9 @@
     //通过数据库查询用户的nickName和signature
     self.nickNameLabel.text = [self.theCurrentUser objectForKey:@"nickName"];
     self.signatureLabel.text = [self.theCurrentUser objectForKey:@"signature"];
-    
 }
 
 #pragma mark - 轻击手势切换图片
-
 - (void)theBackgroudImageViewTapAction {
     
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"更换背景" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
@@ -436,7 +432,9 @@
         [self.navigationController presentViewController:imagePicker animated:YES completion:nil];
     }];
     
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消"
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:^(UIAlertAction * _Nonnull action) {
         
     }];
     
@@ -453,14 +451,22 @@
 - (void)imagePickerController:(UIImagePickerController *)picker
 didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
     UIImage *pickedImage = info[UIImagePickerControllerOriginalImage];
-
+    
+    CGFloat scaleBetweenWidthAndHeight = pickedImage.size.width / pickedImage.size.height;
+    
+    CGSize size = CGSizeMake(2.0 / 3.0 * kHeight * scaleBetweenWidthAndHeight, 2.0 / 3.0 * kHeight);
+    
+    UIImage *compressedImage = [[self class] imageWithImageSimple:pickedImage scaledToSize:size];
+    
     NSData *imageData = nil;
+    
     NSString *string = nil;
-    if (UIImageJPEGRepresentation(pickedImage, 1)) {
-        imageData = UIImageJPEGRepresentation(pickedImage, 1);
+    
+    if (UIImageJPEGRepresentation(compressedImage, 1)) {
+        imageData = UIImageJPEGRepresentation(compressedImage, 1);
         string = @".jpg";
-    } else if (UIImagePNGRepresentation(pickedImage)) {
-        imageData = UIImagePNGRepresentation(pickedImage);
+    } else if (UIImagePNGRepresentation(compressedImage)) {
+        imageData = UIImagePNGRepresentation(compressedImage);
         string = @".png";
     }
     
@@ -474,7 +480,8 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
         
         [imageData writeToFile:imagePath atomically:YES];
         
-        self.theBackgroundImageView.image = [UIImage imageWithContentsOfFile:imagePath];
+//        self.theBackgroundImageView.image = [UIImage imageWithContentsOfFile:imagePath];
+        self.theBackgroundImageView.image = compressedImage;
         
         AVFile *file = [AVFile fileWithData:imageData];
         
@@ -485,8 +492,11 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
         
         [imageData writeToFile:imagePath atomically:YES];
 
-        self.headImageView.image = [UIImage imageWithContentsOfFile:imagePath];
+//        self.headImageView.image = [UIImage imageWithContentsOfFile:imagePath];
+        self.headImageView.image = compressedImage;
+        
         AVFile *file = [AVFile fileWithData:imageData];
+        
         [self.theCurrentUser setObject:file forKey:@"headImage"];
         self.isHeadImageView = NO;
     }
@@ -497,10 +507,31 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
-
-- (UIStatusBarStyle)preferredStatusBarStyle
+/**
+ *  压缩图片
+ *
+ *  @param image   被压缩的image
+ *  @param newSize 压缩后的尺寸
+ *
+ *  @return 压缩后得到的image
+ */
++ (UIImage*)imageWithImageSimple:(UIImage*)image scaledToSize:(CGSize)newSize
 {
-    return UIStatusBarStyleLightContent;
+    // Create a graphics image context
+    UIGraphicsBeginImageContext(newSize);
+    
+    // Tell the old image to draw in this new context, with the desired
+    // new size
+    [image drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
+    
+    // Get the new image from the context
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    
+    // End the context
+    UIGraphicsEndImageContext();
+    
+    // Return the new image.
+    return newImage;
 }
 
 #pragma mark -

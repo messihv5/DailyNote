@@ -11,9 +11,6 @@
 
 @interface WLLMoodView ()<UICollectionViewDelegate, UICollectionViewDataSource>
 
-@property (weak, nonatomic) IBOutlet UISwitch *shareSwitch;
-@property (weak, nonatomic) IBOutlet UICollectionView *weatherIcon;
-
 @end
 
 @implementation WLLMoodView
@@ -66,11 +63,6 @@ static NSString *const reuseIdentifier = @"weather_item";
     layout.sectionInset = UIEdgeInsetsMake(10, 5, 10, 5);
     layout.itemSize = CGSizeMake(65, 40);
     [self.weatherIcon setCollectionViewLayout:layout];
-}
-
-#pragma mark - 分享日记
-- (IBAction)shareNoteAction:(UISwitch *)sender {
-    
 }
 
 

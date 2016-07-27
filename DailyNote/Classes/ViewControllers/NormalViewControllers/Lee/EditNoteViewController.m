@@ -76,6 +76,18 @@
 @property (assign, nonatomic) NSInteger OffsetByInteger;
 @property (strong, nonatomic) NSMutableArray *localCopyArrayOfModelPhotoArray;
 @property (strong, nonatomic) NSMutableArray *internetCopyArrayOfModelPhotoArray;
+/**
+ *  获取当前模型对应的AVObject对象
+ */
+@property (strong, nonatomic) AVObject *object;
+/**
+ * 分享日期
+ */
+@property (strong, nonatomic) NSDate *sharedDate;
+/**
+ *  标记日记是否分享
+ */
+@property (assign, nonatomic) BOOL isDiaryShared;
 
 @end
 
@@ -92,9 +104,9 @@
     [self.localCopyArrayOfModelPhotoArray addObjectsFromArray:self.passedObject.photoArray];
     
     //创建一个保存网络图片的数组
-    AVObject *object = [AVObject objectWithClassName:@"Diary" objectId:self.passedObject.diaryId];
+    self.object = [AVObject objectWithClassName:@"Diary" objectId:self.passedObject.diaryId];
     
-    [object fetchInBackgroundWithBlock:^(AVObject *object, NSError *error) {
+    [self.object fetchInBackgroundWithBlock:^(AVObject *object, NSError *error) {
         NSArray *photoArray = [object objectForKey:@"photoArray"];
         
         [self.internetCopyArrayOfModelPhotoArray addObjectsFromArray:photoArray];
@@ -118,6 +130,12 @@
     
     // 心情视图
     self.mood = [WLLMoodView viewFromXib];
+    [self.mood.shareSwitch addTarget:self action:@selector(shareDiary:) forControlEvents:UIControlEventValueChanged];
+    if (self.passedObject.sharedDate != nil) {
+        self.mood.shareSwitch.on = YES;
+    } else {
+        self.mood.shareSwitch.on = NO;
+    }
     
     // 键盘初始为隐藏
     self.is = YES;
@@ -142,6 +160,20 @@
     
     // 加载来自详情页面数据
     [self dataFromDetail];
+}
+
+/**
+ *  设置是否分享日记
+ *
+ *  @param shareSwitch switch按钮
+ */
+- (void)shareDiary:(UISwitch *)shareSwitch {
+    self.isDiaryShared = YES;
+    if (shareSwitch.on) {
+        self.sharedDate = [NSDate date];
+    } else {
+        self.sharedDate = nil;
+    }
 }
 
 - (void)addPictureScrollView {
@@ -469,7 +501,6 @@
                     
                     //日记内容不为空，保存日记
                     self.passedObject.content = self.contentText.text;
-                    [object setObject:self.contentText.text forKey:@"content"];
                     
                     //保存背景颜色
                     NSMutableData *data = [[NSMutableData alloc] init];
@@ -478,17 +509,14 @@
                     [archiverBackColor finishEncoding];
                     
                     self.passedObject.backColor = self.contentText.backgroundColor;
-                    [object setObject:data forKey:@"backColor"];
                     
                     //保存字体大小
                     //从详情页面传过来的object中解析的字体
                     NSString *passedFontNumber = self.passedObject.fontNumber;
                     if (self.fontNumber != nil) {
                         self.passedObject.fontNumber = self.fontNumber;
-                        [object setObject:self.fontNumber forKey:@"fontNumber"];
                     } else {
                         self.passedObject.fontNumber = passedFontNumber;
-                        [object setObject:passedFontNumber forKey:@"fontNumber"];
                     }
                     
                     //保存字体的颜色
@@ -499,16 +527,41 @@
                     [archiverFontColor finishEncoding];
                     
                     self.passedObject.fontColor = self.contentText.textColor;
-                    [object setObject:fontColor forKey:@"fontColor"];
                     
                     //保存模型图片数组
                     self.passedObject.photoArray = self.localCopyArrayOfModelPhotoArray;
                     
-                    //保存数据库图片数组
+                    //保存分享日期
+                    if (self.isDiaryShared == YES) {
+                        self.passedObject.sharedDate = self.sharedDate;
+                    }
+                    
+                    //数据库保存
                     [object fetchInBackgroundWithBlock:^(AVObject *object, NSError *error) {
-                        [object removeObjectForKey:@"photoArray"];
+                        //日记内容
+                        [object setObject:self.contentText.text forKey:@"content"];
                         
+                        //图片保存
+                        [object removeObjectForKey:@"photoArray"];
                         [object addObjectsFromArray:self.internetCopyArrayOfModelPhotoArray forKey:@"photoArray"];
+                        
+                        //背景颜色
+                        [object setObject:data forKey:@"backColor"];
+                        
+                        //字体大小
+                        if (self.fontNumber != nil) {
+                            [object setObject:self.fontNumber forKey:@"fontNumber"];
+                        } else {
+                            [object setObject:passedFontNumber forKey:@"fontNumber"];
+                        }
+                        
+                        //字体颜色
+                        [object setObject:fontColor forKey:@"fontColor"];
+
+                        //保存分享日期
+                        if (self.isDiaryShared == YES) {
+                            [object setObject:self.sharedDate forKey:@"sharedDate"];
+                        }
                         
                         object.fetchWhenSave = YES;
                         
@@ -516,9 +569,7 @@
                         [object saveInBackground];
                     }];
                     
-                    
                     [self.navigationController popViewControllerAnimated:YES];
-                    
                 }
             } else {
                 UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"请稍后保存，正在处理网络" message:nil preferredStyle:UIAlertControllerStyleAlert];
@@ -545,7 +596,7 @@
             // 收回font view
             self.fontView.frame = CGRectMake(0, kHeight, kWidth, 0.4*kHeight);
             
-            //保存日记到网络
+            //创建日记对象，保存日记到网络
             AVObject *object = [AVObject objectWithClassName:@"Diary"];
             
             //创建model，传给第一页面
@@ -598,8 +649,14 @@
                 
                 //保存图片数组
                 [object addObjectsFromArray:self.internetCopyArrayOfModelPhotoArray forKey:@"photoArray"];
-                model.photoArray = self.photoArrayLocal;
+                model.photoArray = self.localCopyArrayOfModelPhotoArray;
                 
+                //保存分享日期
+                if (self.isDiaryShared == YES) {
+                    model.sharedDate = [NSDate date];
+                    [object setObject:[NSDate date] forKey:@"sharedDate"];
+                }
+               
                 //给model日期赋值
                 model.date = [NSDate date];
                 
@@ -615,7 +672,6 @@
                         model.diaryId = object.objectId;
                     }
                 }];
-                
             }
             [self.navigationController popViewControllerAnimated:YES];
         }
@@ -805,17 +861,25 @@
                 
                 weakSelf.choosedImage = [UIImage imageWithCGImage:asset.defaultRepresentation.fullResolutionImage] ;
                 
+                //对从相册拿到的图片进行等比例缩小处理
+                CGFloat scaleBetweenWidthAndHeight = weakSelf.choosedImage.size.width / weakSelf.choosedImage.size.height;
+                
+                CGSize size = CGSizeMake(1.5 * kWidth,  1.5 * kWidth / scaleBetweenWidthAndHeight);
+                
+                UIImage *compressedImage = [[self class] imageWithImageSimple:weakSelf.choosedImage scaledToSize:size];
+                
+                //将图片转化为NSData格式
                 NSData *imageData = nil;
-                if (UIImageJPEGRepresentation(weakSelf.choosedImage, 1)) {
-                    imageData = UIImageJPEGRepresentation(weakSelf.choosedImage, 1);
+                if (UIImageJPEGRepresentation(compressedImage, 1)) {
+                    imageData = UIImageJPEGRepresentation(compressedImage, 1);
                     imagePath = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"%ldimage%ld.jpg",numberOFModelInArray, idx]];
-                } else if (UIImagePNGRepresentation(weakSelf.choosedImage)) {
-                    imageData = UIImagePNGRepresentation(weakSelf.choosedImage);
+                } else if (UIImagePNGRepresentation(compressedImage)) {
+                    imageData = UIImagePNGRepresentation(compressedImage);
                     imagePath = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"%ldimage%ld.png", numberOFModelInArray, idx]];
                 }
                 
-                //重新设定contentsize
-                weakSelf.numberOfPictures = weakSelf.numberOfPictures +1;
+                //重新设定contentsize，以便把从相册添加的照片放在scrollView上
+                weakSelf.numberOfPictures = weakSelf.numberOfPictures + 1;
                 
                 weakSelf.pictureScrollView.contentSize = CGSizeMake(weakSelf.numberOfPictures * 60, 80);
                 
@@ -827,7 +891,7 @@
                 
                 imageV.tag = weakSelf.numberOfPictures - 1;
                 
-                imageV.image = weakSelf.choosedImage;
+                imageV.image = compressedImage;
                 
                 UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction:)];
                 
@@ -843,6 +907,7 @@
                 
                 [weakSelf.photoArrayLocal addObject:imagePath];
             }];
+            
             [self.localCopyArrayOfModelPhotoArray addObjectsFromArray:self.photoArrayLocal];
             [self.photoArrayLocal removeAllObjects];
             [self.internetCopyArrayOfModelPhotoArray addObjectsFromArray:self.photoArrayInternet];
@@ -857,6 +922,33 @@
     assetPicker.selectionLimit = 10;
     
     [weakSelf presentViewController:assetPicker animated:YES completion:nil];
+}
+
+/**
+ *  压缩图片
+ *
+ *  @param image   被压缩的image
+ *  @param newSize 压缩后的尺寸
+ *
+ *  @return 压缩后得到的image
+ */
++ (UIImage*)imageWithImageSimple:(UIImage*)image scaledToSize:(CGSize)newSize
+{
+    // Create a graphics image context
+    UIGraphicsBeginImageContext(newSize);
+    
+    // Tell the old image to draw in this new context, with the desired
+    // new size
+    [image drawInRect:CGRectMake(0,0,newSize.width,newSize.height)];
+    
+    // Get the new image from the context
+    UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
+    
+    // End the context
+    UIGraphicsEndImageContext();
+    
+    // Return the new image.
+    return newImage;
 }
 
 #pragma mark - 定位代理方法
@@ -888,31 +980,11 @@
     
 }
 
-+ (UIImage*)imageWithImageSimple:(UIImage*)image scaledToSize:(CGSize)newSize
-{
-    // Create a graphics image context
-    UIGraphicsBeginImageContext(newSize);
-    
-    // Tell the old image to draw in this new context, with the desired
-    // new size
-    [image drawInRect:CGRectMake(0,0,newSize.width,newSize.height)];
-    
-    // Get the new image from the context
-    UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
-    
-    // End the context
-    UIGraphicsEndImageContext();
-    
-    // Return the new image.
-    return newImage;
-}
-
 //移除观察着
 #pragma mark - 辅助工具栏按钮响应
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"change" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillChangeFrameNotification object:nil];
 }
-
 
 @end

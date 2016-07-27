@@ -14,10 +14,14 @@
 
 @interface WLLDailyNoteViewController : UIViewController
 
-//判断该页面是通过点击calendar加载的
+/**
+ *  在dailyNoteVC页面通过这个，判断是不是从calendar加载日记
+ */
 @property (assign, nonatomic) BOOL isFromCalendar;
 
-//点击日历传过来的日期
+/**
+ *  点击日历日期，传过来的日期字符串
+ */
 @property (copy, nonatomic) NSString *dateString;
 
 @end

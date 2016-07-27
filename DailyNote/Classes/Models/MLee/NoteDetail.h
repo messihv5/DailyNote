@@ -54,5 +54,10 @@
  *  日记的更新时间，主要用于记录日记删除的时间
  */
 @property (strong, nonatomic) NSDate *updatedDate;
+/**
+ *  日记是否分享
+ */
+@property (strong, nonatomic) NSString *isPublic;
+@property (strong, nonatomic) NSDate *sharedDate;
 
 @end
