@@ -25,18 +25,41 @@
 //@property (nonatomic, weak) UIButton *button;
 
 @property (strong, nonatomic) NoteDetail *model;
+/**
+ *  存放NoteDetail对象的数组
+ */
 @property (strong, nonatomic) NSMutableArray *data;
 @property (strong, nonatomic) NSUserDefaults *userDefaults;
 @property (strong, nonatomic) UILabel *downLoadLabel;
 @property (strong, nonatomic) UIView *alertView;
+/**
+ *  提示标签,"日记已加载完"，“网络故障”等提示
+ */
 @property (strong, nonatomic) UILabel *upLabel;
+/**
+ *  判断是否正在加载日记
+ */
 @property (assign, nonatomic) BOOL isLoading;
+/**
+ *  判断是否正在刷新
+ */
 @property (assign, nonatomic) BOOL isRefreshing;
+/**
+ *  判断是否从登陆界面跳转回来的
+ */
 @property (assign, nonatomic) BOOL isBackFromLoginController;
-@property (strong, nonatomic) NSDate *dateFromCalendar;
+/**
+ *  判断是不是加载自本页面
+ */
 @property (assign, nonatomic) BOOL isLoadedFromViewDidLoad;
+/**
+ *  新添加日记时，接收添加页面传过来的日记model
+ */
 @property (strong, nonatomic) NoteDetail *passedObject;
-@property (assign, nonatomic) BOOL backFromEditNoteVC;
+/**
+ *  判断是否跳转自编辑页面
+ */
+//@property (assign, nonatomic) BOOL backFromEditNoteVC;
 
 @end
 
@@ -151,12 +174,9 @@ static NSString  *const reuseIdentifier = @"note_cell";
     }
 }
 
-//删除回收站里已经30天的日记
-- (void)deleteDiary:(NSNotification *)notification {
-    
-}
-
-//添加刷新控件
+/**
+ *  添加刷新控件
+ */
 - (void)addRefreshToTableView {
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     
@@ -166,11 +186,11 @@ static NSString  *const reuseIdentifier = @"note_cell";
     refreshControl.userInteractionEnabled = NO;
 }
 
-//更新最新添加的日记方法
-- (void)backFromEditNoteVC:(NSNotification *)notification {
-    self.backFromEditNoteVC = YES;
-}
-//数据数组懒加载
+/**
+ *  数组懒加载
+ *
+ *  @return 存放NoteDetail对象的数组
+ */
 - (NSMutableArray *)data {
     if (_data == nil) {
         _data = [NSMutableArray array];
@@ -178,7 +198,9 @@ static NSString  *const reuseIdentifier = @"note_cell";
     return _data;
 }
 
-//加载calendar页面的5篇日记
+/**
+ *  点击日历的日期，加载日记
+ */
 - (void)loadDirayFromCalendarPage {
     if (self.isFromCalendar == YES) {
         
@@ -192,10 +214,11 @@ static NSString  *const reuseIdentifier = @"note_cell";
             [self.notesTableView reloadData];
         }];
     }
-
 }
 
-//加载5篇日记
+/**
+ *  加载主页面的5篇日记
+ */
 - (void)loadTenDiaries {
     NSDate *cacheDate = [[AVUser currentUser] objectForKey:@"cacheDate"];
     
@@ -224,7 +247,11 @@ static NSString  *const reuseIdentifier = @"note_cell";
     }];
 }
 
-//消失alertViewcontroller
+/**
+ *  使提示框消失
+ *
+ *  @param timer 计时器
+ */
 - (void)dismissAlertVC:(NSTimer *)timer {
     if ([timer.userInfo isKindOfClass:[UIAlertController class]]) {
         UIAlertController *alertVC = timer.userInfo;
@@ -236,23 +263,28 @@ static NSString  *const reuseIdentifier = @"note_cell";
         label.hidden = YES;
         self.isLoading = NO;
     }
-    
-    
-    
 }
 
-//下拉刷新方法，加载最新的日记
+/**
+ *  下拉刷新（实际没有功能）
+ *
+ *  @param refreshControl 刷新控件
+ */
 - (void)refreshAction:(UIRefreshControl *)refreshControl {
     [refreshControl beginRefreshing];
-    
     self.isLoading = YES;
-
+    
     BOOL networkAvailable = [WLLDailyNoteDataManager sharedInstance].isNetworkAvailable;
 
     if (networkAvailable == NO) {
         self.upLabel.hidden = NO;
         self.upLabel.text = @"网络错误";
-        [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(dismissAlertVC:) userInfo:self.upLabel repeats:NO];
+        [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(dismissAlertVC:) userInfo:self.upLabel repeats:NO];
+        [refreshControl endRefreshing];
+    } else {
+        self.upLabel.hidden = NO;
+        self.upLabel.text = @"日记已加载完";
+        [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(dismissAlertVC:) userInfo:self.upLabel repeats:NO];
         [refreshControl endRefreshing];
     }
     /*
@@ -354,10 +386,11 @@ static NSString  *const reuseIdentifier = @"note_cell";
 //            }
 //        }
 //    } */
-    [refreshControl endRefreshing];
 }
 
-//给tableViewFooterView添加刷新的view
+/**
+ *  给tableViewFooterView添加“上拉加载更多的标签”
+ */
 - (void)addViewToFooterView {
     CGRect footerViewRect = CGRectMake(0, 0, kWidth, 60);
     UIView *footerView = [[UIView alloc] initWithFrame:footerViewRect];
@@ -373,9 +406,10 @@ static NSString  *const reuseIdentifier = @"note_cell";
     self.notesTableView.tableFooterView = footerView;
 }
 
-//给tableView添加一个alertView
+/**
+ *  本页面添加一个提示标签“日记已加载完”，“网络故障”等提示内容
+ */
 - (void)addAlertView {
-    
     self.alertView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
     self.alertView.center = CGPointMake(kWidth*0.5, kHeight*0.5);
     
@@ -387,15 +421,17 @@ static NSString  *const reuseIdentifier = @"note_cell";
     self.upLabel.backgroundColor = [UIColor blackColor];
     self.upLabel.layer.masksToBounds = YES;
     self.upLabel.layer.cornerRadius = 5;
-    
-    [self.alertView addSubview:self.upLabel];
-    
-    [self.view addSubview:self.alertView];
-    
     self.upLabel.hidden = YES;
+
+    [self.alertView addSubview:self.upLabel];
+    [self.view addSubview:self.alertView];
 }
 
-//scrollView滑动的代理方法，上拉刷新
+/**
+ *  scrollView滑动方法
+ *
+ *  @param scrollView scrollView
+ */
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     CGFloat offset = scrollView.contentOffset.y;
     
@@ -406,7 +442,6 @@ static NSString  *const reuseIdentifier = @"note_cell";
     }
     
     if (self.data.count < 5) {
-
         if (networkAvailable == NO) {
             if (offset > -64 && offset <= 200) {
                 self.upLabel.hidden = NO;
@@ -430,16 +465,14 @@ static NSString  *const reuseIdentifier = @"note_cell";
     
     //contentsize减去scrollView的height + 富余量10
     CGFloat loadDataContentOffset = scrollView.contentSize.height - self.notesTableView.height + 10;
-    
+
     if (offset > loadDataContentOffset) {
-        
         if (networkAvailable == YES) {
             self.isLoading = YES;
             self.upLabel.hidden = NO;
             self.upLabel.text = @"日记已加载完";
             //调用加载方法
             [self loadTenMoreDiaries];
-
         } else {
             self.isLoading = YES;
             self.upLabel.hidden = NO;
@@ -451,7 +484,9 @@ static NSString  *const reuseIdentifier = @"note_cell";
     }
 }
 
-//每次上拉最多加载10篇日记
+/**
+ *  下拉加载5篇日记
+ */
 - (void)loadTenMoreDiaries {
     NoteDetail *model = [self.data lastObject];
     
@@ -498,11 +533,15 @@ static NSString  *const reuseIdentifier = @"note_cell";
     }
 }
 
-// 加载 barButton Item
+/**
+ *  视图将出现，加载导航栏按钮
+ *
+ *  @param animated 动画
+ */
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:YES];
     
-//    [self.notesTableView reloadData];
+    [self.notesTableView reloadData];
     
     self.parentViewController.navigationItem.title = @"Time Line";
     
@@ -523,6 +562,11 @@ static NSString  *const reuseIdentifier = @"note_cell";
     self.parentViewController.navigationItem.rightBarButtonItem.tintColor = [UIColor grayColor];
 }
 
+/**
+ *  视图将消失，导航栏按钮置为空，同时将isFromCalendar和isBackFromRecycle置为NO
+ *
+ *  @param animated 动画
+ */
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:YES];
     self.parentViewController.navigationItem.leftBarButtonItem = nil;
@@ -539,6 +583,11 @@ static NSString  *const reuseIdentifier = @"note_cell";
     }
 }
 
+/**
+ *  判断用户的登录状态，没有登录就弹出登录界面；第一次启动时，加载5篇日记；获取主题所需的image；设置用户设置的导航栏颜色
+ *
+ *  @param animated 动画
+ */
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:YES];
     
@@ -566,7 +615,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
     UITabBar *tabbar = self.tabBarController.tabBar;
     UINavigationBar *bar = self.tabBarController.navigationController.navigationBar;
     
-    //第一次进入页面时，获取四种颜色的image
+    //第一次进入页面时，获取四种颜色的dailyNote页面的image,用于后面用户设置主题
     NSData *imageData = [self.userDefaults objectForKey:@"navigationImagesAndTabbarImages"];
     if (imageData == nil) {
         NSMutableData *navigationImagesAndTabbarImages = [[NSMutableData alloc] init];
@@ -603,7 +652,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
         [archiver encodeObject:navigationImage4 forKey:@"navigationImage4"];
         [archiver finishEncoding];
         
-        //保存在NSUserDefaults里面，使得在同一手机登录的用户主题相同
+        //保存在NSUserDefaults里面
         [self.userDefaults setObject:navigationImagesAndTabbarImages forKey:@"navigationImagesAndTabbarImages"];
         [self.userDefaults synchronize];
     }
@@ -629,9 +678,14 @@ static NSString  *const reuseIdentifier = @"note_cell";
     }
 }
 
-//渲染view.layer获取image
+/**
+ *  根据view获取image
+ *
+ *  @param view 要获取image的view
+ *
+ *  @return 根据view渲染的image
+ */
 - (UIImage *)imageWithView:(UIView *)view {
-    
     //获取view的image
     UIGraphicsBeginImageContextWithOptions(view.bounds.size, NO, 0.0);
     [view.layer renderInContext:UIGraphicsGetCurrentContext()];
@@ -640,14 +694,21 @@ static NSString  *const reuseIdentifier = @"note_cell";
     return image;
 }
 
-
-// 查看以前日志
+/**
+ *  前往日历界面
+ *
+ *  @param button barbutton
+ */
 - (void)checkPastNotes:(UIBarButtonItem *)button {
     WLLCalendarViewController *calendarVC = [[WLLCalendarViewController alloc] init];
     [self.navigationController pushViewController:calendarVC animated:YES];
 }
 
-// 写新日记
+/**
+ *  写新日记
+ *
+ *  @param button Barbutton
+ */
 - (void)newDaily:(UIBarButtonItem *)button {
     if ([WLLDailyNoteDataManager sharedInstance].isNetworkAvailable == NO) {
         self.upLabel.hidden = NO;
@@ -756,7 +817,9 @@ static NSString  *const reuseIdentifier = @"note_cell";
     return height;
 }
 
-//移除通知
+/**
+ *  移除更新日记通知
+ */
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"readyToUpdateNewNote" object:nil];
 }

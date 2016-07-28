@@ -114,21 +114,21 @@
     [refreshControl beginRefreshing];
     
     self.isLoading = YES;
-    //得到数据中的第一个数据
     
+    //得到数据中的第一个数据
     if (self.isNetworkAvailable == NO) {
         self.upLabel.hidden = NO;
         self.upLabel.text = @"网络错误";
-        [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(dismissView:) userInfo:self.upLabel repeats:NO];
+        [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(dismissView:) userInfo:self.upLabel repeats:NO];
         [refreshControl endRefreshing];
     } else {
         //刷新数据，加载最新的数据，当数组存储了数据，查询的新数据插到数组的最前面
         if (self.data.count != 0) {
             NoteDetail *firstObject = self.data[0];
             
-            NSDate *firstDate = firstObject.date;
+            NSDate *firstDate = firstObject.sharedDate;
+            
             if (self.passedIndexPath) {
-                
                 //点击收藏加载数据
                 [[WLLDailyNoteDataManager sharedInstance] refreshTenDiariesOfCollectionByDate:firstDate finished:^{
                     NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
@@ -180,22 +180,25 @@
                     self.isLoading = NO;
                 }];
             } else {
-                
                 //嵌套在tabbar中的Viewcontroller加载数据
-                [[WLLDailyNoteDataManager sharedInstance] refreshTenDiariesOfSharingByDate:date finished:^{
+                [[WLLDailyNoteDataManager sharedInstance] loadTenDiariesOfSharingByDate:date finished:^{
                     NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
                     if (array.count != 0) {
                         [self.data addObjectsFromArray:array];
                         [self.shareTableView reloadData];
-
                     } else {
+                        
                     }
                     [refreshControl endRefreshing];
                     self.isLoading = NO;
+                } error:^{
+                    NSLog(@"网络错误，刷新分享日记失败");
                 }];
             }
         }
-
+        self.upLabel.hidden = NO;
+        self.upLabel.text = @"日记已加载完";
+        [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(dismissView:) userInfo:self.upLabel repeats:NO];
     }
 }
 
@@ -247,7 +250,7 @@
         return;
     }
     
-    if (self.data.count < 10 ) {
+    if (self.data.count < 5 ) {
         if (self.isNetworkAvailable == NO) {
             if (offset > -50 ) {
                 self.upLabel.hidden = NO;
@@ -386,6 +389,7 @@
     cell.nickNameLabel.text = model.nickName;
     [cell.headImageView sd_setImageWithURL:model.headImageUrl];
     cell.starNumberLabel.text = model.starNumber;
+    cell.backgroundColor = [UIColor colorWithRed:0.3 green:0.5 blue:0.7 alpha:0.5];
     
     //判断当前用户是否已经点赞
     if ([model.staredUserArray containsObject:self.currentUser]) {
@@ -409,8 +413,6 @@
     
     detailController.passedObject = self.data[indexPath.row];
     
-    WChaoShareCellTableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-
     //如果是从收藏页面过去的,传个indexpath作为标记
     if (self.passedIndexPath) {
         detailController.passedIndexPath = indexPath;

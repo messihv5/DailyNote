@@ -114,13 +114,17 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
         }
 
         // Set decompression to YES
-        _shouldDecompressImages = NO;//messi
+        _shouldDecompressImages = NO;//XiaoDai
 
         // memory cache enabled
         _shouldCacheImagesInMemory = YES;
 
         // Disable iCloud
         _shouldDisableiCloud = YES;
+        
+        //max memory cache count XiaoDaiDidthis
+        self.maxMemoryCountLimit = 1;
+        self.memCache.countLimit = 1;
         
         dispatch_sync(_ioQueue, ^{
             _fileManager = [NSFileManager new];
