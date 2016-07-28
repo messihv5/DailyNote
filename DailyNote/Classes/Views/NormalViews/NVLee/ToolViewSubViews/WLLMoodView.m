@@ -35,7 +35,6 @@ static NSString *const reuseIdentifier = @"weather_item";
         
     }
     
-    cell.backgroundColor = [UIColor whiteColor];
     
     return cell;
 }
@@ -45,8 +44,7 @@ static NSString *const reuseIdentifier = @"weather_item";
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     WLLWeatherCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier
                                                                            forIndexPath:indexPath];
-
-    NSLog(@"%@", cell.weatherIcon);
+    NSLog(@"%@", cell.backgroundView);
     
 }
 
