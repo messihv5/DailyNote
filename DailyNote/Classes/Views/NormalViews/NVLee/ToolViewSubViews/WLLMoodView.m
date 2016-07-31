@@ -28,13 +28,13 @@ static NSString *const reuseIdentifier = @"weather_item";
                                                                            forIndexPath:indexPath];
     if (indexPath.row == 0) {
         
-        UIImage *image = [UIImage imageNamed:@"mood"];
+        UIImage *image = [UIImage imageNamed:@"cloudy_selected"];
         UIImage *highlightedImage = [UIImage imageNamed:@"label2"];
         
-        cell.weatherIcon = [[UIImageView alloc] initWithImage:image highlightedImage:highlightedImage];
+        cell.backgroundView = [[UIImageView alloc] initWithImage:image highlightedImage:highlightedImage];
         
     }
-    cell.backgroundColor = [UIColor whiteColor];
+    
     
     return cell;
 }
@@ -44,8 +44,7 @@ static NSString *const reuseIdentifier = @"weather_item";
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     WLLWeatherCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier
                                                                            forIndexPath:indexPath];
-
-    NSLog(@"%@", cell.weatherIcon);
+    NSLog(@"%@", cell.backgroundView);
     
 }
 
