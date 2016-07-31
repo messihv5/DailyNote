@@ -834,10 +834,75 @@
 // 图片来自拍照
 - (void)pictureFromCamera {
     UIImagePickerController *pictureController = [[UIImagePickerController alloc] init];
+    
     pictureController.sourceType = UIImagePickerControllerSourceTypeCamera;
     pictureController.delegate = self;
+    pictureController.allowsEditing = YES;
     
     [self presentViewController:pictureController animated:YES completion:nil];
+}
+
+//已选图片代理方法
+- (void)imagePickerController:(UIImagePickerController *)picker
+didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
+    UIImage *pickedImage = info[UIImagePickerControllerOriginalImage];
+    
+    CGFloat scaleBetweenWidthAndHeight = pickedImage.size.width / pickedImage.size.height;
+    
+    CGSize newSize = CGSizeMake(kWidth * 1.5, kWidth / scaleBetweenWidthAndHeight * 1.5);
+    
+    UIImage *compressedImage = [[self class] imageWithImageSimple:pickedImage scaledToSize:newSize];
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    
+    NSString *path = [paths objectAtIndex:0];
+    
+    NSData *imageData = nil;
+    
+    NSString *imagePath = nil;
+    
+    if (UIImageJPEGRepresentation(compressedImage, 1)) {
+        imageData = UIImageJPEGRepresentation(compressedImage, 1);
+    } else if (UIImagePNGRepresentation(compressedImage)) {
+        imageData = UIImagePNGRepresentation(compressedImage);
+    }
+    
+    imagePath = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"%ldimage%ld", self.numberOfModelInArray, self.numberOfPictures]];
+    
+    self.numberOfPictures++;
+    
+    self.pictureScrollView.contentSize = CGSizeMake(self.numberOfPictures * 60, 80);
+    
+    CGRect imageVRect = CGRectMake((self.numberOfPictures - 1) * 60, 0, 60, 80);
+    
+    UIImageView *imageV = [[UIImageView alloc] initWithFrame:imageVRect];
+    
+    [self.pictureScrollView addSubview:imageV];
+    
+    imageV.tag = self.numberOfPictures - 1;
+    
+    imageV.image = compressedImage;
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction:)];
+    
+    [imageV addGestureRecognizer:tap];
+    
+    imageV.userInteractionEnabled = YES;
+    
+    [imageData writeToFile:imagePath atomically:YES];
+    
+    AVFile *imageFile = [AVFile fileWithData:imageData];
+    
+    [self.photoArrayInternet addObject:imageFile];
+    
+    [self.photoArrayLocal addObject:imagePath];
+
+    [self.localCopyArrayOfModelPhotoArray addObjectsFromArray:self.photoArrayLocal];
+    [self.photoArrayLocal removeAllObjects];
+    [self.internetCopyArrayOfModelPhotoArray addObjectsFromArray:self.photoArrayInternet];
+    [self.photoArrayInternet removeAllObjects];
+    
+    [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
 // 图片来自相册
@@ -872,11 +937,10 @@
                 NSData *imageData = nil;
                 if (UIImageJPEGRepresentation(compressedImage, 1)) {
                     imageData = UIImageJPEGRepresentation(compressedImage, 1);
-                    imagePath = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"%ldimage%ld.jpg",numberOFModelInArray, idx]];
                 } else if (UIImagePNGRepresentation(compressedImage)) {
                     imageData = UIImagePNGRepresentation(compressedImage);
-                    imagePath = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"%ldimage%ld.png", numberOFModelInArray, idx]];
                 }
+                 imagePath = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"%ldimage%ld.png", numberOFModelInArray, self.numberOfPictures]];
                 
                 //重新设定contentsize，以便把从相册添加的照片放在scrollView上
                 weakSelf.numberOfPictures = weakSelf.numberOfPictures + 1;

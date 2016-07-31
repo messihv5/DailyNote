@@ -29,7 +29,7 @@
  editNoteViewcontroller进入
  */
 @property (assign, nonatomic) BOOL isFromDetailViewController;
-
+@property (assign, nonatomic) BOOL isReport;
 
 
 /**

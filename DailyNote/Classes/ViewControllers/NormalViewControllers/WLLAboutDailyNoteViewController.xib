@@ -7,6 +7,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WLLAboutDailyNoteViewController">
             <connections>
+                <outlet property="commitButton" destination="d7q-Jy-2w6" id="zG0-8R-u6u"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>

@@ -11,7 +11,9 @@
 #import "WLLAssetTableViewController.h"
 
 @interface WLLAlbumTableViewController ()
+
 @property (nonatomic, strong) NSMutableArray *assetGroups; // Data source (all groups of assets).
+
 @end
 
 @implementation WLLAlbumTableViewController
@@ -28,16 +30,13 @@
 
 #pragma mark - View Lifecycle
 
-
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
     self.wantsFullScreenLayout = YES;
     
     [self.assetPickerState clearSelectedAssets];
-    
 }
-
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -49,9 +48,6 @@
                                                                                            action:@selector(cancelButtonAction:)];
     
     [self.assetPickerState.assetsLibrary enumerateGroupsWithTypes:ALAssetsGroupAll usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
-        
-        
-        
         if (group == nil) {
             
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -61,7 +57,6 @@
             return;
         }
         
-        
         [self.assetGroups addObject:group];
         
     } failureBlock:^(NSError *error) {
@@ -70,20 +65,17 @@
     }];
 }
 
-
 #pragma mark - Rotation
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
-
 #pragma  mark - Actions
 
 - (void)cancelButtonAction:(id)sender {
     [self.assetPickerState sessionCanceled];
 }
-
 
 #pragma mark - Table view data source
 
@@ -93,16 +85,16 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *CellIdentifier = @"WLLAlbumCell";
+    
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
 
-    
     ALAssetsGroup *group = [self.assetGroups objectAtIndex:indexPath.row];
-    [group setAssetsFilter:[ALAssetsFilter allPhotos]]; // TODO: Make this a delegate choice.
     
+    [group setAssetsFilter:[ALAssetsFilter allPhotos]]; // TODO: Make this a delegate choice.
     
     cell.textLabel.text = [NSString stringWithFormat:@"%@ (%ld)", [group valueForProperty:ALAssetsGroupPropertyName], [group numberOfAssets]];
     cell.imageView.image = [UIImage imageWithCGImage:[group posterImage]];
@@ -111,11 +103,11 @@
     return cell;
 }
 
-
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     ALAssetsGroup *group = [self.assetGroups objectAtIndex:indexPath.row];
+    
     [group setAssetsFilter:[ALAssetsFilter allPhotos]]; // TODO: Make this a delegate choice.
     
     WLLAssetTableViewController *assetTableViewController = [[WLLAssetTableViewController alloc] initWithStyle:UITableViewStylePlain];

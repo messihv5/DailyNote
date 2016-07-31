@@ -55,7 +55,6 @@
 		4D7AD7B91D18C917005237DC /* backImage2.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D7AD7B81D18C917005237DC /* backImage2.png */; };
 		4D7AD7BB1D18CBCD005237DC /* starImage2.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D7AD7BA1D18CBCD005237DC /* starImage2.png */; };
 		4D7AD7BD1D18CBD2005237DC /* shareImage2.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D7AD7BC1D18CBD2005237DC /* shareImage2.png */; };
-		4D7AD7BF1D18CBD7005237DC /* collectionImage2.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D7AD7BE1D18CBD7005237DC /* collectionImage2.png */; };
 		4D7AD7C11D18CBDC005237DC /* reportImage2.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D7AD7C01D18CBDC005237DC /* reportImage2.png */; };
 		4D7AD7C71D1918EF005237DC /* WLLShareDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D7AD7C51D1918EF005237DC /* WLLShareDetailViewController.m */; };
 		4D7AD7C81D1918EF005237DC /* WLLShareDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D7AD7C61D1918EF005237DC /* WLLShareDetailViewController.xib */; };
@@ -106,6 +105,8 @@
 		4DC3459E1D10F64A00D260BA /* backButton2.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DC3459D1D10F64A00D260BA /* backButton2.png */; };
 		4DCAD5961D1F60BC007E47E9 /* heart40X40.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DCAD5951D1F60BC007E47E9 /* heart40X40.png */; };
 		4DCAD5981D1F60EB007E47E9 /* heartSelected40X40.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DCAD5971D1F60EB007E47E9 /* heartSelected40X40.png */; };
+		4DCCEEA41D4DA5EB00AB1E5C /* collectionSelected.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DCCEEA31D4DA5EB00AB1E5C /* collectionSelected.png */; };
+		4DCCEEA61D4DA64300AB1E5C /* collection.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DCCEEA51D4DA64300AB1E5C /* collection.png */; };
 		4DD28D161D04F37500ADA78D /* WLLSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DD28D141D04F37500ADA78D /* WLLSettingViewController.m */; };
 		4DD28D171D04F37500ADA78D /* WLLSettingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4DD28D151D04F37500ADA78D /* WLLSettingViewController.xib */; };
 		4DD28D1B1D05394800ADA78D /* WLLFunctionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DD28D191D05394800ADA78D /* WLLFunctionController.m */; };
@@ -238,7 +239,6 @@
 		4D7AD7B81D18C917005237DC /* backImage2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = backImage2.png; sourceTree = "<group>"; };
 		4D7AD7BA1D18CBCD005237DC /* starImage2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = starImage2.png; sourceTree = "<group>"; };
 		4D7AD7BC1D18CBD2005237DC /* shareImage2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shareImage2.png; sourceTree = "<group>"; };
-		4D7AD7BE1D18CBD7005237DC /* collectionImage2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = collectionImage2.png; sourceTree = "<group>"; };
 		4D7AD7C01D18CBDC005237DC /* reportImage2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = reportImage2.png; sourceTree = "<group>"; };
 		4D7AD7C41D1918EF005237DC /* WLLShareDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLShareDetailViewController.h; sourceTree = "<group>"; };
 		4D7AD7C51D1918EF005237DC /* WLLShareDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLShareDetailViewController.m; sourceTree = "<group>"; };
@@ -309,6 +309,8 @@
 		4DC3459D1D10F64A00D260BA /* backButton2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = backButton2.png; sourceTree = "<group>"; };
 		4DCAD5951D1F60BC007E47E9 /* heart40X40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = heart40X40.png; sourceTree = "<group>"; };
 		4DCAD5971D1F60EB007E47E9 /* heartSelected40X40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = heartSelected40X40.png; sourceTree = "<group>"; };
+		4DCCEEA31D4DA5EB00AB1E5C /* collectionSelected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = collectionSelected.png; sourceTree = "<group>"; };
+		4DCCEEA51D4DA64300AB1E5C /* collection.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = collection.png; sourceTree = "<group>"; };
 		4DD28D131D04F37500ADA78D /* WLLSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLSettingViewController.h; sourceTree = "<group>"; };
 		4DD28D141D04F37500ADA78D /* WLLSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLSettingViewController.m; sourceTree = "<group>"; };
 		4DD28D151D04F37500ADA78D /* WLLSettingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WLLSettingViewController.xib; sourceTree = "<group>"; };
@@ -716,13 +718,14 @@
 		4D8A3F2C1CF3D615000C2D42 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				4DCCEEA51D4DA64300AB1E5C /* collection.png */,
+				4DCCEEA31D4DA5EB00AB1E5C /* collectionSelected.png */,
 				4DCAD5971D1F60EB007E47E9 /* heartSelected40X40.png */,
 				4DCAD5951D1F60BC007E47E9 /* heart40X40.png */,
 				4D2010231D1A3AFD00CE8EC9 /* heart15X15.png */,
 				4D2010211D1A3AD500CE8EC9 /* heartSelected15X15.png */,
 				4D20101D1D1A3A5800CE8EC9 /* eye15X15.png */,
 				4D7AD7C01D18CBDC005237DC /* reportImage2.png */,
-				4D7AD7BE1D18CBD7005237DC /* collectionImage2.png */,
 				4D7AD7BC1D18CBD2005237DC /* shareImage2.png */,
 				4D7AD7BA1D18CBCD005237DC /* starImage2.png */,
 				4D7AD7B81D18C917005237DC /* backImage2.png */,
@@ -1112,9 +1115,11 @@
 				4DDB2AF71CFEDB96002D7784 /* WChaoShareCellTableViewCell.xib in Resources */,
 				4D48D1CA1CF59B9400D9E4F1 /* NickName.png in Resources */,
 				4DD5198F1D27778800745AA1 /* EditNoteViewController.xib in Resources */,
+				4DCCEEA61D4DA64300AB1E5C /* collection.png in Resources */,
 				4DA9CD661D0CF31D0075D1B3 /* grayButton.png in Resources */,
 				4D1550D31CFD8B79001CF139 /* WLLModifyInfomationViewController.xib in Resources */,
 				4DAFDC661D0697520027B677 /* WLLSecurityViewController.xib in Resources */,
+				4DCCEEA41D4DA5EB00AB1E5C /* collectionSelected.png in Resources */,
 				4D48D1C81CF56CDA00D9E4F1 /* WLLResetPasswordViewController.xib in Resources */,
 				4D8A3EFF1CF3D14D000C2D42 /* Assets.xcassets in Resources */,
 				4D83E3391D0C5C9B003D5756 /* darkButton.png in Resources */,
@@ -1143,7 +1148,6 @@
 				4D96D6B71D0FF46A00AC23FD /* WLLTimePickerController.xib in Resources */,
 				4D8A3EFA1CF3D14D000C2D42 /* Main.storyboard in Resources */,
 				4D7AD7BB1D18CBCD005237DC /* starImage2.png in Resources */,
-				4D7AD7BF1D18CBD7005237DC /* collectionImage2.png in Resources */,
 				4D888AB21D07CF3900545F7D /* blue_circle.png in Resources */,
 				4DD28D171D04F37500ADA78D /* WLLSettingViewController.xib in Resources */,
 				4D48D1C31CF5678600D9E4F1 /* WLLLogUpViewController.xib in Resources */,

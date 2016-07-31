@@ -63,10 +63,8 @@
     self.tableView.separatorColor = [UIColor clearColor];
     self.tableView.allowsSelection = NO;
     
-    
     [self fetchAssets];
 }
-
 
 #pragma mark - Getters
 
@@ -90,7 +88,6 @@
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     [self.tableView reloadData];
 }
-
 
 #pragma mark - Fetching Code
 
@@ -143,6 +140,7 @@
     NSUInteger assetIndex = indexPath.row * self.assetsPerRow + column;
     
     WLLAssetWrapper *assetWrapper = [self.fetchedAssets objectAtIndex:assetIndex];
+    
     assetWrapper.selected = selected;
     
     [self.assetPickerState changeSelectionState:selected forAsset:assetWrapper.asset];
@@ -172,6 +170,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *AssetCellIdentifier = @"WLLAssetCell";
+    
     WLLAssetsCell *cell = [self.tableView dequeueReusableCellWithIdentifier:AssetCellIdentifier];
     
     if (cell == nil) {
@@ -185,7 +184,6 @@
     
     return cell;
 }
-
 
 #pragma mark - Table view delegate
 

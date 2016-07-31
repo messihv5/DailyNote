@@ -7,6 +7,8 @@
 //
 
 #import "WLLShareDetailViewController.h"
+#import "WLLDailyNoteDataManager.h"
+#import <LeanCloudFeedback/LeanCloudFeedback.h>
 
 #define ScreenHeight CGRectGetHeight([UIScreen mainScreen].bounds)
 #define ScreenWidth CGRectGetWidth([UIScreen mainScreen].bounds)
@@ -31,7 +33,14 @@
 @property (weak, nonatomic) IBOutlet UILabel *readNumberLabel;
 @property (weak, nonatomic) IBOutlet UILabel *contentLabel;
 @property (strong, nonatomic) AVUser *currentUser;
+/**
+ *  点赞按钮
+ */
 @property (strong, nonatomic) UIButton *starButton;
+/**
+ *  收藏按钮
+ */
+@property (strong, nonatomic) UIButton *collectionButton;
 @property (strong, nonatomic) UILabel *alreadyStaredLabel;
 @property (strong ,nonatomic) UILabel *alreadyCollectionLabel;
 
@@ -60,6 +69,7 @@
     
     [self loadPersonnalInfo];
     
+    [WLLDailyNoteDataManager sharedInstance].isReport = YES;
 }
 
 //加载一个显示已经点赞的弹框，加载一个已经收藏的弹框
@@ -118,9 +128,7 @@
     self.currentDiaryStarNumberLabel.text = self.passedObject.starNumber;
     
     NSString *readTime = self.passedObject.readTime;
-    if (readTime == nil) {
-        readTime = @"0";
-    }
+    
     self.readNumberLabel.text = [NSString stringWithFormat:@"%ld", [readTime integerValue] + 1];
     self.passedObject.readTime = self.readNumberLabel.text;
     [object setObject:self.readNumberLabel.text forKey:@"readTime"];
@@ -135,12 +143,27 @@
     [dateFormatter setDateFormat:@"yyyy年MM月dd日EEEE"];
     self.dateLabel.text = [dateFormatter stringFromDate:createdDate];
 
+    //如果用户已点赞，图片设置为已点赞
     NSArray *staredUserArray = self.passedObject.staredUserArray;
     
     if ([staredUserArray containsObject:self.currentUser]) {
         [self.starButton setImage:[UIImage imageNamed:@"heartSelected40X40"] forState:UIControlStateNormal];
+    } else {
+        [self.starButton setImage:[UIImage imageNamed:@"heart40X40"] forState:UIControlStateNormal];
     }
-
+    
+    //如果用户已收藏，图片设置为已收藏
+    AVRelation *collectionRelation = [self.currentUser relationForKey:@"collectionDiaries"];
+    
+    AVQuery *relationQuery = [collectionRelation query];
+    
+    [relationQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if ([objects containsObject:object]) {
+            [self.collectionButton setImage:[UIImage imageNamed:@"collectionSelected"] forState:UIControlStateNormal];
+        } else {
+            [self.collectionButton setImage:[UIImage imageNamed:@"collection"] forState:UIControlStateNormal];
+        }
+    }];
 }
 
 //代码布局
@@ -178,10 +201,10 @@
     [self.starButton addTarget:self action:@selector(starAction:) forControlEvents:UIControlEventTouchUpInside];
     
     CGRect collectionButtoonRect = CGRectMake(ScreenWidth / 10 - 15 + 2 * ScreenWidth / 5, 15, 30, 30);
-    UIButton *collectionButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    collectionButton.frame = collectionButtoonRect;
-    [collectionButton setImage:[UIImage imageNamed:@"collectionImage2"] forState:UIControlStateNormal];
-    [collectionButton addTarget:self action:@selector(collectionAction:) forControlEvents:UIControlEventTouchUpInside];
+    self.collectionButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    self.collectionButton.frame = collectionButtoonRect;
+    [self.collectionButton setImage:[UIImage imageNamed:@"collectionImage2"] forState:UIControlStateNormal];
+    [self.collectionButton addTarget:self action:@selector(collectionAction:) forControlEvents:UIControlEventTouchUpInside];
     
     CGRect shareButtonRect = CGRectMake(ScreenWidth / 10 - 15 + 3 * ScreenWidth / 5, 15, 30, 30);
     UIButton *shareButton = [UIButton buttonWithType:UIButtonTypeSystem];
@@ -192,10 +215,11 @@
     UIButton *reportButton = [UIButton buttonWithType:UIButtonTypeSystem];
     reportButton.frame = reportButtonRect;
     [reportButton setImage:[UIImage imageNamed:@"reportImage2"] forState:UIControlStateNormal];
+    [reportButton addTarget:self action:@selector(reportAction:) forControlEvents:UIControlEventTouchUpInside];
     
     [self.toolBarView addSubview:backButton];
     [self.toolBarView addSubview:self.starButton];
-    [self.toolBarView addSubview:collectionButton];
+    [self.toolBarView addSubview:self.collectionButton];
     [self.toolBarView addSubview:shareButton];
     [self.toolBarView addSubview:reportButton];
 }
@@ -243,9 +267,8 @@
         } else {
             
             //该用户没有点赞
-            
             //日记里面保存的点赞数字也加1
-            NSString *num = diary.diaryId;
+            NSString *num = diary.currentDiaryStarNumber;
             num = [NSString stringWithFormat:@"%ld", [num integerValue] + 1];
             diary.starNumber = num;
             [object setObject:num forKey:@"starNumber"];
@@ -264,7 +287,7 @@
     
     [self.starButton setImage:[UIImage imageNamed:@"heartSelected40X40"] forState:UIControlStateNormal];
     
-    //如果该用户没有点赞，执行点赞，点赞数加1
+    //如果该用户没有点赞，UI上的点赞数加1
     NSInteger numberOfStar = [self.currentDiaryStarNumberLabel.text integerValue];
     self.currentDiaryStarNumberLabel.text = [NSString stringWithFormat:@"%ld", numberOfStar + 1];
         
@@ -279,6 +302,7 @@
     AVQuery *collectionQuery = [collectionRelation query];
     
     AVObject *diary = [AVObject objectWithClassName:@"Diary" objectId:self.passedObject.diaryId];
+    
     [collectionQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if ([objects containsObject:diary]) {
             
@@ -288,6 +312,7 @@
             
             self.alreadyCollectionLabel.hidden = NO;
             self.alreadyCollectionLabel.text = @"已取消收藏";
+            [sender setImage:[UIImage imageNamed:@"collection"] forState:UIControlStateNormal];
             [NSTimer scheduledTimerWithTimeInterval:1
                                              target:self
                                            selector:@selector(hidesAlertLabel)
@@ -306,7 +331,6 @@
             //没有收藏
             [diary saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                 if (error) {
-                    NSLog(@"%@", error);
                 } else {
                     AVRelation *collectionRelation = [self.currentUser relationForKey:@"collectionDiaries"];
                     [collectionRelation addObject:diary];
@@ -314,6 +338,7 @@
                     
                     self.alreadyCollectionLabel.hidden = NO;
                     self.alreadyCollectionLabel.text = @"已收藏";
+                    [self.collectionButton setImage:[UIImage imageNamed:@"collectionSelected"] forState:UIControlStateNormal];
                     [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(hidesAlertLabel) userInfo:nil repeats:NO];
                 }
             }];
@@ -321,11 +346,29 @@
     }];
 }
 
+//举报操作
+- (void)reportAction:(UIButton *)sender {
+    LCUserFeedbackViewController *feedBackVC = [[LCUserFeedbackViewController alloc] init];
+    
+    feedBackVC.navigationBarStyle = LCUserFeedbackNavigationBarStyleNone;
+    feedBackVC.contactHeaderHidden = NO;
+    feedBackVC.feedbackTitle = [NSString stringWithFormat:@"举报日记%@", self.passedObject.diaryId];
+    
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:feedBackVC];
+    
+    [self presentViewController:navigationController animated:YES completion:nil];
+}
+
 //隐藏alertLabel
 - (void)hidesAlertLabel {
     self.alreadyStaredLabel.hidden = YES;
     self.alreadyCollectionLabel.hidden = YES;
 }
+
+-(void)dealloc {
+    [WLLDailyNoteDataManager sharedInstance].isReport = NO;
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

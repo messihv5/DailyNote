@@ -56,10 +56,6 @@
  *  新添加日记时，接收添加页面传过来的日记model
  */
 @property (strong, nonatomic) NoteDetail *passedObject;
-/**
- *  判断是否跳转自编辑页面
- */
-//@property (assign, nonatomic) BOOL backFromEditNoteVC;
 
 @end
 
@@ -435,6 +431,9 @@ static NSString  *const reuseIdentifier = @"note_cell";
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     CGFloat offset = scrollView.contentOffset.y;
     
+    //contentsize减去scrollView的height + 富余量10
+    CGFloat loadDataContentOffset = scrollView.contentSize.height - self.notesTableView.height + 10;
+    
     BOOL networkAvailable = [WLLDailyNoteDataManager sharedInstance].isNetworkAvailable;
 
     if (self.isLoading == YES) {
@@ -443,29 +442,24 @@ static NSString  *const reuseIdentifier = @"note_cell";
     
     if (self.data.count < 5) {
         if (networkAvailable == NO) {
-            if (offset > -64 && offset <= 200) {
+            if (offset > loadDataContentOffset) {
                 self.upLabel.hidden = NO;
                 self.upLabel.text = @"网络出错";
-            } else {
-                self.upLabel.hidden = YES;
+                [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(dismissAlertVC:) userInfo:self.upLabel repeats:NO];
+                self.isLoading = NO;
+                return;
             }
-            self.isLoading = NO;
-            return;
         } else {
-            if (offset > -64 && offset <= 200) {
+            if (offset > loadDataContentOffset) {
                 self.upLabel.hidden = NO;
                 self.upLabel.text = @"日记已加载完";
-            } else {
-                self.upLabel.hidden = YES;
+                [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(dismissAlertVC:) userInfo:self.upLabel repeats:NO];
+                self.isLoading = NO;
+                return;
             }
-            self.isLoading = NO;
-            return;
         }
     }
     
-    //contentsize减去scrollView的height + 富余量10
-    CGFloat loadDataContentOffset = scrollView.contentSize.height - self.notesTableView.height + 10;
-
     if (offset > loadDataContentOffset) {
         if (networkAvailable == YES) {
             self.isLoading = YES;
@@ -571,16 +565,6 @@ static NSString  *const reuseIdentifier = @"note_cell";
     [super viewWillDisappear:YES];
     self.parentViewController.navigationItem.leftBarButtonItem = nil;
     self.parentViewController.navigationItem.rightBarButtonItem = nil;
-    
-    //页面将消失时，将标记来自日历的标记设置为NO
-    if (self.isFromCalendar) {
-        self.isFromCalendar = NO;
-    }
-    
-    //页面将消失时， 将标记来自回收站的标记设置为NO
-    if ([WLLDailyNoteDataManager sharedInstance].isBackFromRecycle) {
-        [WLLDailyNoteDataManager sharedInstance].isBackFromRecycle = NO;
-    }
 }
 
 /**
@@ -794,6 +778,8 @@ static NSString  *const reuseIdentifier = @"note_cell";
         }];
         
         UIAlertAction *deleteAction = [UIAlertAction actionWithTitle:@"彻底删除" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+            [self.data removeObject:model];
+            [self.notesTableView reloadData];
             [object deleteInBackground];
         }];
         
@@ -822,5 +808,13 @@ static NSString  *const reuseIdentifier = @"note_cell";
  */
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"readyToUpdateNewNote" object:nil];
+    
+    if ([WLLDailyNoteDataManager sharedInstance].isBackFromRecycle == YES) {
+        [WLLDailyNoteDataManager sharedInstance].isBackFromRecycle = NO;
+    }
+    
+    if (self.isFromCalendar == YES) {
+        self.isFromCalendar = NO;
+    }
 }
 @end

@@ -136,7 +136,7 @@
         scrollView.tag = i - 1;
         scrollView.bounces = NO;
         
-        if (photoUrlArray != nil && photoUrlArray.count != 0) {
+        if (photoUrlArray != nil && photoUrlArray.count == photoArray.count) {
             NSString *urlString = photoUrlArray[i - 1];
             
             [imageV sd_setImageWithURL:[NSURL URLWithString:urlString]];

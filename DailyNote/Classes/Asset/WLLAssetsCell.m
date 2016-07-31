@@ -114,6 +114,4 @@
     [self stopObserving];
 }
 
-
-
 @end

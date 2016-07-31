@@ -47,7 +47,7 @@
 }
 
 - (void)pushNotePage {
-    WLLDailyNoteViewController *dailyNoteVC = [[WLLDailyNoteViewController alloc] initWithNibName:@"WLLDailyNoteViewController" bundle:nil];
+    WLLDailyNoteViewController *dailyNoteVC = [[WLLDailyNoteViewController alloc] initWithNibName:@"WLLDailyNoteViewController" bundle:[NSBundle mainBundle]];
     
     //给dailyNote传个标记，判断dailyNote来自calendar的点击
     self.isFromCalendar = YES;

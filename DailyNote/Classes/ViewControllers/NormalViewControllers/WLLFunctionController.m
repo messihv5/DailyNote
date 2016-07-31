@@ -100,6 +100,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) {
+        
+        //提醒写日记
         WLLSetReminderTimeViewController *reminderController = [[WLLSetReminderTimeViewController alloc] initWithNibName:@"WLLSetReminderTimeViewController" bundle:[NSBundle mainBundle]];
         
         //反向传值
@@ -108,13 +110,14 @@
         };
         [self.navigationController pushViewController:reminderController animated:YES];
     } else if (indexPath.section == 1) {
+        
+        //进入回收站
         WLLDailyNoteViewController *dailyNoteVC;
         dailyNoteVC = [[WLLDailyNoteViewController alloc] initWithNibName:@"WLLDailyNoteViewController"
                                                                    bundle:[NSBundle mainBundle]];
         [WLLDailyNoteDataManager sharedInstance].isBackFromRecycle = YES;
         [self.navigationController pushViewController:dailyNoteVC animated:YES];
     }
-    
 }
 
 - (void)didReceiveMemoryWarning {

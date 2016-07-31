@@ -362,7 +362,6 @@
 }
 
 - (IBAction)lastDiaryAction:(UIButton *)sender {
-    
     if (self.lastDiary > 0) {
         [self removeAllImageView];
         self.lastDiary--;

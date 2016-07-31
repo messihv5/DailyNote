@@ -13,11 +13,12 @@
 #define SELECTED_COUNT_KEY @"selectedCount"
 
 @interface WLLAssetPickerController ()
+
 @property (nonatomic, strong) WLLAssetPickerState *assetPickerState;
 @property (nonatomic, readwrite) NSUInteger selectedCount;
 @property (nonatomic) UIStatusBarStyle originalStatusBarStyle;
-
 @property (nonatomic, strong) PickerDidFailBlock pickerDidFailBlock;
+
 @end
 
 
@@ -26,15 +27,12 @@
 @dynamic selectedAssets;
 
 #pragma mark - Initialization -
-
-
 + (WLLAssetPickerController *)pickerWithCompletion:(PickerDidCompleteBlock)completion
                                          canceled:(PickerDidCancelBlock)canceled {
     return [[self class] pickerWithAssetsLibrary:nil
                                       completion:completion
                                         canceled:canceled];
 }
-
 
 + (WLLAssetPickerController *)pickerWithAssetsLibrary:(ALAssetsLibrary *)library
                                           completion:(PickerDidCompleteBlock)completion
@@ -46,10 +44,7 @@
     return picker;
 }
 
-
 - (id)init {
-    
-    
     WLLAlbumTableViewController *albumTableViewController = [[WLLAlbumTableViewController alloc] initWithStyle:UITableViewStylePlain];
     albumTableViewController.assetPickerState = self.assetPickerState;
     
@@ -67,14 +62,12 @@
     return picker;
 }
 
-
 - (WLLAssetPickerState *)assetPickerState {
     if (!_assetPickerState) {
         _assetPickerState = [[WLLAssetPickerState alloc] init];
     }
     return _assetPickerState;
 }
-
 
 - (void)setSelectionLimit:(NSInteger)selectionLimit {
     if (_selectionLimit != selectionLimit) {
@@ -130,7 +123,6 @@
         }];
     }
 }
-
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
