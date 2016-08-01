@@ -41,8 +41,7 @@
  *  收藏按钮
  */
 @property (strong, nonatomic) UIButton *collectionButton;
-@property (strong, nonatomic) UILabel *alreadyStaredLabel;
-@property (strong ,nonatomic) UILabel *alreadyCollectionLabel;
+@property (strong, nonatomic) UILabel *reminderLabel;
 
 @end
 
@@ -80,29 +79,17 @@
     [self.view addSubview:alertView];
     
     CGRect alertLabelRect = CGRectMake(0, 0, 180, 40);
-    self.alreadyStaredLabel = [[UILabel alloc] initWithFrame:alertLabelRect];
-    self.alreadyStaredLabel.text = @"你已经点赞";
-    self.alreadyStaredLabel.textAlignment = NSTextAlignmentCenter;
-    self.alreadyStaredLabel.textColor = [UIColor whiteColor];
-    self.alreadyStaredLabel.backgroundColor = [UIColor darkTextColor];
-    self.alreadyStaredLabel.alpha = 0.6;
-    self.alreadyStaredLabel.hidden = YES;
-    self.alreadyStaredLabel.layer.masksToBounds = YES;
-    self.alreadyStaredLabel.layer.cornerRadius = 5;
+    self.reminderLabel = [[UILabel alloc] initWithFrame:alertLabelRect];
+    self.reminderLabel.text = @"你已经点赞";
+    self.reminderLabel.textAlignment = NSTextAlignmentCenter;
+    self.reminderLabel.textColor = [UIColor whiteColor];
+    self.reminderLabel.backgroundColor = [UIColor darkTextColor];
+    self.reminderLabel.alpha = 0.6;
+    self.reminderLabel.hidden = YES;
+    self.reminderLabel.layer.masksToBounds = YES;
+    self.reminderLabel.layer.cornerRadius = 5;
     
-    self.alreadyCollectionLabel = [[UILabel alloc] initWithFrame:alertLabelRect];
-    self.alreadyCollectionLabel.textAlignment = NSTextAlignmentCenter;
-    self.alreadyCollectionLabel.textColor = [UIColor whiteColor];
-    self.alreadyCollectionLabel.backgroundColor = [UIColor darkTextColor];
-    self.alreadyCollectionLabel.alpha = 0.7;
-    self.alreadyCollectionLabel.hidden = YES;
-    self.alreadyCollectionLabel.layer.masksToBounds = YES;
-    self.alreadyCollectionLabel.layer.cornerRadius = 5;
-    
-    [alertView addSubview:self.alreadyStaredLabel];
-    [alertView addSubview:self.alreadyCollectionLabel];
-
-    
+    [alertView addSubview:self.reminderLabel];
 }
 
 //scrollView滑动方法
@@ -261,7 +248,8 @@
         
         //如果该用户已经点赞
         if ([staredUserArray containsObject:[AVUser currentUser]]) {
-            self.alreadyStaredLabel.hidden = NO;
+            self.reminderLabel.hidden = NO;
+            self.reminderLabel.text = @"已经点赞";
             [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(hidesAlertLabel) userInfo:nil repeats:NO];
             return;
         } else {
@@ -291,7 +279,8 @@
     NSInteger numberOfStar = [self.currentDiaryStarNumberLabel.text integerValue];
     self.currentDiaryStarNumberLabel.text = [NSString stringWithFormat:@"%ld", numberOfStar + 1];
         
-    self.alreadyStaredLabel.hidden = NO;
+    self.reminderLabel.hidden = NO;
+    self.reminderLabel.hidden = @"谢谢点赞";
     [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(hidesAlertLabel) userInfo:nil repeats:NO];
 }
 
@@ -310,8 +299,8 @@
             [collectionRelation removeObject:diary];
             [self.currentUser saveInBackground];
             
-            self.alreadyCollectionLabel.hidden = NO;
-            self.alreadyCollectionLabel.text = @"已取消收藏";
+            self.reminderLabel.hidden = NO;
+            self.reminderLabel.text = @"已取消收藏";
             [sender setImage:[UIImage imageNamed:@"collection"] forState:UIControlStateNormal];
             [NSTimer scheduledTimerWithTimeInterval:1
                                              target:self
@@ -336,8 +325,8 @@
                     [collectionRelation addObject:diary];
                     [self.currentUser saveInBackground];
                     
-                    self.alreadyCollectionLabel.hidden = NO;
-                    self.alreadyCollectionLabel.text = @"已收藏";
+                    self.reminderLabel.hidden = NO;
+                    self.reminderLabel.text = @"已收藏";
                     [self.collectionButton setImage:[UIImage imageNamed:@"collectionSelected"] forState:UIControlStateNormal];
                     [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(hidesAlertLabel) userInfo:nil repeats:NO];
                 }
@@ -348,21 +337,54 @@
 
 //举报操作
 - (void)reportAction:(UIButton *)sender {
-    LCUserFeedbackViewController *feedBackVC = [[LCUserFeedbackViewController alloc] init];
+    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"举报" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     
-    feedBackVC.navigationBarStyle = LCUserFeedbackNavigationBarStyleNone;
-    feedBackVC.contactHeaderHidden = NO;
-    feedBackVC.feedbackTitle = [NSString stringWithFormat:@"举报日记%@", self.passedObject.diaryId];
+    UIAlertAction *salacityAction = [UIAlertAction actionWithTitle:@"色情" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        self.reminderLabel.hidden = NO;
+        self.reminderLabel.text = @"举报成功";
+        [self reportActionOfTitle:@"色情"];
+    }];
     
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:feedBackVC];
+    UIAlertAction *violenceAction = [UIAlertAction actionWithTitle:@"暴力" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        self.reminderLabel.hidden = NO;
+        self.reminderLabel.text = @"举报成功";
+        [self reportActionOfTitle:@"暴力"];
+    }];
     
-    [self presentViewController:navigationController animated:YES completion:nil];
+    UIAlertAction *illegalAction = [UIAlertAction actionWithTitle:@"违法" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        self.reminderLabel.hidden = NO;
+        self.reminderLabel.text = @"举报成功";
+        [self reportActionOfTitle:@"违法"];
+    }];
+    
+    UIAlertAction *otherAction = [UIAlertAction actionWithTitle:@"其他" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        self.reminderLabel.hidden = NO;
+        self.reminderLabel.text = @"举报成功";
+        [self reportActionOfTitle:@"其他"];
+    }];
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    }];
+    
+    [alertVC addAction:salacityAction];
+    [alertVC addAction:violenceAction];
+    [alertVC addAction:illegalAction];
+    [alertVC addAction:otherAction];
+    [alertVC addAction:cancelAction];
+    
+    [self presentViewController:alertVC animated:YES completion:nil];
+}
+
+- (void)reportActionOfTitle:(NSString *)title {
+    NSString *reportTitle = [NSString stringWithFormat:@"%@%@", title, self.passedObject.diaryId];
+    [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(hidesAlertLabel) userInfo:nil repeats:NO];
+    [LCUserFeedbackThread feedbackWithContent:reportTitle contact:self.currentUser.username withBlock:^(id object, NSError *error) {
+    }];
 }
 
 //隐藏alertLabel
 - (void)hidesAlertLabel {
-    self.alreadyStaredLabel.hidden = YES;
-    self.alreadyCollectionLabel.hidden = YES;
+    self.reminderLabel.hidden = YES;
 }
 
 -(void)dealloc {

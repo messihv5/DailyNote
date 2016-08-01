@@ -67,7 +67,7 @@
  *  添加删除照片的提示标签
  */
 - (void)addDeleteReminderLabel {
-    CGRect reminderLabelRect = CGRectMake(kWidth / 2 - 40, kHeight / 2 - 20, 80, 40);
+    CGRect reminderLabelRect = CGRectMake(kWidth / 2 - 40, kHeight / 2 - 20, 120, 40);
     
     self.reminderLabel = [[UILabel alloc] initWithFrame:reminderLabelRect];
     self.reminderLabel.text = @"删除成功";
@@ -75,6 +75,7 @@
     self.reminderLabel.layer.masksToBounds = YES;
     self.reminderLabel.layer.cornerRadius = 5;
     self.reminderLabel.backgroundColor = [UIColor darkTextColor];
+    self.reminderLabel.textAlignment = NSTextAlignmentCenter;
     
     [self.view addSubview:self.reminderLabel];
 }
@@ -265,7 +266,8 @@
         if (scrollView.tag == offsetByInteger) {
             UIImageView *imageV = [scrollView.subviews firstObject];
             
-            UIImageWriteToSavedPhotosAlbum(imageV.image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+            UIImageWriteToSavedPhotosAlbum(imageV.image, nil, nil, nil);
+            [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(hideReminderLabel:) userInfo:nil repeats:NO];
         }
     }
 }
@@ -297,7 +299,7 @@
     if (scrollViews.count == 1) {
         [scrollViews[0] removeFromSuperview];
         self.reminderLabel.hidden = NO;
-        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(hideReminderLabel:) userInfo:nil repeats:NO];
+        [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(hideReminderLabel:) userInfo:nil repeats:NO];
         [self dismissViewControllerAnimated:YES completion:nil];
     } else {
         if (offSetByInteger < scrollViews.count -1) {

@@ -64,6 +64,7 @@
     
     [self addAlertView];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sharePageDeleteDiary:) name:@"sharePageDeleteDiary" object:nil];
 }
 
 //加载从收藏界面push过来的controller
@@ -508,6 +509,19 @@
         UILabel *label = timer.userInfo;
         label.hidden = YES;
         self.isLoading = NO;
+    }
+}
+
+- (void)sharePageDeleteDiary:(NSNotification *)notification {
+    NSDictionary *dic = notification.userInfo;
+    
+    NSString *objectId = dic[@"objectId"];
+    
+    for (NoteDetail *model in self.data) {
+        if ([model.diaryId isEqualToString:objectId]) {
+            [self.data removeObject:model];
+            [self.shareTableView reloadData];
+        }
     }
 }
 

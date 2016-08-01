@@ -275,6 +275,7 @@ static WLLDailyNoteDataManager *manager = nil;
     query.maxCacheAge = 24 * 60 * 60;
     [query orderByDescending:@"sharedDate"];
     [query whereKey:@"sharedDate" lessThan:date];
+    [query whereKey:@"wasDeleted" notEqualTo:@"YES"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (error) {
             hasError();
@@ -300,6 +301,7 @@ static WLLDailyNoteDataManager *manager = nil;
     query.limit = 5;
     [query orderByDescending:@"sharedDate"];
     [query whereKey:@"sharedDate" greaterThan:date];
+    [query whereKey:@"wasDeleted" notEqualTo:@"YES"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         [self getDataFromShareArray:objects];
         finished();
@@ -411,6 +413,24 @@ static WLLDailyNoteDataManager *manager = nil;
         
         model.sharedDate = [object objectForKey:@"sharedDate"];
         
+        //背景颜色赋值
+        NSData *backColorData = [object objectForKey:@"backColor"];
+        NSKeyedUnarchiver *backColorUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:backColorData];
+        model.backColor = [backColorUnarchiver decodeObjectForKey:@"backColor"];
+        
+        //字体颜色解析
+        NSData *fontColorData = [object objectForKey:@"fontColor"];
+        NSKeyedUnarchiver *fontColorUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:fontColorData];
+        model.fontColor = [fontColorUnarchiver decodeObjectForKey:@"fontColor"];
+        
+        //字体解析
+        NSString *fontNumberString = [object objectForKey:@"fontNumber"];
+        if (fontNumberString == nil) {
+            model.fontNumber = @"17.0";
+        } else {
+            model.fontNumber = fontNumberString;
+        }
+
         //图片解析出来
         AVFile *file = photoArray[0];
         
