@@ -80,12 +80,9 @@
             [object setObject:@"YES" forKey:@"wasDeleted"];
             [object saveInBackground];
             
-            //让dailyNote页面执行删除日记操作
-            self.deleteDiary();
-            
-            //share页面执行删除日记操作
+            //share页面,及dailyNote页面执行删除日记操作
             NSDictionary *dic = [NSDictionary dictionaryWithObject:self.passedObject.diaryId forKey:@"objectId"];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"sharePageDeleteDiary" object:nil userInfo:dic];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"dailyNoteAndSharePageDeleteDiary" object:nil userInfo:dic];
             
             [self.navigationController popViewControllerAnimated:YES];
         } else {

@@ -422,6 +422,9 @@ static WLLDailyNoteDataManager *manager = nil;
         NSData *fontColorData = [object objectForKey:@"fontColor"];
         NSKeyedUnarchiver *fontColorUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:fontColorData];
         model.fontColor = [fontColorUnarchiver decodeObjectForKey:@"fontColor"];
+        if (model.fontColor == nil) {
+            model.fontColor = [UIColor blackColor];
+        }
         
         //字体解析
         NSString *fontNumberString = [object objectForKey:@"fontNumber"];
@@ -450,9 +453,22 @@ static WLLDailyNoteDataManager *manager = nil;
  *  @param array AVObject对象
  */
 - (void)getDataFromShareArray:(NSArray *)array {
+    //收藏的日记
+    NSMutableArray *collectionArray = [NSMutableArray arrayWithCapacity:5];
+    
+    AVRelation *collectionRelation = [[AVUser currentUser] relationForKey:@"collectionDiaries"];
+    
+    AVQuery *collectionQuery = [collectionRelation query];
+    
+    [collectionQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        [collectionArray addObjectsFromArray:objects];
+    }];
+
     for (AVObject *object in array) {
         NoteDetail *model = [[NoteDetail alloc] init];
         
+        //添加当前用户收藏的日记
+        model.collectionDiaries = collectionArray;
         //diaryID
         model.diaryId = object.objectId;
         

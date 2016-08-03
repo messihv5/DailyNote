@@ -55,9 +55,12 @@
  */
 @property (strong, nonatomic) NSDate *updatedDate;
 /**
- *  日记是否分享
+ *  日记分享日期
  */
-@property (strong, nonatomic) NSString *isPublic;
 @property (strong, nonatomic) NSDate *sharedDate;
+/**
+ *  收藏的日记数组
+ */
+@property (strong, nonatomic) NSMutableArray *collectionDiaries;
 
 @end

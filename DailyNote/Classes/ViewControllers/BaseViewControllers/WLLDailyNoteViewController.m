@@ -96,6 +96,38 @@ static NSString  *const reuseIdentifier = @"note_cell";
     
     //注册恢复日记的通知
     [self addNotificationObserver];
+    
+    //注册删除日记的通知
+    [self addDeleteDiaryNotification];
+}
+
+/**
+ *  添加删除日记的通知，只要勇于在详情页面删除日记时，dailyNote页面同时删除数据
+ */
+- (void)addDeleteDiaryNotification {
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(deleteDiary:)
+                                                 name:@"dailyNoteAndSharePageDeleteDiary"
+                                               object:nil];
+}
+
+/**
+ *  删除日记
+ *
+ *  @param notificaiton 接受到的通知信息
+ */
+- (void)deleteDiary:(NSNotification *)notificaiton {
+    NSDictionary *dic = notificaiton.userInfo;
+    
+    NSString *objectId = dic[@"objectId"];
+    
+    for (NoteDetail *model in self.data) {
+        if ([model.diaryId isEqualToString:objectId]) {
+            [self.data removeObject:model];
+            [self.notesTableView reloadData];
+            return;
+        }
+    }
 }
 
 /**
@@ -748,12 +780,6 @@ static NSString  *const reuseIdentifier = @"note_cell";
             weakNoteDetailVC.passedObject = self.data[nextDiaty];
         };
         
-        //notedetail页面删除日记
-        noteDetailVC.deleteDiary = ^ {
-            [self.data removeObjectAtIndex:indexPath.row];
-            [self.notesTableView reloadData];
-        };
-           
         [self.navigationController pushViewController:noteDetailVC animated:YES];
     } else {
         //回收站日记的处理
@@ -808,6 +834,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
  */
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"readyToUpdateNewNote" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"dailyNoteAndSharePageDeleteDiary" object:nil];
     
     if ([WLLDailyNoteDataManager sharedInstance].isBackFromRecycle == YES) {
         [WLLDailyNoteDataManager sharedInstance].isBackFromRecycle = NO;

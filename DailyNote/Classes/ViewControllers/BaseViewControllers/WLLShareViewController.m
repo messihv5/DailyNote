@@ -64,14 +64,14 @@
     
     [self addAlertView];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sharePageDeleteDiary:) name:@"sharePageDeleteDiary" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sharePageDeleteDiary:) name:@"dailyNoteAndSharePageDeleteDiary" object:nil];
 }
 
 //加载从收藏界面push过来的controller
 - (void)controllerFromCollectionView {
     if (self.passedIndexPath) {
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(removeDiaryAndReloadTableView:) name:@"deleteThisDiariyCollection"
+                                                 selector:@selector(removeDiaryAndReloadTableView:) name:@"deleteThisDiaryCollection"
                                                    object:nil];
     }
 }
@@ -494,7 +494,6 @@
     }
 }
 
-
 //移除取消收藏的日记
 - (void)removeDiaryAndReloadTableView:(NSNotification *)notification {
     AVObject *object = notification.userInfo[@"passedObject"];
@@ -512,6 +511,11 @@
     }
 }
 
+/**
+ *  当用户删除他分享的日记时，分享页面的日记也被删除
+ *
+ *  @param notification 删除日记的通知
+ */
 - (void)sharePageDeleteDiary:(NSNotification *)notification {
     NSDictionary *dic = notification.userInfo;
     
@@ -521,8 +525,14 @@
         if ([model.diaryId isEqualToString:objectId]) {
             [self.data removeObject:model];
             [self.shareTableView reloadData];
+            return;
         }
     }
+}
+
+-(void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"deleteThisDiariyCollection" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"dailyNoteAndSharePageDeleteDiary" object:nil];
 }
 
 - (void)didReceiveMemoryWarning {
