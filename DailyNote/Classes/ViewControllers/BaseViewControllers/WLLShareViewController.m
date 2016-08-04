@@ -64,13 +64,14 @@
     
     [self addAlertView];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sharePageDeleteDiary:) name:@"dailyNoteAndSharePageDeleteDiary" object:nil];
 }
 
 //加载从收藏界面push过来的controller
 - (void)controllerFromCollectionView {
     if (self.passedIndexPath) {
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(removeDiaryAndReloadTableView:) name:@"deleteThisDiariyCollection"
+                                                 selector:@selector(removeDiaryAndReloadTableView:) name:@"deleteThisDiaryCollection"
                                                    object:nil];
     }
 }
@@ -122,6 +123,7 @@
         [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(dismissView:) userInfo:self.upLabel repeats:NO];
         [refreshControl endRefreshing];
     } else {
+        
         //刷新数据，加载最新的数据，当数组存储了数据，查询的新数据插到数组的最前面
         if (self.data.count != 0) {
             NoteDetail *firstObject = self.data[0];
@@ -138,7 +140,6 @@
                         NSIndexSet *set = [NSIndexSet indexSetWithIndexesInRange:range];
                         [self.data insertObjects:array atIndexes:set];
                         [self.shareTableView reloadData];
-
                     } else {
                     }
                     [refreshControl endRefreshing];
@@ -155,7 +156,6 @@
                         NSIndexSet *set = [NSIndexSet indexSetWithIndexesInRange:range];
                         [self.data insertObjects:array atIndexes:set];
                         [self.shareTableView reloadData];
-
                     } else {
                     }
                     [refreshControl endRefreshing];
@@ -187,7 +187,6 @@
                         [self.data addObjectsFromArray:array];
                         [self.shareTableView reloadData];
                     } else {
-                        
                     }
                     [refreshControl endRefreshing];
                     self.isLoading = NO;
@@ -238,13 +237,15 @@
     [footerView addSubview:self.downLoadLabel];
     
     self.shareTableView.tableFooterView = footerView;
-    
 }
 
 //scrollView滑动的代理方法，上拉刷新
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     
     CGFloat offset = scrollView.contentOffset.y;
+    
+    //contentsize减去scrollView的height + 富余量10
+    CGFloat loadDataContentOffset = scrollView.contentSize.height - self.shareTableView.frame.size.height + 10;
 
     if (self.isLoading == YES) {
         return;
@@ -252,26 +253,23 @@
     
     if (self.data.count < 5 ) {
         if (self.isNetworkAvailable == NO) {
-            if (offset > -50 ) {
+            if (offset > loadDataContentOffset) {
                 self.upLabel.hidden = NO;
-                self.upLabel.text = @"网络出错";
-            } else if (offset == -64) {
-                self.upLabel.hidden = YES;
+                self.upLabel.text = @"网络故障";
+                [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(dismissView:) userInfo:self.upLabel repeats:NO];
+                self.isLoading = NO;
+                return;
             }
-            return;
         } else {
-            if (offset > -50 ) {
+            if (offset > loadDataContentOffset) {
                 self.upLabel.hidden = NO;
-                self.upLabel.text = @"已加载完日记";
-            } else if (offset == -64) {
-                self.upLabel.hidden = YES;
+                self.upLabel.text = @"日记已加载完";
+                [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(dismissView:) userInfo:self.upLabel repeats:NO];
+                self.isLoading = NO;
+                return;
             }
-            return;
         }
     }
-    
-    //contentsize减去scrollView的height + 富余量10
-    CGFloat loadDataContentOffset = scrollView.contentSize.height - self.shareTableView.frame.size.height + 10;
     
     if (offset > loadDataContentOffset) {
         if (self.isNetworkAvailable == NO) {
@@ -314,7 +312,6 @@
             if (array.count != 0) {
                 [self.data addObjectsFromArray:array];
                 [self.shareTableView reloadData];
-
             }
             self.isLoading = NO;
         } error:^{
@@ -440,9 +437,7 @@
     //获取到日记对象
     AVObject *object = [AVObject objectWithClassName:@"Diary" objectId:diary.diaryId];
     if (array == nil) {
-        
-       
-        
+
         //第一次查询时点赞用户数组为空
         self.staredUserArray = [NSMutableArray arrayWithCapacity:10];
         
@@ -499,7 +494,6 @@
     }
 }
 
-
 //移除取消收藏的日记
 - (void)removeDiaryAndReloadTableView:(NSNotification *)notification {
     AVObject *object = notification.userInfo[@"passedObject"];
@@ -515,6 +509,30 @@
         label.hidden = YES;
         self.isLoading = NO;
     }
+}
+
+/**
+ *  当用户删除他分享的日记时，分享页面的日记也被删除
+ *
+ *  @param notification 删除日记的通知
+ */
+- (void)sharePageDeleteDiary:(NSNotification *)notification {
+    NSDictionary *dic = notification.userInfo;
+    
+    NSString *objectId = dic[@"objectId"];
+    
+    for (NoteDetail *model in self.data) {
+        if ([model.diaryId isEqualToString:objectId]) {
+            [self.data removeObject:model];
+            [self.shareTableView reloadData];
+            return;
+        }
+    }
+}
+
+-(void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"deleteThisDiariyCollection" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"dailyNoteAndSharePageDeleteDiary" object:nil];
 }
 
 - (void)didReceiveMemoryWarning {

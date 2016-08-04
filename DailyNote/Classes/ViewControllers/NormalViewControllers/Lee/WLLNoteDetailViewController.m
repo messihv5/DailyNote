@@ -80,8 +80,9 @@
             [object setObject:@"YES" forKey:@"wasDeleted"];
             [object saveInBackground];
             
-            //让dailyNote页面执行删除日记操作
-            self.deleteDiary();
+            //share页面,及dailyNote页面执行删除日记操作
+            NSDictionary *dic = [NSDictionary dictionaryWithObject:self.passedObject.diaryId forKey:@"objectId"];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"dailyNoteAndSharePageDeleteDiary" object:nil userInfo:dic];
             
             [self.navigationController popViewControllerAnimated:YES];
         } else {
@@ -144,7 +145,17 @@
     self.photoArray = self.passedObject.photoArray;
     self.photoUrlArray = self.passedObject.photoUrlArray;
     
-    CGRect rect = [self heightForContentLabel];
+    NSString *fontNumberString = self.passedObject.fontNumber;
+    
+    float fontNumber = 0.0;
+    
+    if (fontNumberString == nil) {
+        fontNumber = 17.0;
+    } else {
+        fontNumber = [fontNumberString floatValue];
+    }
+    
+    CGRect rect = [self heightForContentLabelWithFontNumber:fontNumber];
     CGRect frame = self.contentLabel.frame;
     frame.size.height = rect.size.height;
     self.contentLabel.frame = frame;
@@ -206,9 +217,9 @@
         }
     }
     if (numberOfRow <= 4) {
-        self.contentViewHeight.constant = 0;
+        self.contentViewHeight.constant = rect.size.height;
     } else {
-        self.contentViewHeight.constant = (numberOfRow - 4) * (0.2 * kHeight + 20);
+        self.contentViewHeight.constant = (numberOfRow - 4) * (0.2 * kHeight + 20) + rect.size.height;
     }
 }
 
@@ -230,7 +241,7 @@
     [self.navigationController presentViewController:navi animated:YES completion:nil];
 }
 
-- (CGRect)heightForContentLabel {
+- (CGRect)heightForContentLabelWithFontNumber:(float)fontNumber {
     
     // 计算：1 获取要计算的字符串
     NSString *temp = self.contentLabel.text;
@@ -238,7 +249,7 @@
     // 宽度和label的宽度一样，高度给一个巨大的值
     CGSize size = CGSizeMake(CGRectGetWidth([UIScreen mainScreen].bounds) - 20, 2000);
     // 这里要和上面label指定的字体一样
-    NSDictionary *dic = @{NSFontAttributeName:[UIFont systemFontOfSize:17]};
+    NSDictionary *dic = @{NSFontAttributeName:[UIFont systemFontOfSize:fontNumber]};
     
     // 计算：3 调用方法，获得rect
     CGRect rect = [temp boundingRectWithSize:size options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin attributes:dic context:nil];
@@ -253,7 +264,6 @@
     [super viewWillAppear:YES];
 
     // 本页数据加载自日志页面
-//    [self dataFromNoteDaily];
     [self dataFromNoteDailyModel:self.passedObject];
     
     [self addNoteImages];
@@ -295,44 +305,28 @@
     
     self.monthAndYearLabel.text = dateString;
     
-    //通过传过来的model查询AVObject、
-    AVObject *object = [AVObject objectWithClassName:@"Diary" objectId:model.diaryId];
+    //背景颜色
+    self.contentView.backgroundColor = self.passedObject.backColor;
     
-    [object fetchInBackgroundWithBlock:^(AVObject *object, NSError *error) {
-        //背景颜色赋值
-        NSData *backColorData = [object objectForKey:@"backColor"];
-        NSKeyedUnarchiver *backColorUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:backColorData];
-        self.contentView.backgroundColor = [backColorUnarchiver decodeObjectForKey:@"backColor"];
+    //字体颜色
+    UIColor *fontColor = self.passedObject.fontColor;
+    
+    //字体大小
+    NSString *fontNumberString = self.passedObject.fontNumber;
+    
+    UIFont *font = [UIFont systemFontOfSize:[fontNumberString floatValue]];
         
-        //字体颜色解析
-        NSData *fontColorData = [object objectForKey:@"fontColor"];
-        NSKeyedUnarchiver *fontColorUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:fontColorData];
-        UIColor *fontColor = [fontColorUnarchiver decodeObjectForKey:@"fontColor"];
-        
-        //字体解析
-        NSString *fontNumberString = [object objectForKey:@"fontNumber"];
-        float fontNumber = [fontNumberString floatValue];
-        UIFont *font = [UIFont systemFontOfSize:fontNumber];
-        
-        if (fontColor == nil) {
-            fontColor = [UIColor blackColor];
-        }
-        
-        if (fontNumber ==  0) {
-            font = [UIFont systemFontOfSize:15];
-        }
-        // 富文本
-        NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:self.contentLabel.text];
-        [attrStr addAttribute:NSForegroundColorAttributeName
+    // 富文本
+    NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:self.contentLabel.text];
+    [attrStr addAttribute:NSForegroundColorAttributeName
                         value:fontColor
                         range:NSMakeRange(0, self.contentLabel.text.length)];
         
-        [attrStr addAttribute:NSFontAttributeName
-                        value:font
-                        range:NSMakeRange(0, self.contentLabel.text.length)];
+    [attrStr addAttribute:NSFontAttributeName
+                    value:font
+                    range:NSMakeRange(0, self.contentLabel.text.length)];
         
-        self.contentLabel.attributedText = attrStr;
-    }];
+    self.contentLabel.attributedText = attrStr;
 }
 
 #pragma mark - 导航栏左右键响应
@@ -362,7 +356,6 @@
 }
 
 - (IBAction)lastDiaryAction:(UIButton *)sender {
-    
     if (self.lastDiary > 0) {
         [self removeAllImageView];
         self.lastDiary--;

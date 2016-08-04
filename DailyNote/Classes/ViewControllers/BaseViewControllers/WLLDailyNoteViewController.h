@@ -23,5 +23,9 @@
  *  点击日历日期，传过来的日期字符串
  */
 @property (copy, nonatomic) NSString *dateString;
+/**
+ *  标记改页面是来自回收站
+ */
+@property (assign, nonatomic) BOOL isFromRecycle;
 
 @end

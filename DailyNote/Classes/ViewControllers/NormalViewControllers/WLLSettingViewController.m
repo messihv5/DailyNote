@@ -20,6 +20,7 @@
 @property (weak, nonatomic) IBOutlet UITableView *settingTableView;
 @property (strong, nonatomic) NSMutableArray *data;
 @property (strong, nonatomic) NSUserDefaults *userDefaults;
+@property (strong, nonatomic) AVUser *theCurrentUser;
 
 @end
 
@@ -29,8 +30,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    //获取用户数据
-    self.userDefaults = [NSUserDefaults standardUserDefaults];
+    self.theCurrentUser = [AVUser currentUser];
     
     self.settingTableView.delegate = self;
     self.settingTableView.dataSource = self;
@@ -102,7 +102,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     //获取用户信息
-    NSString *addressString = [self.userDefaults objectForKey:@"displayAddress"];
+    NSString *addressString = [self.theCurrentUser objectForKey:@"displayAddress"];
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CW"];
     if (cell == nil) {
@@ -118,9 +118,7 @@
             cell.detailTextLabel.text = @"不显示地址";
         }
 }
-    
     return cell;
-    
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -139,78 +137,142 @@
         [self.navigationController pushViewController:topicController animated:YES];
         
     } else if (indexPath.section == 2 && indexPath.row == 1) {
-        
-        //是否显示地理信息,查看用户是否设置显示地理信息
-        NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-        
-        if ([[userDefault objectForKey:@"displayAddress"] isEqualToString:@"YES"]) {
-            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"关闭地理位置" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+        if ([[self.theCurrentUser objectForKey:@"displayAddress"] isEqualToString:@"YES"]) {
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"关闭地理位置" message:nil preferredStyle:UIAlertControllerStyleAlert];
             
             UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
                 
             }];
             
             UIAlertAction *executeAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                [userDefault setObject:@"NO" forKey:@"displayAddress"];
                 UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
                 cell.detailTextLabel.text = @"不显示地理位置";
-                [self.userDefaults setObject:@"NO" forKey:@"displayAddress"];
-                [self.userDefaults synchronize];
+                [self.theCurrentUser setObject:@"NO" forKey:@"displayAddress"];
+                [self.theCurrentUser saveInBackground];
             }];
             
             [alertController addAction:cancelAction];
             [alertController addAction:executeAction];
             [self.navigationController presentViewController:alertController animated:YES completion:nil];
         } else {
-            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"打开地理位置" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"打开地理位置" message:nil preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
                 
             }];
             
             UIAlertAction *executeAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                [userDefault setObject:@"YES" forKey:@"displayAddress"];
                 UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
                 cell.detailTextLabel.text = @"显示地理位置";
-                [self.userDefaults setObject:@"YES" forKey:@"displayAddress"];
-                [self.userDefaults synchronize];
+                [self.theCurrentUser setObject:@"YES" forKey:@"displayAddress"];
+                [self.theCurrentUser saveInBackground];
             }];
             
             [alertController addAction:cancelAction];
             [alertController addAction:executeAction];
             [self.navigationController presentViewController:alertController animated:YES completion:nil];
-            
         }
-        
-        
     } else if (indexPath.section == 2 && indexPath.row == 2) {
         //清除缓存
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"清楚缓存" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+        //计算缓存大小
+        NSString *path = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+        
+        float cacheSize = [[self class] folderSizeAtPath:path];
+        
+        NSString *cacheSizeString = [NSString stringWithFormat:@"缓存大小%.2fMB", cacheSize];
+        
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"清楚缓存"
+                                                                                 message:cacheSizeString
+                                                                          preferredStyle:UIAlertControllerStyleAlert];
+        
         UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
             
         }];
         UIAlertAction *executeAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [AVQuery clearAllCachedResults];
+            [[self class] clearCache:path];
         }];
+        
         [alertController addAction:cancelAction];
         [alertController addAction:executeAction];
         [self.navigationController presentViewController:alertController animated:YES completion:nil];
-
-        
     } else if (indexPath.section == 3 && indexPath.row == 0) {
         
         //用户建议反馈
         LCUserFeedbackViewController *feedbackViewController = [[LCUserFeedbackViewController alloc] init];
+        
         feedbackViewController.navigationBarStyle = LCUserFeedbackNavigationBarStyleNone;
         feedbackViewController.contactHeaderHidden = NO;
         feedbackViewController.feedbackTitle = [AVUser currentUser].username;
+        
         UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:feedbackViewController];
+        
         [self presentViewController:navigationController animated:YES completion: ^{
         }];
-
     } else if (indexPath.section == 3 && indexPath.row == 1) {
         WLLAboutDailyNoteViewController *aboutController = [[WLLAboutDailyNoteViewController alloc] initWithNibName:@"WLLAboutDailyNoteViewController" bundle:[NSBundle mainBundle]];
         [self.navigationController pushViewController:aboutController animated:YES];
     }
+}
+
+/**
+ *  计算单个文件的大小
+ *
+ *  @param path 文件的绝对路径
+ *
+ *  @return 文件大小，单位MB
+ */
++ (float)fileSizeAtPath:(NSString *)path {
+    NSFileManager *manager = [NSFileManager defaultManager];
+    
+    if ([manager fileExistsAtPath:path]) {
+        long long size = [manager attributesOfItemAtPath:path error:nil].fileSize;
+        return size / 1024.0 / 1024.0;
+    }
+    
+    return 0;
+}
+
+/**
+ *  计算文件夹缓存大小，包括SDImageCache
+ *
+ *  @param path 文件夹路径
+ *
+ *  @return 缓存大小
+ */
++ (float)folderSizeAtPath:(NSString *)path {
+    NSFileManager *manager = [NSFileManager defaultManager];
+    
+    float folderSize;
+    
+    if ([manager fileExistsAtPath:path]) {
+        NSArray *subFiles = [manager subpathsAtPath:path];
+        
+        for (NSString *fileName in subFiles) {
+            NSString *absolutePath = [path stringByAppendingPathComponent:fileName];
+            folderSize += [[self class] fileSizeAtPath:absolutePath];
+        }
+    }
+    
+    folderSize += [[SDImageCache sharedImageCache] getSize] / 1024.0 / 1024.0;
+    return folderSize;
+}
+
+/**
+ *  清楚缓存
+ *
+ *  @param path 文件夹路径
+ */
++ (void)clearCache:(NSString *)path {
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    
+    NSArray *subPaths = [fileManager subpathsAtPath:path];
+    if ([fileManager fileExistsAtPath:path]) {
+        for (NSString *fileName in subPaths) {
+            NSString *absoluteFile = [path stringByAppendingPathComponent:fileName];
+            
+            [fileManager removeItemAtPath:absoluteFile error:nil];
+        }
+    }
+    [[SDImageCache sharedImageCache] cleanDisk];
 }
 
 - (void)didReceiveMemoryWarning {

@@ -16,6 +16,7 @@
 #import <UIImageView+WebCache.h>
 #import "Reachability.h"
 #import <SDImageCache.h>
+#import "WLLDailyNoteDataManager.h"
 
 
 #ifndef PrefixHeader_pch

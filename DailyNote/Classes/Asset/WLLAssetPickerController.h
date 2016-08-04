@@ -23,8 +23,6 @@ typedef void (^PickerDidFailBlock)(NSError *error);
 
 @property (nonatomic, readonly) NSArray *selectedAssets;
 @property (nonatomic, readonly) NSUInteger selectedCount;
-
-
 @property (nonatomic, readwrite) NSInteger selectionLimit;
 
 /**
@@ -33,7 +31,6 @@ typedef void (^PickerDidFailBlock)(NSError *error);
  @param library An instance of ALAssetsLibrary.
  @param completion A block to be executed when the picker controller finishes successfully. This block has not return value and takes a single argument: an NSDictionary containing the selection information. The keys for this dictionary are listed in “Selection Info Keys”
  @param canceled test
- 
  */
 + (WLLAssetPickerController *)pickerWithAssetsLibrary:(ALAssetsLibrary *)library
                                           completion:(PickerDidCompleteBlock)completion
@@ -54,7 +51,6 @@ typedef void (^PickerDidFailBlock)(NSError *error);
 @protocol WLLAssetPickerControllerDelegate <UINavigationControllerDelegate>
 
 - (void)assetPickerControllerDidCancel:(WLLAssetPickerController *)sender;
-
 
 - (void)assetPickerController:(WLLAssetPickerController *)sender didFinishPickingMediaWithAssets:(NSArray *)assets;
 

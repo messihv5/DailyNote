@@ -15,6 +15,10 @@
 
 @property (weak, nonatomic) IBOutlet UITableView *remindreTableView;
 @property (strong, nonatomic) NSUserDefaults *userDefaults;
+/**
+ *  是否支持改变日记提醒时间
+ */
+@property (assign, nonatomic) BOOL isReminderTimeChangable;
 
 @end
 
@@ -25,7 +29,7 @@
     // Do any additional setup after loading the view from its nib.
     
     //获取到用户的信息
-    self.userDefaults = [NSUserDefaults standardUserDefaults];
+//    self.userDefaults = [NSUserDefaults standardUserDefaults];
     
     self.navigationItem.title = @"提醒写日记";
     
@@ -48,7 +52,6 @@
     [button addTarget:self action:@selector(backAction) forControlEvents:UIControlEventTouchUpInside];
 
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
-    
 }
 
 //自定义导航栏按钮的方法
@@ -63,6 +66,7 @@
     } else {
         self.block(@"已关闭");
     }
+    
     //把该状态设置到userDefault里面
     [[AVUser currentUser] setObject:time forKey:@"reminderTime"];
     [[AVUser currentUser] saveInBackground];
@@ -124,6 +128,10 @@
 
 //改变日记提醒时间方法
 - (void)changeReminderTimeAction:(UIButton *)sender {
+    if (self.isReminderTimeChangable == NO) {
+        return;
+    }
+    
     WLLTimePickerController *timeController = [[WLLTimePickerController alloc] initWithNibName:@"WLLTimePickerController" bundle:[NSBundle mainBundle]];
     
     timeController.block = ^ (NSString *string) {

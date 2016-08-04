@@ -91,4 +91,5 @@
         self.selected = (canSelect && (self.selected == NO));
     }
 }
+
 @end

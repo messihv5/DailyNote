@@ -11,5 +11,7 @@
 @class WLLAssetPickerState;
 
 @interface WLLAlbumTableViewController : UITableViewController
+
 @property (nonatomic, weak) WLLAssetPickerState *assetPickerState;
+
 @end

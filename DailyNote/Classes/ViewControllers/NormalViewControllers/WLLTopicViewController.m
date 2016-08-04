@@ -42,13 +42,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-        //添加按钮
+    
     self.theCurrentUser = [AVUser currentUser];
     
     [self addFourButton];
-    
-    //从userDefault获取image
-//    self.topicImageView.image = [WLLDailyNoteDataManager sharedInstance].topicImage;
     
     self.userDefaults = [NSUserDefaults standardUserDefaults];
     
@@ -57,15 +54,19 @@
     
     //根据dailyNote页面保存的四种风格的导航栏，解档
     NSData *imageData = [self.userDefaults objectForKey:@"navigationImagesAndTabbarImages"];
-    NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:imageData];
-    self.tabbarImage1 = [unarchiver decodeObjectForKey:@"tabbarImage1"];
-    self.navigationImage1 = [unarchiver decodeObjectForKey:@"navigationImage1"];
-    self.tabbarImage2 = [unarchiver decodeObjectForKey:@"tabbarImage2"];
-    self.navigationImage2 = [unarchiver decodeObjectForKey:@"navigationImage2"];
-    self.tabbarImage3 = [unarchiver decodeObjectForKey:@"tabbarImage3"];
-    self.navigationImage3 = [unarchiver decodeObjectForKey:@"navigationImage3"];
-    self.tabbarImage4 = [unarchiver decodeObjectForKey:@"tabbarImage4"];
-    self.navigationImage4 = [unarchiver decodeObjectForKey:@"navigationImage4"];
+    if (imageData == nil) {
+        return;
+    } else {
+        NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:imageData];
+        self.tabbarImage1 = [unarchiver decodeObjectForKey:@"tabbarImage1"];
+        self.navigationImage1 = [unarchiver decodeObjectForKey:@"navigationImage1"];
+        self.tabbarImage2 = [unarchiver decodeObjectForKey:@"tabbarImage2"];
+        self.navigationImage2 = [unarchiver decodeObjectForKey:@"navigationImage2"];
+        self.tabbarImage3 = [unarchiver decodeObjectForKey:@"tabbarImage3"];
+        self.navigationImage3 = [unarchiver decodeObjectForKey:@"navigationImage3"];
+        self.tabbarImage4 = [unarchiver decodeObjectForKey:@"tabbarImage4"];
+        self.navigationImage4 = [unarchiver decodeObjectForKey:@"navigationImage4"];
+    }
     
     //如果用户没保存主题，就默认第一主题，保存了则用自己保存的主题
     if (navigationImageData == nil && tabbarImageData == nil) {

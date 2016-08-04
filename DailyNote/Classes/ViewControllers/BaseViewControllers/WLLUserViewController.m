@@ -14,9 +14,11 @@
 #import "UserInfo.h"
 #import "WLLFunctionController.h"
 #import "WLLSettingViewController.h"
+#import "WLLShareViewController.h"
+
 #import <ShareSDK/ShareSDK.h>
 #import <ShareSDKUI/ShareSDK+SSUI.h>
-#import "WLLShareViewController.h"
+
 
 @interface WLLUserViewController ()<UITableViewDelegate,
                                     UITableViewDataSource,
@@ -418,6 +420,7 @@
     
     UIAlertAction *cameroAction = [UIAlertAction actionWithTitle:@"相机拍摄" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+        
         imagePicker.delegate = self;
         imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
         imagePicker.allowsEditing = YES;
@@ -426,6 +429,7 @@
     
     UIAlertAction *albumAction = [UIAlertAction actionWithTitle:@"相册选取" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+        
         imagePicker.delegate = self;
         imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         imagePicker.allowsEditing = YES;
@@ -480,7 +484,6 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
         
         [imageData writeToFile:imagePath atomically:YES];
         
-//        self.theBackgroundImageView.image = [UIImage imageWithContentsOfFile:imagePath];
         self.theBackgroundImageView.image = compressedImage;
         
         AVFile *file = [AVFile fileWithData:imageData];
@@ -492,7 +495,6 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
         
         [imageData writeToFile:imagePath atomically:YES];
 
-//        self.headImageView.image = [UIImage imageWithContentsOfFile:imagePath];
         self.headImageView.image = compressedImage;
         
         AVFile *file = [AVFile fileWithData:imageData];

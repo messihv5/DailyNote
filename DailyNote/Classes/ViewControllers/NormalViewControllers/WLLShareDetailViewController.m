@@ -7,6 +7,8 @@
 //
 
 #import "WLLShareDetailViewController.h"
+#import "WLLDailyNoteDataManager.h"
+#import <LeanCloudFeedback/LeanCloudFeedback.h>
 
 #define ScreenHeight CGRectGetHeight([UIScreen mainScreen].bounds)
 #define ScreenWidth CGRectGetWidth([UIScreen mainScreen].bounds)
@@ -31,9 +33,20 @@
 @property (weak, nonatomic) IBOutlet UILabel *readNumberLabel;
 @property (weak, nonatomic) IBOutlet UILabel *contentLabel;
 @property (strong, nonatomic) AVUser *currentUser;
+/**
+ *  点赞按钮
+ */
 @property (strong, nonatomic) UIButton *starButton;
-@property (strong, nonatomic) UILabel *alreadyStaredLabel;
-@property (strong ,nonatomic) UILabel *alreadyCollectionLabel;
+/**
+ *  收藏按钮
+ */
+@property (strong, nonatomic) UIButton *collectionButton;
+@property (strong, nonatomic) UILabel *reminderLabel;
+/**
+ *  contentView的高度约束，用于计算需要的高度
+ */
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *contentViewHeight;
+@property (strong, nonatomic) NSMutableArray *collectionDiaries;
 
 @end
 
@@ -60,6 +73,14 @@
     
     [self loadPersonnalInfo];
     
+    [WLLDailyNoteDataManager sharedInstance].isReport = YES;
+}
+
+- (NSMutableArray *)collectionDiaries {
+    if (_collectionDiaries == nil) {
+        _collectionDiaries = [NSMutableArray arrayWithCapacity:5];
+    }
+    return _collectionDiaries;
 }
 
 //加载一个显示已经点赞的弹框，加载一个已经收藏的弹框
@@ -70,29 +91,17 @@
     [self.view addSubview:alertView];
     
     CGRect alertLabelRect = CGRectMake(0, 0, 180, 40);
-    self.alreadyStaredLabel = [[UILabel alloc] initWithFrame:alertLabelRect];
-    self.alreadyStaredLabel.text = @"你已经点赞";
-    self.alreadyStaredLabel.textAlignment = NSTextAlignmentCenter;
-    self.alreadyStaredLabel.textColor = [UIColor whiteColor];
-    self.alreadyStaredLabel.backgroundColor = [UIColor darkTextColor];
-    self.alreadyStaredLabel.alpha = 0.6;
-    self.alreadyStaredLabel.hidden = YES;
-    self.alreadyStaredLabel.layer.masksToBounds = YES;
-    self.alreadyStaredLabel.layer.cornerRadius = 5;
+    self.reminderLabel = [[UILabel alloc] initWithFrame:alertLabelRect];
+    self.reminderLabel.text = @"你已经点赞";
+    self.reminderLabel.textAlignment = NSTextAlignmentCenter;
+    self.reminderLabel.textColor = [UIColor whiteColor];
+    self.reminderLabel.backgroundColor = [UIColor darkTextColor];
+    self.reminderLabel.alpha = 0.6;
+    self.reminderLabel.hidden = YES;
+    self.reminderLabel.layer.masksToBounds = YES;
+    self.reminderLabel.layer.cornerRadius = 5;
     
-    self.alreadyCollectionLabel = [[UILabel alloc] initWithFrame:alertLabelRect];
-    self.alreadyCollectionLabel.textAlignment = NSTextAlignmentCenter;
-    self.alreadyCollectionLabel.textColor = [UIColor whiteColor];
-    self.alreadyCollectionLabel.backgroundColor = [UIColor darkTextColor];
-    self.alreadyCollectionLabel.alpha = 0.7;
-    self.alreadyCollectionLabel.hidden = YES;
-    self.alreadyCollectionLabel.layer.masksToBounds = YES;
-    self.alreadyCollectionLabel.layer.cornerRadius = 5;
-    
-    [alertView addSubview:self.alreadyStaredLabel];
-    [alertView addSubview:self.alreadyCollectionLabel];
-
-    
+    [alertView addSubview:self.reminderLabel];
 }
 
 //scrollView滑动方法
@@ -118,9 +127,7 @@
     self.currentDiaryStarNumberLabel.text = self.passedObject.starNumber;
     
     NSString *readTime = self.passedObject.readTime;
-    if (readTime == nil) {
-        readTime = @"0";
-    }
+    
     self.readNumberLabel.text = [NSString stringWithFormat:@"%ld", [readTime integerValue] + 1];
     self.passedObject.readTime = self.readNumberLabel.text;
     [object setObject:self.readNumberLabel.text forKey:@"readTime"];
@@ -135,12 +142,23 @@
     [dateFormatter setDateFormat:@"yyyy年MM月dd日EEEE"];
     self.dateLabel.text = [dateFormatter stringFromDate:createdDate];
 
+    //如果用户已点赞，图片设置为已点赞
     NSArray *staredUserArray = self.passedObject.staredUserArray;
     
     if ([staredUserArray containsObject:self.currentUser]) {
         [self.starButton setImage:[UIImage imageNamed:@"heartSelected40X40"] forState:UIControlStateNormal];
+    } else {
+        [self.starButton setImage:[UIImage imageNamed:@"heart40X40"] forState:UIControlStateNormal];
     }
-
+    
+    //如果用户已收藏，图片设置为已收藏
+    self.collectionDiaries = self.passedObject.collectionDiaries;
+    
+    if ([self.collectionDiaries containsObject:object]) {
+        [self.collectionButton setImage:[UIImage imageNamed:@"collectionSelected"] forState:UIControlStateNormal];
+    } else {
+        [self.collectionButton setImage:[UIImage imageNamed:@"collection"] forState:UIControlStateNormal];
+    }
 }
 
 //代码布局
@@ -156,6 +174,10 @@
     
     self.nickNameLabelTopConstraint.constant = ScreenHeight / 36;
     self.nickNameLabelTopConstraint.active = YES;
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [self calculateScrollViewContentViewHeight];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -178,10 +200,10 @@
     [self.starButton addTarget:self action:@selector(starAction:) forControlEvents:UIControlEventTouchUpInside];
     
     CGRect collectionButtoonRect = CGRectMake(ScreenWidth / 10 - 15 + 2 * ScreenWidth / 5, 15, 30, 30);
-    UIButton *collectionButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    collectionButton.frame = collectionButtoonRect;
-    [collectionButton setImage:[UIImage imageNamed:@"collectionImage2"] forState:UIControlStateNormal];
-    [collectionButton addTarget:self action:@selector(collectionAction:) forControlEvents:UIControlEventTouchUpInside];
+    self.collectionButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    self.collectionButton.frame = collectionButtoonRect;
+    [self.collectionButton setImage:[UIImage imageNamed:@"collectionImage2"] forState:UIControlStateNormal];
+    [self.collectionButton addTarget:self action:@selector(collectionAction:) forControlEvents:UIControlEventTouchUpInside];
     
     CGRect shareButtonRect = CGRectMake(ScreenWidth / 10 - 15 + 3 * ScreenWidth / 5, 15, 30, 30);
     UIButton *shareButton = [UIButton buttonWithType:UIButtonTypeSystem];
@@ -192,10 +214,11 @@
     UIButton *reportButton = [UIButton buttonWithType:UIButtonTypeSystem];
     reportButton.frame = reportButtonRect;
     [reportButton setImage:[UIImage imageNamed:@"reportImage2"] forState:UIControlStateNormal];
+    [reportButton addTarget:self action:@selector(reportAction:) forControlEvents:UIControlEventTouchUpInside];
     
     [self.toolBarView addSubview:backButton];
     [self.toolBarView addSubview:self.starButton];
-    [self.toolBarView addSubview:collectionButton];
+    [self.toolBarView addSubview:self.collectionButton];
     [self.toolBarView addSubview:shareButton];
     [self.toolBarView addSubview:reportButton];
 }
@@ -237,15 +260,15 @@
         
         //如果该用户已经点赞
         if ([staredUserArray containsObject:[AVUser currentUser]]) {
-            self.alreadyStaredLabel.hidden = NO;
+            self.reminderLabel.hidden = NO;
+            self.reminderLabel.text = @"已经点赞";
             [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(hidesAlertLabel) userInfo:nil repeats:NO];
             return;
         } else {
             
             //该用户没有点赞
-            
             //日记里面保存的点赞数字也加1
-            NSString *num = diary.diaryId;
+            NSString *num = diary.currentDiaryStarNumber;
             num = [NSString stringWithFormat:@"%ld", [num integerValue] + 1];
             diary.starNumber = num;
             [object setObject:num forKey:@"starNumber"];
@@ -264,68 +287,210 @@
     
     [self.starButton setImage:[UIImage imageNamed:@"heartSelected40X40"] forState:UIControlStateNormal];
     
-    //如果该用户没有点赞，执行点赞，点赞数加1
+    //如果该用户没有点赞，UI上的点赞数加1
     NSInteger numberOfStar = [self.currentDiaryStarNumberLabel.text integerValue];
     self.currentDiaryStarNumberLabel.text = [NSString stringWithFormat:@"%ld", numberOfStar + 1];
         
-    self.alreadyStaredLabel.hidden = NO;
+    self.reminderLabel.hidden = NO;
+    self.reminderLabel.hidden = @"谢谢点赞";
     [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(hidesAlertLabel) userInfo:nil repeats:NO];
 }
 
 //收藏操作
 - (void)collectionAction:(UIButton *)sender {
-    AVRelation *collectionRelation = [self.currentUser relationForKey:@"collectionDiaries"];
+//    AVRelation *collectionRelation = [self.currentUser relationForKey:@"collectionDiaries"];
+//    
+//    AVQuery *collectionQuery = [collectionRelation query];
+//    
+//    AVObject *diary = [AVObject objectWithClassName:@"Diary" objectId:self.passedObject.diaryId];
+//    
+//    [collectionQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+//        if ([objects containsObject:diary]) {
+//            
+//            //已经收藏，点击之后取消收藏
+//            [collectionRelation removeObject:diary];
+//            [self.passedObject.collectionDiaries removeObject:diary];
+//            [self.currentUser saveInBackground];
+//            
+//            self.reminderLabel.hidden = NO;
+//            self.reminderLabel.text = @"已取消收藏";
+//            [sender setImage:[UIImage imageNamed:@"collection"] forState:UIControlStateNormal];
+//            [NSTimer scheduledTimerWithTimeInterval:1
+//                                             target:self
+//                                           selector:@selector(hidesAlertLabel)
+//                                           userInfo:nil
+//                                            repeats:NO];
+//            
+//            //如果是从收藏页面进来的，点取消收藏时，给收藏主页面发通知，让其删除已经取消收藏的日记
+//            if (self.passedIndexPath) {
+//                NSDictionary *usrInfo = @{@"passedObject":self.passedObject};
+//                [[NSNotificationCenter defaultCenter] postNotificationName:@"deleteThisDiariyCollection"
+//                                                                    object:nil
+//                                                                  userInfo:usrInfo];
+//            }
+//        } else {
+//            
+//            //没有收藏
+//            [diary saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+//                if (error) {
+//                } else {
+//                    AVRelation *collectionRelation = [self.currentUser relationForKey:@"collectionDiaries"];
+//                    [collectionRelation addObject:diary];
+//                    [self.passedObject.collectionDiaries addObject:diary];
+//                    [self.currentUser saveInBackground];
+//                    
+//                    self.reminderLabel.hidden = NO;
+//                    self.reminderLabel.text = @"已收藏";
+//                    [self.collectionButton setImage:[UIImage imageNamed:@"collectionSelected"] forState:UIControlStateNormal];
+//                    [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(hidesAlertLabel) userInfo:nil repeats:NO];
+//                }
+//            }];
+//        }
+//    }];
+    NSMutableArray *collectionDiaries = self.passedObject.collectionDiaries;
     
-    AVQuery *collectionQuery = [collectionRelation query];
+    AVObject *object = [AVObject objectWithClassName:@"Diary" objectId:self.passedObject.diaryId];
     
-    AVObject *diary = [AVObject objectWithClassName:@"Diary" objectId:self.passedObject.diaryId];
-    [collectionQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if ([objects containsObject:diary]) {
-            
-            //已经收藏，点击之后取消收藏
-            [collectionRelation removeObject:diary];
+    if ([collectionDiaries containsObject:object]) {
+        //已经收藏了该日记，点击取消收藏,删除model里的数据及数据库里的数据
+        [collectionDiaries removeObject:object];
+        
+        AVRelation *collectionRelation = [[AVUser currentUser] relationForKey:@"collectionDiaries"];
+        
+        AVQuery *collectionQuery = [collectionRelation query];
+        
+        [collectionQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            [collectionRelation removeObject:object];
             [self.currentUser saveInBackground];
-            
-            self.alreadyCollectionLabel.hidden = NO;
-            self.alreadyCollectionLabel.text = @"已取消收藏";
-            [NSTimer scheduledTimerWithTimeInterval:1
-                                             target:self
-                                           selector:@selector(hidesAlertLabel)
-                                           userInfo:nil
-                                            repeats:NO];
-            
-            //如果是从收藏页面进来的，点取消收藏时，给收藏主页面发通知，让其删除已经取消收藏的日记
-            if (self.passedIndexPath) {
-                NSDictionary *usrInfo = @{@"passedObject":self.passedObject};
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"deleteThisDiariyCollection"
-                                                                    object:nil
-                                                                  userInfo:usrInfo];
-            }
-        } else {
-            
-            //没有收藏
-            [diary saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                if (error) {
-                    NSLog(@"%@", error);
-                } else {
-                    AVRelation *collectionRelation = [self.currentUser relationForKey:@"collectionDiaries"];
-                    [collectionRelation addObject:diary];
-                    [self.currentUser saveInBackground];
-                    
-                    self.alreadyCollectionLabel.hidden = NO;
-                    self.alreadyCollectionLabel.text = @"已收藏";
-                    [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(hidesAlertLabel) userInfo:nil repeats:NO];
-                }
-            }];
+        }];
+        
+        //提示信息处理
+        self.reminderLabel.hidden = NO;
+        self.reminderLabel.text = @"已取消收藏";
+        [sender setImage:[UIImage imageNamed:@"collection"] forState:UIControlStateNormal];
+        [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(hidesAlertLabel) userInfo:nil repeats:NO];
+        
+        //如果是从收藏页面进来的，点击取消收藏，给收藏页面发送通知，删除该篇日记
+        if (self.passedIndexPath) {
+            NSDictionary *userInfo = @{@"passedObject":self.passedObject};
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"deleteThisDiaryCollection" object:nil userInfo:userInfo];
         }
+    } else {
+        [object saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            if (succeeded) {
+                //添加数据
+                [collectionDiaries addObject:object];
+                
+                AVRelation *collectionRelation = [self.currentUser relationForKey:@"collectionDiaries"];
+                
+                [collectionRelation addObject:object];
+                [self.currentUser saveInBackground];
+                
+                self.reminderLabel.hidden = NO;
+                self.reminderLabel.text = @"已收藏";
+                [sender setImage:[UIImage imageNamed:@"collectionSelected"] forState:UIControlStateNormal];
+                [NSTimer scheduledTimerWithTimeInterval:1
+                                                 target:self
+                                               selector:@selector(hidesAlertLabel)
+                                               userInfo:nil
+                                                repeats:NO];
+                
+            } else {
+                
+            }
+        }];
+    }
+    
+}
+
+//举报操作
+- (void)reportAction:(UIButton *)sender {
+    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"举报" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    UIAlertAction *salacityAction = [UIAlertAction actionWithTitle:@"色情" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        self.reminderLabel.hidden = NO;
+        self.reminderLabel.text = @"举报成功";
+        [self reportActionOfTitle:@"色情"];
+    }];
+    
+    UIAlertAction *violenceAction = [UIAlertAction actionWithTitle:@"暴力" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        self.reminderLabel.hidden = NO;
+        self.reminderLabel.text = @"举报成功";
+        [self reportActionOfTitle:@"暴力"];
+    }];
+    
+    UIAlertAction *illegalAction = [UIAlertAction actionWithTitle:@"违法" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        self.reminderLabel.hidden = NO;
+        self.reminderLabel.text = @"举报成功";
+        [self reportActionOfTitle:@"违法"];
+    }];
+    
+    UIAlertAction *otherAction = [UIAlertAction actionWithTitle:@"其他" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        self.reminderLabel.hidden = NO;
+        self.reminderLabel.text = @"举报成功";
+        [self reportActionOfTitle:@"其他"];
+    }];
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    }];
+    
+    [alertVC addAction:salacityAction];
+    [alertVC addAction:violenceAction];
+    [alertVC addAction:illegalAction];
+    [alertVC addAction:otherAction];
+    [alertVC addAction:cancelAction];
+    
+    [self presentViewController:alertVC animated:YES completion:nil];
+}
+
+- (void)reportActionOfTitle:(NSString *)title {
+    NSString *reportTitle = [NSString stringWithFormat:@"%@%@", title, self.passedObject.diaryId];
+    [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(hidesAlertLabel) userInfo:nil repeats:NO];
+    [LCUserFeedbackThread feedbackWithContent:reportTitle contact:self.currentUser.username withBlock:^(id object, NSError *error) {
     }];
 }
 
 //隐藏alertLabel
 - (void)hidesAlertLabel {
-    self.alreadyStaredLabel.hidden = YES;
-    self.alreadyCollectionLabel.hidden = YES;
+    self.reminderLabel.hidden = YES;
 }
+
+/**
+ *  计算contentView的高度
+ */
+- (void)calculateScrollViewContentViewHeight {
+    float yCoordinateOfContentLabel = CGRectGetMinY(self.contentLabel.frame);
+    
+    float yCoordinateOfToolBarView = CGRectGetMinY(self.toolBarView.frame);
+    
+    float contentLabelToToolBarView = yCoordinateOfToolBarView - yCoordinateOfContentLabel;
+    
+    float height = [self heightForText:self.passedObject.content];
+    
+    self.contentViewHeight.constant = height - contentLabelToToolBarView + 20;
+}
+
+/**
+ *  计算label的高度
+ *
+ *  @param text label的text
+ *
+ *  @return label的高度
+ */
+- (float)heightForText:(NSString *)text {
+    CGSize largeSize = CGSizeMake(kWidth - 40, 2000);
+    
+    NSDictionary *dic = @{NSFontAttributeName:[UIFont systemFontOfSize:15.0]};
+    
+    CGRect contentLabelRect = [text boundingRectWithSize:largeSize options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin attributes:dic context:nil];
+    
+    return contentLabelRect.size.height;
+}
+
+-(void)dealloc {
+    [WLLDailyNoteDataManager sharedInstance].isReport = NO;
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

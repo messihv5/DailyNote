@@ -83,9 +83,8 @@ static WLLDailyNoteDataManager *manager = nil;
     
     AVQuery *query = [AVQuery andQueryWithSubqueries:@[dateQuery1,dateQuery2]];
     
-    query.cachePolicy = kAVCachePolicyCacheElseNetwork;
-    query.maxCacheAge = 24 * 60 * 60;
     [query orderByDescending:@"createdAt"];
+    [query whereKey:@"wasDeleted" notEqualTo:@"YES"];
     query.limit = 5;
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -127,6 +126,7 @@ static WLLDailyNoteDataManager *manager = nil;
     query.maxCacheAge = 24 * 60 * 60;
     [query orderByDescending:@"createdAt"];
     [query whereKey:@"belong" equalTo:[AVUser currentUser]];
+    [query whereKey:@"wasDeleted" notEqualTo:@"YES"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         [self getDataFromArray:objects];
         finished();
@@ -210,6 +210,7 @@ static WLLDailyNoteDataManager *manager = nil;
                         for (AVFile *file in photoArray) {
                             [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
                                 NSString *urlString = file.url;
+                                
                                 if ([photoUrlArray containsObject:urlString]) {
                                     
                                 } else {
@@ -259,138 +260,6 @@ static WLLDailyNoteDataManager *manager = nil;
 }
 
 /**
- *  获取自leancloud的AVObject对象的解析
- *
- *  @param array 获取的AVObject对象数组
- */
-- (void)getDataFromArray:(NSArray <AVObject *>*)array {
-    for (AVObject *object in array) {
-        NoteDetail *model = [[NoteDetail alloc] init];
-        
-        //diaryID
-        model.diaryId = object.objectId;
-        
-        //获取日期
-        model.date = [object objectForKey:@"createdAt"];
-        
-        //日记内容
-        model.content = [object objectForKey:@"content"];
-        
-        //日记更新时间
-        model.updatedDate = object.updatedAt;
-        
-        //图片数组
-        NSMutableArray *photoArray = [object objectForKey:@"photoArray"];
-        
-        model.photoArray = photoArray;
-        
-        model.photoUrlArray = [object objectForKey:@"photoUrlArray"];
-        
-        model.sharedDate = [object objectForKey:@"sharedDate"];
-        
-        //图片解析出来
-        AVFile *file = photoArray[0];
-        
-        [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
-            NSString *urlString = file.url;
-            
-            model.imageUrl = urlString;
-        }];
-        
-        [self.noteData addObject:model];
-    }
-}
-
-/**
- *  解析leancloud的AVObject对象
- *
- *  @param array AVObject对象
- */
-- (void)getDataFromShareArray:(NSArray *)array {
-    for (AVObject *object in array) {
-        NoteDetail *model = [[NoteDetail alloc] init];
-        
-        //diaryID
-        model.diaryId = object.objectId;
-        
-        //获取日期
-        model.date = [object objectForKey:@"createdAt"];
-        
-        //获取点赞用户数组，判断用户是否点赞
-        NSMutableArray *staredUserArray = [object objectForKey:@"staredUser"];
-        model.staredUserArray = staredUserArray;
-        
-        //获取日记的创建时间
-        NSString *string = nil;
-        
-        NSDate *createdDate = [object objectForKey:@"createdAt"];
-        
-        NSDate *currentDate = [NSDate date];
-        
-        NSTimeInterval timeInterval = [currentDate timeIntervalSinceDate:createdDate];
-        
-        if (timeInterval / (24 * 60 * 60) >= 1) {
-            string = [NSString stringWithFormat:@"%ld天前", (NSInteger)timeInterval / (24 * 60 * 60)];
-            } else if (timeInterval / (60 * 60) >= 1) {
-                string = [NSString stringWithFormat:@"%ld小时前", (NSInteger)timeInterval / (60 * 60)];
-            } else if (timeInterval / 60 >= 1) {
-                string = [NSString stringWithFormat:@"%ld分钟以前", (NSInteger)timeInterval / 60];
-            } else {
-                    string = [NSString stringWithFormat:@"%ld秒前", (NSInteger)timeInterval];
-            }
-        model.timeString = string;
-        
-        //点赞数
-        model.starNumber = [object objectForKey:@"starNumber"];
-        if (model.starNumber == nil) {
-            model.starNumber = @"0";
-            }
-        
-        //内容
-        model.content = [object objectForKey:@"content"];
-        
-        //获取当前日记的点赞数
-        model.currentDiaryStarNumber = [object objectForKey:@"starNumber"];
-        
-        //获取日记的阅读次数
-        NSString *readTime = [object objectForKey:@"readTime"];
-        if (readTime == nil) {
-            model.readTime = @"0";
-        }
-        model.readTime = readTime;
-        
-        //日记是否分享
-        model.sharedDate = [object objectForKey:@"sharedDate"];
-        
-        //获取到这篇日记的作者的信息
-        NSArray *keys = [NSArray arrayWithObjects:@"belong", nil];
-        [object fetchInBackgroundWithKeys:keys block:^(AVObject *object, NSError *error) {
-            AVUser *relatedUser = [object objectForKey:@"belong"];
-        
-            //获取用户的nickName
-            model.nickName = [relatedUser objectForKey:@"nickName"];
-        
-            //获取签名
-            model.signature = [relatedUser objectForKey:@"signature"];
-        
-            //获取总的点赞数
-            model.totalStarNumber = [relatedUser objectForKey:@"starNumber"];
-        
-            //获取背景图片
-            AVFile *backgroundImage = [relatedUser objectForKey:@"theBackgroundImage"];
-        
-            model.backgroundImageUrl = [NSURL URLWithString:backgroundImage.url];
-        
-            //获取headImage
-            AVFile *headImage = [relatedUser objectForKey:@"headImage"];
-        
-            model.headImageUrl = [NSURL URLWithString:headImage.url];
-        }];
-        [self.noteData addObject:model];
-    }
-}
-
-/**
  *  加载5篇分享的日记
  *
  *  @param date     日期
@@ -406,6 +275,7 @@ static WLLDailyNoteDataManager *manager = nil;
     query.maxCacheAge = 24 * 60 * 60;
     [query orderByDescending:@"sharedDate"];
     [query whereKey:@"sharedDate" lessThan:date];
+    [query whereKey:@"wasDeleted" notEqualTo:@"YES"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (error) {
             hasError();
@@ -431,6 +301,7 @@ static WLLDailyNoteDataManager *manager = nil;
     query.limit = 5;
     [query orderByDescending:@"sharedDate"];
     [query whereKey:@"sharedDate" greaterThan:date];
+    [query whereKey:@"wasDeleted" notEqualTo:@"YES"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         [self getDataFromShareArray:objects];
         finished();
@@ -510,6 +381,175 @@ static WLLDailyNoteDataManager *manager = nil;
             [[SDImageCache sharedImageCache] setValue:nil forKey:@"memCache"];
         }
     }];
+}
+
+/**
+ *  获取自leancloud的AVObject对象的解析
+ *
+ *  @param array 获取的AVObject对象数组
+ */
+- (void)getDataFromArray:(NSArray <AVObject *>*)array {
+    for (AVObject *object in array) {
+        NoteDetail *model = [[NoteDetail alloc] init];
+        
+        //diaryID
+        model.diaryId = object.objectId;
+        
+        //获取日期
+        model.date = [object objectForKey:@"createdAt"];
+
+        //日记内容
+        model.content = [object objectForKey:@"content"];
+        
+        //日记更新时间, 对删除的日记来说就是删除时间
+        model.updatedDate = object.updatedAt;
+        
+        //图片数组
+        NSMutableArray *photoArray = [object objectForKey:@"photoArray"];
+        
+        model.photoArray = photoArray;
+        
+        model.photoUrlArray = [object objectForKey:@"photoUrlArray"];
+        
+        model.sharedDate = [object objectForKey:@"sharedDate"];
+        
+        //背景颜色赋值
+        NSData *backColorData = [object objectForKey:@"backColor"];
+        NSKeyedUnarchiver *backColorUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:backColorData];
+        model.backColor = [backColorUnarchiver decodeObjectForKey:@"backColor"];
+        
+        //字体颜色解析
+        NSData *fontColorData = [object objectForKey:@"fontColor"];
+        NSKeyedUnarchiver *fontColorUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:fontColorData];
+        model.fontColor = [fontColorUnarchiver decodeObjectForKey:@"fontColor"];
+        if (model.fontColor == nil) {
+            model.fontColor = [UIColor blackColor];
+        }
+        
+        //字体解析
+        NSString *fontNumberString = [object objectForKey:@"fontNumber"];
+        if (fontNumberString == nil) {
+            model.fontNumber = @"17.0";
+        } else {
+            model.fontNumber = fontNumberString;
+        }
+
+        //图片解析出来
+        AVFile *file = photoArray[0];
+        
+        [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
+            NSString *urlString = file.url;
+            
+            model.imageUrl = urlString;
+        }];
+        
+        [self.noteData addObject:model];
+    }
+}
+
+/**
+ *  解析leancloud的AVObject对象
+ *
+ *  @param array AVObject对象
+ */
+- (void)getDataFromShareArray:(NSArray *)array {
+    //收藏的日记
+    NSMutableArray *collectionArray = [NSMutableArray arrayWithCapacity:5];
+    
+    AVRelation *collectionRelation = [[AVUser currentUser] relationForKey:@"collectionDiaries"];
+    
+    AVQuery *collectionQuery = [collectionRelation query];
+    
+    [collectionQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        [collectionArray addObjectsFromArray:objects];
+    }];
+
+    for (AVObject *object in array) {
+        NoteDetail *model = [[NoteDetail alloc] init];
+        
+        //添加当前用户收藏的日记
+        model.collectionDiaries = collectionArray;
+        //diaryID
+        model.diaryId = object.objectId;
+        
+        //获取日期
+        model.date = [object objectForKey:@"createdAt"];
+        
+        //获取点赞用户数组，判断用户是否点赞
+        NSMutableArray *staredUserArray = [object objectForKey:@"staredUser"];
+        model.staredUserArray = staredUserArray;
+        
+        //获取日记的创建时间
+        NSString *string = nil;
+        
+        NSDate *createdDate = [object objectForKey:@"createdAt"];
+        
+        NSDate *currentDate = [NSDate date];
+        
+        NSTimeInterval timeInterval = [currentDate timeIntervalSinceDate:createdDate];
+        
+        if (timeInterval / (24 * 60 * 60) >= 1) {
+            string = [NSString stringWithFormat:@"%ld天前", (NSInteger)timeInterval / (24 * 60 * 60)];
+        } else if (timeInterval / (60 * 60) >= 1) {
+            string = [NSString stringWithFormat:@"%ld小时前", (NSInteger)timeInterval / (60 * 60)];
+        } else if (timeInterval / 60 >= 1) {
+            string = [NSString stringWithFormat:@"%ld分钟以前", (NSInteger)timeInterval / 60];
+        } else {
+            string = [NSString stringWithFormat:@"%ld秒前", (NSInteger)timeInterval];
+        }
+        model.timeString = string;
+        
+        //点赞数
+        model.starNumber = [object objectForKey:@"starNumber"];
+        if (model.starNumber == nil) {
+            model.starNumber = @"0";
+        }
+        
+        //内容
+        model.content = [object objectForKey:@"content"];
+        
+        //获取当前日记的点赞数
+        model.currentDiaryStarNumber = [object objectForKey:@"starNumber"];
+        
+        //获取日记的阅读次数
+        NSString *readTime = [object objectForKey:@"readTime"];
+        if (readTime == nil) {
+            model.readTime = @"0";
+        }
+        model.readTime = readTime;
+        
+        //日记是否分享
+        model.sharedDate = [object objectForKey:@"sharedDate"];
+        
+        //获取到这篇日记的作者的信息
+        NSArray *keys = [NSArray arrayWithObjects:@"belong", nil];
+        [object fetchInBackgroundWithKeys:keys block:^(AVObject *object, NSError *error) {
+            AVUser *relatedUser = [object objectForKey:@"belong"];
+            
+            //获取用户的nickName
+            model.nickName = [relatedUser objectForKey:@"nickName"];
+            
+            //获取签名
+            model.signature = [relatedUser objectForKey:@"signature"];
+            
+            //获取总的点赞数
+            model.totalStarNumber = [relatedUser objectForKey:@"starNumber"];
+            
+            //获取背景图片
+            AVFile *backgroundImage = [relatedUser objectForKey:@"theBackgroundImage"];
+            
+            [AVFile getFileWithObjectId:backgroundImage.objectId withBlock:^(AVFile *file, NSError *error) {
+                model.backgroundImageUrl = [NSURL URLWithString:backgroundImage.url];
+            }];
+            
+            //获取headImage
+            AVFile *headImage = [relatedUser objectForKey:@"headImage"];
+            [AVFile getFileWithObjectId:headImage.objectId withBlock:^(AVFile *file, NSError *error) {
+                model.headImageUrl = [NSURL URLWithString:headImage.url];
+            }];
+        }];
+        [self.noteData addObject:model];
+    }
 }
 
 @end

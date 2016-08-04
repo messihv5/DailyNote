@@ -109,7 +109,6 @@
             [self presentViewController:alert animated:YES completion:nil];
         }
     }];
-    
 }
 
 #pragma mark - UITextField代理方法，处理键盘

@@ -458,11 +458,26 @@
 #pragma mark - 导航栏左右键响应
 // 保存
 - (void)saveNote:(UIBarButtonItem *)button {
+    //没有网络的时候，不能编辑，弹出提示框
     if ([WLLDailyNoteDataManager sharedInstance].isNetworkAvailable == NO) {
         [self tipOfNoneDairyContent];
     } else {
-        if (_indexPath) {   // 如果是由点击DailyNote页面cell 进入，就是编辑
+        //归档背景颜色
+        NSMutableData *backColorData = [[NSMutableData alloc] init];
+        NSKeyedArchiver *archiverBackColor = [[NSKeyedArchiver alloc] initForWritingWithMutableData:backColorData];
+        [archiverBackColor encodeObject:self.contentText.backgroundColor forKey:@"backColor"];
+        [archiverBackColor finishEncoding];
+        
+        //归档字体颜色
+        NSMutableData *fontColor = [[NSMutableData alloc] init];
+        
+        NSKeyedArchiver *archiverFontColor = [[NSKeyedArchiver alloc] initForWritingWithMutableData:fontColor];
+        [archiverFontColor encodeObject:self.contentText.textColor forKey:@"fontColor"];
+        [archiverFontColor finishEncoding];
+
+        if (_indexPath) {
             
+            // 如果是由点击DailyNote页面cell 进入，就是编辑
             // 移除遮盖view
             [self.coverView removeFromSuperview];
             
@@ -499,69 +514,16 @@
                     
                 } else {
                     
-                    //日记内容不为空，保存日记
-                    self.passedObject.content = self.contentText.text;
-                    
-                    //保存背景颜色
-                    NSMutableData *data = [[NSMutableData alloc] init];
-                    NSKeyedArchiver *archiverBackColor = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
-                    [archiverBackColor encodeObject:self.contentText.backgroundColor forKey:@"backColor"];
-                    [archiverBackColor finishEncoding];
-                    
-                    self.passedObject.backColor = self.contentText.backgroundColor;
-                    
-                    //保存字体大小
-                    //从详情页面传过来的object中解析的字体
-                    NSString *passedFontNumber = self.passedObject.fontNumber;
-                    if (self.fontNumber != nil) {
-                        self.passedObject.fontNumber = self.fontNumber;
-                    } else {
-                        self.passedObject.fontNumber = passedFontNumber;
-                    }
-                    
-                    //保存字体的颜色
-                    NSMutableData *fontColor = [[NSMutableData alloc] init];
-                    
-                    NSKeyedArchiver *archiverFontColor = [[NSKeyedArchiver alloc] initForWritingWithMutableData:fontColor];
-                    [archiverFontColor encodeObject:self.contentText.textColor forKey:@"fontColor"];
-                    [archiverFontColor finishEncoding];
-                    
-                    self.passedObject.fontColor = self.contentText.textColor;
-                    
-                    //保存模型图片数组
-                    self.passedObject.photoArray = self.localCopyArrayOfModelPhotoArray;
-                    
-                    //保存分享日期
-                    if (self.isDiaryShared == YES) {
-                        self.passedObject.sharedDate = self.sharedDate;
-                    }
+                    //model保存数据
+                    [self saveDataInModel:self.passedObject];
                     
                     //数据库保存
                     [object fetchInBackgroundWithBlock:^(AVObject *object, NSError *error) {
-                        //日记内容
-                        [object setObject:self.contentText.text forKey:@"content"];
                         
                         //图片保存
                         [object removeObjectForKey:@"photoArray"];
-                        [object addObjectsFromArray:self.internetCopyArrayOfModelPhotoArray forKey:@"photoArray"];
                         
-                        //背景颜色
-                        [object setObject:data forKey:@"backColor"];
-                        
-                        //字体大小
-                        if (self.fontNumber != nil) {
-                            [object setObject:self.fontNumber forKey:@"fontNumber"];
-                        } else {
-                            [object setObject:passedFontNumber forKey:@"fontNumber"];
-                        }
-                        
-                        //字体颜色
-                        [object setObject:fontColor forKey:@"fontColor"];
-
-                        //保存分享日期
-                        if (self.isDiaryShared == YES) {
-                            [object setObject:self.sharedDate forKey:@"sharedDate"];
-                        }
+                        [self saveDataInAVObject:object backColorData:backColorData fontColorData:fontColor];
                         
                         object.fetchWhenSave = YES;
                         
@@ -581,8 +543,8 @@
                 [self.navigationController presentViewController:alertVC animated:YES completion:nil];
             }
         } else {
-            // 如果是由DailyNote页面直接点击添加进入，就是添加
             
+            // 如果是由DailyNote页面直接点击添加进入，就是添加
             // 移除遮盖view
             [self.coverView removeFromSuperview];
             
@@ -614,52 +576,15 @@
                 
             } else {
                 
-                //日记内容不为空，保存日记
-                [object setObject:self.contentText.text forKey:@"content"];
-                model.content = self.contentText.text;
+                //model保存数据
+                [self saveDataInModel:model];
                 
-                //保存背景颜色
-                NSMutableData *data = [[NSMutableData alloc] init];
-                
-                NSKeyedArchiver *archiverBackColor = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
-                [archiverBackColor encodeObject:self.contentText.backgroundColor forKey:@"backColor"];
-                [archiverBackColor finishEncoding];
-                
-                [object setObject:data forKey:@"backColor"];
-                model.backColor = self.contentText.backgroundColor;
-                
-                //保存字体大小
-                if (self.fontNumber != nil) {
-                    [object setObject:self.fontNumber forKey:@"fontNumber"];
-                    model.fontNumber = self.fontNumber;
-                } else {
-                    [object setObject:@"15" forKey:@"fontNumber"];
-                    model.fontNumber = @"15";
-                }
-                
-                //保存字体的颜色
-                NSMutableData *fontColor = [[NSMutableData alloc] init];
-                
-                NSKeyedArchiver *archiverFontColor = [[NSKeyedArchiver alloc] initForWritingWithMutableData:fontColor];
-                [archiverFontColor encodeObject:self.contentText.textColor forKey:@"fontColor"];
-                [archiverFontColor finishEncoding];
-                
-                [object setObject:fontColor forKey:@"fontColor"];
-                model.fontColor = self.contentText.textColor;
-                
-                //保存图片数组
-                [object addObjectsFromArray:self.internetCopyArrayOfModelPhotoArray forKey:@"photoArray"];
-                model.photoArray = self.localCopyArrayOfModelPhotoArray;
-                
-                //保存分享日期
-                if (self.isDiaryShared == YES) {
-                    model.sharedDate = [NSDate date];
-                    [object setObject:[NSDate date] forKey:@"sharedDate"];
-                }
-               
                 //给model日期赋值
                 model.date = [NSDate date];
                 
+                //AVObject对象存储数据
+                [self saveDataInAVObject:object backColorData:backColorData fontColorData:fontColor];
+               
                 self.block(model);
                 
                 //保存日记的作者为当前用户
@@ -675,6 +600,80 @@
             }
             [self.navigationController popViewControllerAnimated:YES];
         }
+    }
+}
+
+/**
+ *  model保存数据
+ *
+ *  @param model NoteDetail的实例
+ */
+- (void)saveDataInModel:(NoteDetail *)model {
+    //日记内容
+    model.content = self.contentText.text;
+    
+    //背景颜色
+    model.backColor = self.contentText.backgroundColor;
+    if (model.backColor == nil) {
+        model.backColor = [UIColor whiteColor];
+    }
+    
+    //保存字体大小
+    //从详情页面传过来的object中解析的字体
+    NSString *passedFontNumber = self.passedObject.fontNumber;
+    if (self.fontNumber != nil) {
+        model.fontNumber = self.fontNumber;
+    } else if (passedFontNumber != nil){
+        model.fontNumber = passedFontNumber;
+    } else {
+        model.fontNumber = @"17";
+    }
+    
+    //字体颜色
+    model.fontColor = self.contentText.textColor;
+    if (model.fontColor == nil) {
+        model.fontColor = [UIColor blackColor];
+    }
+    
+    //保存模型图片数组
+    model.photoArray = self.localCopyArrayOfModelPhotoArray;
+    
+    //保存分享日期
+    if (self.isDiaryShared == YES) {
+        model.sharedDate = self.sharedDate;
+    }
+}
+
+/**
+ *  object对象保存数据
+ *
+ *  @param object        AVObject实例
+ *  @param backColorData 背景颜色数据
+ *  @param fontColorData 字体颜色数据
+ */
+- (void)saveDataInAVObject:(AVObject *)object backColorData:(NSData *)backColorData fontColorData:(NSData *)fontColorData{
+    //日记内容
+    [object setObject:self.contentText.text forKey:@"content"];
+    
+    //照片
+    [object addObjectsFromArray:self.internetCopyArrayOfModelPhotoArray forKey:@"photoArray"];
+    
+    //背景颜色
+    [object setObject:backColorData forKey:@"backColor"];
+    
+    //字体大小
+    if (self.fontNumber != nil) {
+        [object setObject:self.fontNumber forKey:@"fontNumber"];
+    } else {
+        [object setObject:self.passedObject.fontNumber forKey:@"fontNumber"];
+    }
+    
+    //字体颜色
+    [object setObject:fontColorData forKey:@"fontColor"];
+    
+    //保存分享日期
+    if (self.isDiaryShared == YES) {
+        [object setObject:self.sharedDate forKey:@"sharedDate"];
     }
 }
 
@@ -834,10 +833,75 @@
 // 图片来自拍照
 - (void)pictureFromCamera {
     UIImagePickerController *pictureController = [[UIImagePickerController alloc] init];
+    
     pictureController.sourceType = UIImagePickerControllerSourceTypeCamera;
     pictureController.delegate = self;
+    pictureController.allowsEditing = YES;
     
     [self presentViewController:pictureController animated:YES completion:nil];
+}
+
+//已选图片代理方法
+- (void)imagePickerController:(UIImagePickerController *)picker
+didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
+    UIImage *pickedImage = info[UIImagePickerControllerOriginalImage];
+    
+    CGFloat scaleBetweenWidthAndHeight = pickedImage.size.width / pickedImage.size.height;
+    
+    CGSize newSize = CGSizeMake(kWidth * 1.5, kWidth / scaleBetweenWidthAndHeight * 1.5);
+    
+    UIImage *compressedImage = [[self class] imageWithImageSimple:pickedImage scaledToSize:newSize];
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    
+    NSString *path = [paths objectAtIndex:0];
+    
+    NSData *imageData = nil;
+    
+    NSString *imagePath = nil;
+    
+    if (UIImageJPEGRepresentation(compressedImage, 1)) {
+        imageData = UIImageJPEGRepresentation(compressedImage, 1);
+    } else if (UIImagePNGRepresentation(compressedImage)) {
+        imageData = UIImagePNGRepresentation(compressedImage);
+    }
+    
+    imagePath = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"%ldimage%ld", self.numberOfModelInArray, self.numberOfPictures]];
+    
+    self.numberOfPictures++;
+    
+    self.pictureScrollView.contentSize = CGSizeMake(self.numberOfPictures * 60, 80);
+    
+    CGRect imageVRect = CGRectMake((self.numberOfPictures - 1) * 60, 0, 60, 80);
+    
+    UIImageView *imageV = [[UIImageView alloc] initWithFrame:imageVRect];
+    
+    [self.pictureScrollView addSubview:imageV];
+    
+    imageV.tag = self.numberOfPictures - 1;
+    
+    imageV.image = compressedImage;
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction:)];
+    
+    [imageV addGestureRecognizer:tap];
+    
+    imageV.userInteractionEnabled = YES;
+    
+    [imageData writeToFile:imagePath atomically:YES];
+    
+    AVFile *imageFile = [AVFile fileWithData:imageData];
+    
+    [self.photoArrayInternet addObject:imageFile];
+    
+    [self.photoArrayLocal addObject:imagePath];
+
+    [self.localCopyArrayOfModelPhotoArray addObjectsFromArray:self.photoArrayLocal];
+    [self.photoArrayLocal removeAllObjects];
+    [self.internetCopyArrayOfModelPhotoArray addObjectsFromArray:self.photoArrayInternet];
+    [self.photoArrayInternet removeAllObjects];
+    
+    [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
 // 图片来自相册
@@ -872,11 +936,10 @@
                 NSData *imageData = nil;
                 if (UIImageJPEGRepresentation(compressedImage, 1)) {
                     imageData = UIImageJPEGRepresentation(compressedImage, 1);
-                    imagePath = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"%ldimage%ld.jpg",numberOFModelInArray, idx]];
                 } else if (UIImagePNGRepresentation(compressedImage)) {
                     imageData = UIImagePNGRepresentation(compressedImage);
-                    imagePath = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"%ldimage%ld.png", numberOFModelInArray, idx]];
                 }
+                 imagePath = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"%ldimage%ld.png", numberOFModelInArray, self.numberOfPictures]];
                 
                 //重新设定contentsize，以便把从相册添加的照片放在scrollView上
                 weakSelf.numberOfPictures = weakSelf.numberOfPictures + 1;
@@ -912,7 +975,6 @@
             [self.photoArrayLocal removeAllObjects];
             [self.internetCopyArrayOfModelPhotoArray addObjectsFromArray:self.photoArrayInternet];
             [self.photoArrayInternet removeAllObjects];
-
         }];
         
     } canceled:^{
@@ -977,7 +1039,6 @@
             [self.locationManager stopUpdatingLocation];
         }
     }];
-    
 }
 
 //移除观察着

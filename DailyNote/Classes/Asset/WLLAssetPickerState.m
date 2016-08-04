@@ -13,16 +13,15 @@ NSString *const WLLAssetPickerAssetsOwningLibraryInstance = @"WLLAssetPickerAsse
 NSString *const WLLAssetPickerURLsForSelectedAssets       = @"WLLAssetPickerURLsForSelectedAssets";
 NSString *const WLLAssetPickerSelectedAssets              = @"WLLAssetPickerSelectedAssets";
 
-
-
 @interface WLLAssetPickerState ()
+
 @property (nonatomic, strong) NSMutableOrderedSet *selectedAssetsSet;
+
 @end
 
 @implementation WLLAssetPickerState
 
 @dynamic info;
-
 
 - (ALAssetsLibrary *)assetsLibrary {
     if (_assetsLibrary == nil) {
@@ -30,7 +29,6 @@ NSString *const WLLAssetPickerSelectedAssets              = @"WLLAssetPickerSele
     }
     return _assetsLibrary;
 }
-
 
 - (NSDictionary *)info {
     NSArray *selectedAssets = self.selectedAssetsSet.array.copy;
@@ -44,14 +42,12 @@ NSString *const WLLAssetPickerSelectedAssets              = @"WLLAssetPickerSele
       };
 }
 
-
 - (NSMutableOrderedSet *)selectedAssetsSet {
     if (!_selectedAssetsSet) {
         _selectedAssetsSet = [NSMutableOrderedSet orderedSet];
     }
     return _selectedAssetsSet;
 }
-
 
 - (void)clearSelectedAssets {
     [self.selectedAssetsSet removeAllObjects];
@@ -63,12 +59,10 @@ NSString *const WLLAssetPickerSelectedAssets              = @"WLLAssetPickerSele
         self.pickerDidCancelBlock();
 }
 
-
 - (void)sessionCompleted {
     if (self.pickerDidCompleteBlock)
         self.pickerDidCompleteBlock(self.info);
 }
-
 
 - (void)sessionFailed:(NSError *)error {
     if (self.pickerDidFailBlock)
