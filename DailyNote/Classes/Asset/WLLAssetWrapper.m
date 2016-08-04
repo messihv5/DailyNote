@@ -15,7 +15,7 @@
 
 - (id)initWithAsset:(ALAsset *)asset
 {
-    if ((self = [super init])) {
+    if (self = [super init]) {
         _asset = asset;
     }
     return self;

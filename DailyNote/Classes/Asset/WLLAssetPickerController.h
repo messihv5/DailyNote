@@ -51,7 +51,7 @@ typedef void (^PickerDidFailBlock)(NSError *error);
 @end
 
 
-@protocol WSAssetPickerControllerDelegate <UINavigationControllerDelegate>
+@protocol WLLAssetPickerControllerDelegate <UINavigationControllerDelegate>
 
 - (void)assetPickerControllerDidCancel:(WLLAssetPickerController *)sender;
 

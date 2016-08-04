@@ -17,5 +17,4 @@
 
 @property (weak, nonatomic) IBOutlet UISwitch *shareSwitch;
 
-@property (weak, nonatomic) IBOutlet UICollectionView *weatherIcon;
 @end
