@@ -579,11 +579,12 @@
                 //model保存数据
                 [self saveDataInModel:model];
                 
-                [self saveDataInAVObject:object backColorData:backColorData fontColorData:fontColor];
-               
                 //给model日期赋值
                 model.date = [NSDate date];
                 
+                //AVObject对象存储数据
+                [self saveDataInAVObject:object backColorData:backColorData fontColorData:fontColor];
+               
                 self.block(model);
                 
                 //保存日记的作者为当前用户
@@ -613,26 +614,26 @@
     
     //背景颜色
     model.backColor = self.contentText.backgroundColor;
+    if (model.backColor == nil) {
+        model.backColor = [UIColor whiteColor];
+    }
     
     //保存字体大小
     //从详情页面传过来的object中解析的字体
     NSString *passedFontNumber = self.passedObject.fontNumber;
     if (self.fontNumber != nil) {
         model.fontNumber = self.fontNumber;
-    } else {
+    } else if (passedFontNumber != nil){
         model.fontNumber = passedFontNumber;
-    }
-    
-    //保存字体大小
-    //从详情页面传过来的object中解析的字体
-    if (self.fontNumber != nil) {
-        model.fontNumber = self.fontNumber;
     } else {
-        model.fontNumber = self.passedObject.fontNumber;
+        model.fontNumber = @"17";
     }
     
     //字体颜色
     model.fontColor = self.contentText.textColor;
+    if (model.fontColor == nil) {
+        model.fontColor = [UIColor blackColor];
+    }
     
     //保存模型图片数组
     model.photoArray = self.localCopyArrayOfModelPhotoArray;

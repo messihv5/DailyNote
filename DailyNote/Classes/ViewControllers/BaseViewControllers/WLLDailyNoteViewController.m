@@ -134,7 +134,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
  *  添加观察日记恢复的通知
  */
 - (void)addNotificationObserver {
-    if (self.isFromCalendar == NO && [WLLDailyNoteDataManager sharedInstance].isBackFromRecycle == NO) {
+    if (self.isFromCalendar == NO && self.isFromRecycle == NO) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(resumeDiary:) name:@"resumeDiary" object:nil];
     }
 }
@@ -162,7 +162,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
  *  加载回收站的5篇日记
  */
 - (void)loadFiveDiariesOfRecycle {
-    if ([WLLDailyNoteDataManager sharedInstance].isBackFromRecycle) {
+    if (self.isFromRecycle) {
         self.navigationItem.title = @"回收站";
         
         NSDate *date = [NSDate date];
@@ -174,7 +174,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
             
             if (array.count != 0) {
                 for (NoteDetail *model in array) {
-                    NSTimeInterval timeInterval = 10 * 60;
+                    NSTimeInterval timeInterval = 60 * 60;
                     
                     NSDate *nowDate = [NSDate date];
                     
@@ -621,8 +621,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
     }
     
     //进入日记，从viewDidLoad进入时，加载一次日记
-    BOOL isFromRecycle = [[WLLDailyNoteDataManager sharedInstance] isBackFromRecycle];
-    if ([AVUser currentUser] && self.isFromCalendar == NO && isFromRecycle ==NO && self.isLoadedFromViewDidLoad == YES) {
+    if ([AVUser currentUser] && self.isFromCalendar == NO && self.isFromRecycle == NO && self.isLoadedFromViewDidLoad == YES) {
         [self loadTenDiaries];
         self.isLoadedFromViewDidLoad = NO;
     }
@@ -760,7 +759,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([WLLDailyNoteDataManager sharedInstance].isBackFromRecycle == NO) {
+    if (self.isFromRecycle == NO) {
         WLLNoteDetailViewController *noteDetailVC;
         noteDetailVC = [[WLLNoteDetailViewController alloc] initWithNibName:@"WLLNoteDetailViewController"
         
@@ -790,22 +789,22 @@ static NSString  *const reuseIdentifier = @"note_cell";
         UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"提示" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
         
         UIAlertAction *resumeAction = [UIAlertAction actionWithTitle:@"恢复日记" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            //处理UI
+            [self.data removeObject:model];
+            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
+            
             //处理数据库
             [object setObject:@"NO" forKey:@"wasDeleted"];
             [object saveInBackground];
             
-            //处理UI
-            [self.data removeObject:model];
-            
-            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
-            
+            //发送恢复日记的通知,让dailyNote页面和日历页面恢复日记
             NSDictionary *dic = [NSDictionary dictionaryWithObject:model forKey:@"diary"];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"resumeDiary" object:nil userInfo:dic];
         }];
         
         UIAlertAction *deleteAction = [UIAlertAction actionWithTitle:@"彻底删除" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
             [self.data removeObject:model];
-            [self.notesTableView reloadData];
+            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
             [object deleteInBackground];
         }];
         
@@ -836,10 +835,9 @@ static NSString  *const reuseIdentifier = @"note_cell";
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"readyToUpdateNewNote" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"dailyNoteAndSharePageDeleteDiary" object:nil];
     
-    if ([WLLDailyNoteDataManager sharedInstance].isBackFromRecycle == YES) {
-        [WLLDailyNoteDataManager sharedInstance].isBackFromRecycle = NO;
+    if (self.isFromRecycle == YES) {
+        self.isFromRecycle = NO;
     }
-    
     if (self.isFromCalendar == YES) {
         self.isFromCalendar = NO;
     }

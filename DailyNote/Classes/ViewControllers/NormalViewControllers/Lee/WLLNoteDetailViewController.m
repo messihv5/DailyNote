@@ -307,6 +307,7 @@
     
     //背景颜色
     self.contentView.backgroundColor = self.passedObject.backColor;
+    
     //字体颜色
     UIColor *fontColor = self.passedObject.fontColor;
     

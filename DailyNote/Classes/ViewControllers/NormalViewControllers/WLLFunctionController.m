@@ -115,7 +115,7 @@
         WLLDailyNoteViewController *dailyNoteVC;
         dailyNoteVC = [[WLLDailyNoteViewController alloc] initWithNibName:@"WLLDailyNoteViewController"
                                                                    bundle:[NSBundle mainBundle]];
-        [WLLDailyNoteDataManager sharedInstance].isBackFromRecycle = YES;
+        dailyNoteVC.isFromRecycle = YES;
         [self.navigationController pushViewController:dailyNoteVC animated:YES];
     }
 }
