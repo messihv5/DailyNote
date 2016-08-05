@@ -27,4 +27,6 @@ typedef void(^WLLPassContentOffsetBlock)(NSInteger offsetByInteger);
 
 @property (strong, nonatomic) NSMutableArray *internetPictureArray;
 
+@property (strong, nonatomic) NSMutableArray *photoUrlArray;
+
 @end

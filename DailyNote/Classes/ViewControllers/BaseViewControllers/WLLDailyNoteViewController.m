@@ -135,7 +135,28 @@ static NSString  *const reuseIdentifier = @"note_cell";
  */
 - (void)addNotificationObserver {
     if (self.isFromCalendar == NO && self.isFromRecycle == NO) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(resumeDiary:) name:@"resumeDiary" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(resumeDiary:)
+                                                     name:@"resumeDiary"
+                                                   object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(updateNoteFromCalendarPage:) name:@"calendarPageChangeNote"
+                                                   object:nil];
+    }
+}
+
+- (void)updateNoteFromCalendarPage:(NSNotification *)notification {
+    NSDictionary *dic = notification.userInfo;
+    
+    NoteDetail *editedNoteModel = dic[@"editedNote"];
+    NSInteger n = 0;
+    for (NoteDetail *model in self.data) {
+        if ([model.diaryId isEqualToString:editedNoteModel.diaryId]) {
+            [self.data replaceObjectAtIndex:n withObject:editedNoteModel];
+            [self.notesTableView reloadData];
+            return;
+        }
+        n++;
     }
 }
 
@@ -768,6 +789,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
         noteDetailVC.passedObject = self.data[indexPath.row];
         noteDetailVC.indexPath = indexPath;
         noteDetailVC.numberOfDiary = self.data.count;
+        noteDetailVC.isFromCalendar = self.isFromCalendar;
         
         //上下篇日记翻页block
         __weak WLLNoteDetailViewController *weakNoteDetailVC = noteDetailVC;
@@ -834,7 +856,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"readyToUpdateNewNote" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"dailyNoteAndSharePageDeleteDiary" object:nil];
-    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"calendarPageChangeNote" object:nil];
     if (self.isFromRecycle == YES) {
         self.isFromRecycle = NO;
     }

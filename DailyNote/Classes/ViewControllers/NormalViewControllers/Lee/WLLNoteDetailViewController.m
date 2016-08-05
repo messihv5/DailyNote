@@ -15,10 +15,6 @@
 @interface WLLNoteDetailViewController ()
 /* 日记-年月标签 */
 @property (weak, nonatomic) IBOutlet UILabel *monthAndYearLabel;
-/* 日记-礼拜标签 */
-@property (weak, nonatomic) IBOutlet UILabel *weekDayLabel;
-/* 日记-时间标签 */
-@property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 /* 日记-内容标签 */
 @property (weak, nonatomic) IBOutlet UILabel *contentLabel;
 /* 日记-控制翻页 */
@@ -44,6 +40,7 @@
  *  用于计算到下一篇日记
  */
 @property (assign, nonatomic) NSInteger nextDiary;
+@property (weak, nonatomic) IBOutlet UIImageView *weatherImageView;
 
 @end
 
@@ -190,28 +187,42 @@
                 imageV.layer.masksToBounds = YES;
                 imageV.layer.cornerRadius = 5.0f;
                 [self.contentView addSubview:imageV];
-                
-                if ([WLLDailyNoteDataManager sharedInstance].isNetworkAvailable) {
-                    //有网络的时候，网络加载图片
-                    if (self.photoArray != nil &&self.photoArray.count != 0) {
-                        if ([self.photoArray[index] isKindOfClass:[AVFile class]]) {
-                            AVFile *file = self.photoArray[index];
-                            [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
-                                [imageV sd_setImageWithURL:[NSURL URLWithString:file.url]];
-                            }];
-                        } else {
-                            NSString *path = self.photoArray[index];
-                            imageV.image = [UIImage imageWithContentsOfFile:path];
-                        }
-                    }
+   //********考虑考虑考虑
+//                if ([WLLDailyNoteDataManager sharedInstance].isNetworkAvailable) {
+//                    //有网络的时候，网络加载图片
+//                    if (self.photoArray != nil && self.photoArray.count != 0) {
+//                        if ([self.photoArray[index] isKindOfClass:[AVFile class]]) {
+//                            AVFile *file = self.photoArray[index];
+//                            [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
+//                                [imageV sd_setImageWithURL:[NSURL URLWithString:file.url]];
+//                            }];
+//                        } else {
+//                            NSString *path = self.photoArray[index];
+//                            imageV.image = [UIImage imageWithContentsOfFile:path];
+//                        }
+//                    }
+//                } else {
+//                    //没有网络的时候，如果有缓存，加载缓存，没有缓存，为空
+//                    if (self.photoUrlArray != nil && self.photoUrlArray.count != 0) {
+//                        NSURL *url = [NSURL URLWithString:self.photoUrlArray[index]];
+//                        [imageV sd_setImageWithURL:url];
+//                    }
+//                }
+//                
+                if (self.photoUrlArray != nil && self.photoUrlArray.count == self.photoArray.count) {
+                    NSString *urlString = self.photoUrlArray[index];
+                    [imageV sd_setImageWithURL:[NSURL URLWithString:urlString]];
                 } else {
-                    //没有网络的时候，如果有缓存，加载缓存，没有缓存，为空
-                    if (self.photoUrlArray != nil && self.photoUrlArray.count != 0) {
-                        NSURL *url = [NSURL URLWithString:self.photoUrlArray[index]];
-                        [imageV sd_setImageWithURL:url];
+                    if ([self.photoArray[index] isKindOfClass:[AVFile class]]) {
+                        AVFile *file = self.photoArray[index];
+                        [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
+                            [imageV sd_setImageWithURL:[NSURL URLWithString:file.url]];
+                        }];
+                    } else {
+                        NSString *path = self.photoArray[index];
+                        imageV.image = [UIImage imageWithContentsOfFile:path];
                     }
                 }
-                
                 index++;
             }
         }
@@ -279,7 +290,7 @@
     NSArray *views = [self.contentView subviews];
     
     for (UIView *view in views) {
-        if ([view isKindOfClass:[UIImageView class]]) {
+        if ([view isKindOfClass:[UIImageView class]] && view.tag < 8) {
             [view removeFromSuperview];
         }
     }
@@ -327,11 +338,13 @@
                     range:NSMakeRange(0, self.contentLabel.text.length)];
         
     self.contentLabel.attributedText = attrStr;
+    
+    //天气图标
+    self.weatherImageView.image = model.weatherImage;
 }
 
 #pragma mark - 导航栏左右键响应
 - (void)backToFront {
-    
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -342,6 +355,7 @@
         EditNoteViewController *editVC = [[EditNoteViewController alloc] initWithNibName:@"EditNoteViewController" bundle:[NSBundle mainBundle]];
         editVC.indexPath = self.indexPath;
         editVC.passedObject = self.passedObject;
+        editVC.isFromeCalendar = self.isFromCalendar;
         
         [self.navigationController pushViewController:editVC animated:YES];
     }

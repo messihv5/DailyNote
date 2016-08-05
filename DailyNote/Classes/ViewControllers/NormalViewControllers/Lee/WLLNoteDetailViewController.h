@@ -36,6 +36,13 @@ typedef void(^NextDiaryBlock)(NSInteger nextDiary);
  *  让dailyNote页面传递下一个model，加载日记
  */
 @property (copy, nonatomic) NextDiaryBlock nextDiaryBlock;
+/**
+ *  日记数
+ */
 @property (assign, nonatomic) NSInteger numberOfDiary;
+/**
+ *  标记是否从calendar传过来的model
+ */
+@property (assign, nonatomic) BOOL isFromCalendar;
 
 @end

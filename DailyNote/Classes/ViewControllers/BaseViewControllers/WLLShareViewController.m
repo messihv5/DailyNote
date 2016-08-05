@@ -191,7 +191,6 @@
                     [refreshControl endRefreshing];
                     self.isLoading = NO;
                 } error:^{
-                    NSLog(@"网络错误，刷新分享日记失败");
                 }];
             }
         }

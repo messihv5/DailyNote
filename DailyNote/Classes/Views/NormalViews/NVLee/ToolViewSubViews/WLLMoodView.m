@@ -21,9 +21,6 @@
 @property (weak, nonatomic) IBOutlet UIImageView *snow;
 @property (weak, nonatomic) IBOutlet UIImageView *fog;
 
-@property (assign, nonatomic) BOOL isSelected;
-@property (assign, nonatomic) NSInteger numberOfImage;
-
 @end
 
 @implementation WLLMoodView
@@ -55,8 +52,6 @@
     
     UITapGestureRecognizer *fogTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(selectedWeatherAction:)];
     [self.fog addGestureRecognizer:fogTap];
-//    self.isSelected = YES;
-  
 }
 
 
@@ -103,6 +98,7 @@
                 self.isSelected = NO;
             } else {
                 self.sunnyInterval.image = [UIImage imageNamed:@"sunny_interval_selected"];
+                self.isSelected = YES;
             }
             
             _sunny.image = [UIImage imageNamed:@"sunny"];
@@ -128,6 +124,7 @@
                 self.isSelected = NO;
             } else {
                 self.cloudy.image = [UIImage imageNamed:@"cloudy_selected"];
+                self.isSelected = YES;
             }
 
             _sunny.image = [UIImage imageNamed:@"sunny"];
@@ -152,6 +149,7 @@
                 self.isSelected = NO;
             } else {
                 self.rainy.image = [UIImage imageNamed:@"rainy_selected"];
+                self.isSelected = YES;
             }
 
             _sunny.image = [UIImage imageNamed:@"sunny"];
@@ -177,6 +175,7 @@
                 self.isSelected = NO;
             } else {
                 self.moon.image = [UIImage imageNamed:@"moon_selected"];
+                self.isSelected = YES;
             }
 
             _sunny.image = [UIImage imageNamed:@"sunny"];
@@ -202,6 +201,7 @@
                 self.isSelected = NO;
             } else {
                 self.thunder.image = [UIImage imageNamed:@"thunder_selected"];
+                self.isSelected = YES;
             }
 
             _sunny.image = [UIImage imageNamed:@"sunny"];
@@ -227,6 +227,7 @@
                 self.isSelected = NO;
             } else {
                 self.snow.image = [UIImage imageNamed:@"snow_selected"];
+                self.isSelected = YES;
             }
 
             _sunny.image = [UIImage imageNamed:@"sunny"];
@@ -252,6 +253,7 @@
                 self.isSelected = NO;
             } else {
                 self.fog.image = [UIImage imageNamed:@"fog_selected"];
+                self.isSelected = YES;
             }
 
             _sunny.image = [UIImage imageNamed:@"sunny"];

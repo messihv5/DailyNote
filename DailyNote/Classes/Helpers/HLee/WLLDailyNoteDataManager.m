@@ -197,39 +197,6 @@ static WLLDailyNoteDataManager *manager = nil;
         } else {
             [self getDataFromArray:objects];
             finished();
-            if ([WLLDailyNoteDataManager sharedInstance].isNetworkAvailable) {
-                for (AVObject *object in objects) {
-                    
-                    NSArray *photoArray = [object objectForKey:@"photoArray"];
-                    
-                    NSArray *photoUrlArray = [object objectForKey:@"photoUrlArray"];
-                    
-                    NSMutableArray *tempArray = [NSMutableArray array];
-                    
-                    if (photoArray != nil && photoArray.count != 0) {
-                        for (AVFile *file in photoArray) {
-                            [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
-                                NSString *urlString = file.url;
-                                
-                                if ([photoUrlArray containsObject:urlString]) {
-                                    
-                                } else {
-                                    [tempArray addObject:file.url];
-                                    
-                                    if (tempArray.count == photoArray.count) {
-                                        [object addObjectsFromArray:tempArray forKey:@"photoUrlArray"];
-                                        object.fetchWhenSave = YES;
-                                        [object saveInBackground];
-                                    }
-                                    
-                                }
-                            }];
-                        }
-                    }
-                    
-                }
-
-            }
         }
     }];
     
@@ -433,15 +400,14 @@ static WLLDailyNoteDataManager *manager = nil;
         } else {
             model.fontNumber = fontNumberString;
         }
-
-        //图片解析出来
-        AVFile *file = photoArray[0];
         
-        [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
-            NSString *urlString = file.url;
-            
-            model.imageUrl = urlString;
-        }];
+        //天气图标解析
+        NSData *weatherImage = [object objectForKey:@"weatherImage"];
+        
+        model.weatherImage = [UIImage imageWithData:weatherImage];
+        
+        //photoUrlArray解析
+        model.photoUrlArray = [object objectForKey:@"photoUrlArray"];
         
         [self.noteData addObject:model];
     }

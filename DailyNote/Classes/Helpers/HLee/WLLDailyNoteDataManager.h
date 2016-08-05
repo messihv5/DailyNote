@@ -70,4 +70,5 @@
  *  @param finished block，返回主页面刷新的block
  */
 - (void)loadFiveDiariesOfRecycleByDate:(NSDate *)date finished:(void (^)())finished;
+
 @end

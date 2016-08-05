@@ -16,5 +16,11 @@
 @interface WLLMoodView : UIView
 
 @property (weak, nonatomic) IBOutlet UISwitch *shareSwitch;
+/**
+ *  天气imageView的父视图
+ */
+@property (weak, nonatomic) IBOutlet UIView *weatherView;
+@property (assign, nonatomic) BOOL isSelected;
+@property (assign, nonatomic) NSInteger numberOfImage;
 
 @end

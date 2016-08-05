@@ -62,5 +62,9 @@
  *  收藏的日记数组
  */
 @property (strong, nonatomic) NSMutableArray *collectionDiaries;
+/**
+ *  保存天气的图标
+ */
+@property (strong, nonatomic) UIImage *weatherImage;
 
 @end

@@ -26,5 +26,9 @@ typedef void(^Block)(NoteDetail *passedToDailyNote);
 @property (copy, nonatomic) Block block;
 /*把第一页面数组的个数传过来*/
 @property (assign, nonatomic) NSInteger numberOfModelInArray;
+/**
+ *  标记是否从calendar穿过来的model
+ */
+@property (assign, nonatomic) BOOL isFromeCalendar;
 
 @end

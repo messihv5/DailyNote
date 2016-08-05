@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
@@ -13,9 +14,8 @@
                 <outlet property="contentViewHeight" destination="bpW-MI-YSN" id="f4b-oW-jt2"/>
                 <outlet property="monthAndYearLabel" destination="d4O-2n-gC8" id="fqv-Yk-5Oi"/>
                 <outlet property="scrollView" destination="ELB-Hg-edf" id="dEw-EJ-BVf"/>
-                <outlet property="timeLabel" destination="pQk-sw-w1m" id="mHn-Eu-J2W"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
-                <outlet property="weekDayLabel" destination="I3g-mN-Q91" id="60L-LA-Fkg"/>
+                <outlet property="weatherImageView" destination="T5N-qR-4PV" id="OFW-ty-2E4"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -42,40 +42,39 @@
                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pQk-sw-w1m">
-                                    <rect key="frame" x="58" y="13" width="31" height="15"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I3g-mN-Q91">
-                                    <rect key="frame" x="99" y="13" width="31" height="15"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AvE-M5-Y7y">
                                     <rect key="frame" x="10" y="55" width="580" height="18"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
+                                <imageView userInteractionEnabled="NO" tag="100" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="T5N-qR-4PV">
+                                    <rect key="frame" x="68" y="3.5" width="30" height="30"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="30" id="H7y-9r-T0S"/>
+                                        <constraint firstAttribute="width" secondItem="T5N-qR-4PV" secondAttribute="height" id="xJc-2U-3wP"/>
+                                    </constraints>
+                                </imageView>
                             </subviews>
                             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
+                                <constraint firstItem="T5N-qR-4PV" firstAttribute="leading" secondItem="d4O-2n-gC8" secondAttribute="trailing" constant="20" id="9ca-QJ-HcS"/>
                                 <constraint firstItem="AvE-M5-Y7y" firstAttribute="top" secondItem="amd-nD-FLY" secondAttribute="bottom" constant="10" id="Bty-Vq-XDc"/>
                                 <constraint firstItem="d4O-2n-gC8" firstAttribute="top" secondItem="Dt1-yy-Jw1" secondAttribute="top" constant="10" id="HiL-UP-Rcr"/>
-                                <constraint firstItem="I3g-mN-Q91" firstAttribute="leading" secondItem="pQk-sw-w1m" secondAttribute="trailing" constant="10" id="Str-uu-IPl"/>
-                                <constraint firstItem="pQk-sw-w1m" firstAttribute="leading" secondItem="d4O-2n-gC8" secondAttribute="trailing" constant="10" id="VS8-8J-NOt"/>
-                                <constraint firstItem="I3g-mN-Q91" firstAttribute="bottom" secondItem="pQk-sw-w1m" secondAttribute="bottom" id="aDp-mn-5Sd"/>
+                                <constraint firstItem="T5N-qR-4PV" firstAttribute="centerY" secondItem="d4O-2n-gC8" secondAttribute="centerY" id="MWx-vr-j7V"/>
                                 <constraint firstItem="amd-nD-FLY" firstAttribute="top" secondItem="Dt1-yy-Jw1" secondAttribute="top" constant="44" id="d7q-Kg-uBD"/>
                                 <constraint firstAttribute="trailing" secondItem="AvE-M5-Y7y" secondAttribute="trailing" constant="10" id="fUY-jk-mYp"/>
-                                <constraint firstItem="pQk-sw-w1m" firstAttribute="bottom" secondItem="d4O-2n-gC8" secondAttribute="bottom" id="oVe-Es-RiR"/>
                                 <constraint firstAttribute="trailing" secondItem="amd-nD-FLY" secondAttribute="trailing" constant="10" id="pNy-VG-91r"/>
                                 <constraint firstItem="d4O-2n-gC8" firstAttribute="leading" secondItem="Dt1-yy-Jw1" secondAttribute="leading" constant="10" id="rMZ-om-wis"/>
                                 <constraint firstItem="amd-nD-FLY" firstAttribute="leading" secondItem="Dt1-yy-Jw1" secondAttribute="leading" constant="10" id="vqz-Sg-yqE"/>
                                 <constraint firstItem="AvE-M5-Y7y" firstAttribute="leading" secondItem="d4O-2n-gC8" secondAttribute="leading" id="yEs-wk-R1R"/>
+                                <constraint firstItem="T5N-qR-4PV" firstAttribute="top" secondItem="Dt1-yy-Jw1" secondAttribute="top" constant="10" id="ysg-Zg-o58"/>
                             </constraints>
+                            <variation key="default">
+                                <mask key="constraints">
+                                    <exclude reference="ysg-Zg-o58"/>
+                                </mask>
+                            </variation>
                         </view>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -136,7 +135,6 @@
                 <constraint firstAttribute="bottom" secondItem="ELB-Hg-edf" secondAttribute="bottom" id="sPk-ed-vhM"/>
                 <constraint firstAttribute="trailing" secondItem="ELB-Hg-edf" secondAttribute="trailing" id="zSI-Li-R6U"/>
             </constraints>
-            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="-202" y="-338"/>
         </view>
     </objects>

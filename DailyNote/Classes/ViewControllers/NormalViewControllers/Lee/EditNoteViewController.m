@@ -77,6 +77,10 @@
 @property (strong, nonatomic) NSMutableArray *localCopyArrayOfModelPhotoArray;
 @property (strong, nonatomic) NSMutableArray *internetCopyArrayOfModelPhotoArray;
 /**
+ *  存放photoUrl的数组
+ */
+@property (strong, nonatomic) NSMutableArray *photoUrlArray;
+/**
  *  获取当前模型对应的AVObject对象
  */
 @property (strong, nonatomic) AVObject *object;
@@ -111,6 +115,9 @@
         
         [self.internetCopyArrayOfModelPhotoArray addObjectsFromArray:photoArray];
     }];
+    
+    //创建一个保存photoUrl的数组
+    [self.photoUrlArray addObjectsFromArray:self.passedObject.photoUrlArray];
     
     // 设置代理
     self.contentText.delegate = self;
@@ -196,6 +203,12 @@
     }
     return _internetCopyArrayOfModelPhotoArray;
 }
+- (NSMutableArray *)photoUrlArray {
+    if (_photoUrlArray == nil) {
+        _photoUrlArray = [NSMutableArray array];
+    }
+    return _photoUrlArray;
+}
 
 
 //网络存放图片数组懒加载
@@ -237,7 +250,6 @@
     if (_indexPath) {   // 如果传过来NSIdexPath不为空, 即从详情页面打开, 为编辑页面，加载数据
         
         //内容
-        // MARK: 没网没内容?!
         self.contentText.text = self.passedObject.content;
         self.countLabel.text = [NSString stringWithFormat:@"%ld", self.contentText.text.length];
         
@@ -325,10 +337,13 @@
 - (void)tapAction:(UITapGestureRecognizer *)tap {
     WLLPictureViewController *pictureVC = [[WLLPictureViewController alloc] initWithNibName:@"WLLPictureViewController"
                                                                                      bundle:[NSBundle mainBundle]];
+    //把点击的图片的tag传给pictureVC
     pictureVC.tagOfImageView = tap.view.tag;
     
+    //传递两个图片数组，一个本地，一个网络存放的
     pictureVC.localPictureArray = self.localCopyArrayOfModelPhotoArray;
     pictureVC.internetPictureArray = self.internetCopyArrayOfModelPhotoArray;
+    pictureVC.photoUrlArray = self.photoUrlArray;
     
     NSArray *imageViewS = self.pictureScrollView.subviews;
     
@@ -517,6 +532,11 @@
                     //model保存数据
                     [self saveDataInModel:self.passedObject];
                     
+                    if (self.isFromeCalendar == YES) {
+                        NSDictionary *dic = [NSDictionary dictionaryWithObject:self.passedObject forKey:@"editedNote"];
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"calendarPageChangeNote" object:nil userInfo:dic];
+                    }
+                    
                     //数据库保存
                     [object fetchInBackgroundWithBlock:^(AVObject *object, NSError *error) {
                         
@@ -528,7 +548,25 @@
                         object.fetchWhenSave = YES;
                         
                         //保存日记的作者为当前用户
-                        [object saveInBackground];
+                        [object saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                            if (succeeded) {
+                                NSArray *photoArray = [object objectForKey:@"photoArray"];
+                                NSMutableArray *tempArray = [NSMutableArray arrayWithCapacity:10];
+                                
+                                for (AVFile *file in photoArray) {
+                                    [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
+                                        NSString *urlString = file.url;
+                                        [tempArray addObject:urlString];
+                                        if (tempArray.count == photoArray.count) {
+                                            self.passedObject.photoUrlArray = tempArray;
+                                            [object removeObjectForKey:@"photoUrlArray"];
+                                            [object addObjectsFromArray:tempArray forKey:@"photoUrlArray"];
+                                            [object saveInBackground];
+                                        }
+                                    }];
+                                }
+                            }
+                        }];
                     }];
                     
                     [self.navigationController popViewControllerAnimated:YES];
@@ -595,6 +633,22 @@
                 [object saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                     if (succeeded) {
                         model.diaryId = object.objectId;
+                        
+                        NSArray *photoArray = [object objectForKey:@"photoArray"];
+                        NSMutableArray *tempArray = [NSMutableArray arrayWithCapacity:10];
+                        
+                        for (AVFile *file in photoArray) {
+                            [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
+                                NSString *urlString = file.url;
+                                [tempArray addObject:urlString];
+                                if (tempArray.count == photoArray.count) {
+                                    self.passedObject.photoUrlArray = tempArray;
+                                    [object removeObjectForKey:@"photoUrlArray"];
+                                    [object addObjectsFromArray:tempArray forKey:@"photoUrlArray"];
+                                    [object saveInBackground];
+                                }
+                            }];
+                        }
                     }
                 }];
             }
@@ -642,6 +696,22 @@
     if (self.isDiaryShared == YES) {
         model.sharedDate = self.sharedDate;
     }
+    
+    //保存天气image
+    if (self.mood.isSelected == YES) {
+        NSInteger numberOfImage = self.mood.numberOfImage;
+        NSArray *weatherImageArray = self.mood.weatherView.subviews;
+        for (UIImageView *imageV in weatherImageArray) {
+            if (imageV.tag == numberOfImage) {
+                model.weatherImage = imageV.image;
+            }
+        }
+    }
+    
+    //保存photoUrArray
+    if (self.indexPath) {
+        model.photoUrlArray = self.photoUrlArray;
+    }
 }
 
 /**
@@ -674,6 +744,32 @@
     //保存分享日期
     if (self.isDiaryShared == YES) {
         [object setObject:self.sharedDate forKey:@"sharedDate"];
+    }
+    
+    //保存天气image
+    if (self.mood.isSelected == YES) {
+        NSInteger numberOfImage = self.mood.numberOfImage;
+        NSArray *weatherImageArray = self.mood.weatherView.subviews;
+        for (UIImageView *imageV in weatherImageArray) {
+            if (imageV.tag == numberOfImage) {
+                NSData *imageData = nil;
+                if (UIImagePNGRepresentation(imageV.image)) {
+                    imageData = UIImagePNGRepresentation(imageV.image);
+                } else if (UIImageJPEGRepresentation(imageV.image, 1)) {
+                    imageData = UIImageJPEGRepresentation(imageV.image, 1);
+                }
+                [object setObject:imageData forKey:@"weatherImage"];
+                break;
+            }
+        }
+    } else {
+        [object setObject:nil forKey:@"weatherImage"];;
+    }
+    
+    //保存photoUrlArray
+    if (self.indexPath) {
+        [object removeObjectForKey:@"photoUrlArray"];
+        [object addObjectsFromArray:self.photoUrlArray forKey:@"photoUrlArray"];
     }
 }
 
