@@ -385,7 +385,6 @@
     cell.nickNameLabel.text = model.nickName;
     [cell.headImageView sd_setImageWithURL:model.headImageUrl];
     cell.starNumberLabel.text = model.starNumber;
-    cell.backgroundColor = [UIColor colorWithRed:0.3 green:0.5 blue:0.7 alpha:0.5];
     
     //判断当前用户是否已经点赞
     if ([model.staredUserArray containsObject:self.currentUser]) {

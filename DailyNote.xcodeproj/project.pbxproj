@@ -94,6 +94,8 @@
 		4D992C7A1D0BF7BD00A23C46 /* blueButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D992C791D0BF7BD00A23C46 /* blueButton.png */; };
 		4D992C7C1D0BF7C200A23C46 /* blue_selectedButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D992C7B1D0BF7C200A23C46 /* blue_selectedButton.png */; };
 		4D9C36041CFD3DEC003108A4 /* scenery.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D9C36031CFD3DEC003108A4 /* scenery.png */; };
+		4DA0FB361D5583C10099203B /* deleteImage30X30.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DA0FB351D5583C10099203B /* deleteImage30X30.png */; };
+		4DA0FB381D5590BF0099203B /* location100X100.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DA0FB371D5590BF0099203B /* location100X100.png */; };
 		4DA9CD641D0CF3190075D1B3 /* red_selectedButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DA9CD631D0CF3190075D1B3 /* red_selectedButton.png */; };
 		4DA9CD661D0CF31D0075D1B3 /* grayButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DA9CD651D0CF31D0075D1B3 /* grayButton.png */; };
 		4DA9CD681D0CF3220075D1B3 /* gray_selectedButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DA9CD671D0CF3220075D1B3 /* gray_selectedButton.png */; };
@@ -296,6 +298,8 @@
 		4D992C791D0BF7BD00A23C46 /* blueButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blueButton.png; sourceTree = "<group>"; };
 		4D992C7B1D0BF7C200A23C46 /* blue_selectedButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blue_selectedButton.png; sourceTree = "<group>"; };
 		4D9C36031CFD3DEC003108A4 /* scenery.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scenery.png; sourceTree = "<group>"; };
+		4DA0FB351D5583C10099203B /* deleteImage30X30.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = deleteImage30X30.png; sourceTree = "<group>"; };
+		4DA0FB371D5590BF0099203B /* location100X100.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = location100X100.png; sourceTree = "<group>"; };
 		4DA9CD631D0CF3190075D1B3 /* red_selectedButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = red_selectedButton.png; sourceTree = "<group>"; };
 		4DA9CD651D0CF31D0075D1B3 /* grayButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = grayButton.png; sourceTree = "<group>"; };
 		4DA9CD671D0CF3220075D1B3 /* gray_selectedButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gray_selectedButton.png; sourceTree = "<group>"; };
@@ -718,6 +722,8 @@
 		4D8A3F2C1CF3D615000C2D42 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				4DA0FB371D5590BF0099203B /* location100X100.png */,
+				4DA0FB351D5583C10099203B /* deleteImage30X30.png */,
 				4DCCEEA51D4DA64300AB1E5C /* collection.png */,
 				4DCCEEA31D4DA5EB00AB1E5C /* collectionSelected.png */,
 				4DCAD5971D1F60EB007E47E9 /* heartSelected40X40.png */,
@@ -1113,6 +1119,7 @@
 				4D7AD7C81D1918EF005237DC /* WLLShareDetailViewController.xib in Resources */,
 				F3DFB41C1D2CDB1900898765 /* WLLCalendarView.xib in Resources */,
 				4DDB2AF71CFEDB96002D7784 /* WChaoShareCellTableViewCell.xib in Resources */,
+				4DA0FB381D5590BF0099203B /* location100X100.png in Resources */,
 				4D48D1CA1CF59B9400D9E4F1 /* NickName.png in Resources */,
 				4DD5198F1D27778800745AA1 /* EditNoteViewController.xib in Resources */,
 				4DCCEEA61D4DA64300AB1E5C /* collection.png in Resources */,
@@ -1165,6 +1172,7 @@
 				4DCAD5981D1F60EB007E47E9 /* heartSelected40X40.png in Resources */,
 				4DD28D1C1D05394800ADA78D /* WLLFunctionController.xib in Resources */,
 				4D8A3F431CF3D7C1000C2D42 /* WLLUserViewController.xib in Resources */,
+				4DA0FB361D5583C10099203B /* deleteImage30X30.png in Resources */,
 				4D888AB41D07CF3D00545F7D /* yellow_circle.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

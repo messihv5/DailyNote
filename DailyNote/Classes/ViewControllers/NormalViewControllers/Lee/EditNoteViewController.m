@@ -92,6 +92,20 @@
  *  标记日记是否分享
  */
 @property (assign, nonatomic) BOOL isDiaryShared;
+/**
+ *  位置信息
+ */
+@property (strong, nonatomic) NSString *locationString;
+/**
+ *  上传日记的指示
+ */
+@property (strong, nonatomic) UIActivityIndicatorView *uploadingDiaryIndicatorView;
+@property (strong, nonatomic) UIView *tipView;
+@property (strong, nonatomic) UILabel *tipLabel;
+/**
+ *  遮盖所有的响应事件视图
+ */
+@property (strong, nonatomic) UIView *ignoreAllEventView;
 
 @end
 
@@ -167,6 +181,69 @@
     
     // 加载来自详情页面数据
     [self dataFromDetail];
+    
+    //添加上传日记的指示
+    [self addUploadingDiaryIndicatorView];
+    
+    //注册监听保存日记成功的通知
+    [self registerSaveNoteNotification];
+    
+    //初始化一个全遮盖View
+    [self initIgnoreAllEventView];
+}
+
+/**
+ *  初始化一个遮盖所有事件的view
+ */
+- (void)initIgnoreAllEventView {
+    CGRect ignoreAllEventViewRect = CGRectMake(0, -64, kWidth, kHeight);
+    self.ignoreAllEventView = [[UIView alloc] initWithFrame:ignoreAllEventViewRect];
+    self.ignoreAllEventView.backgroundColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:0.5];
+}
+
+/**
+ *  登记保存日记成功的通知
+ */
+- (void)registerSaveNoteNotification {
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(dismissTipView:)
+                                                 name:@"dismissTipView"
+                                               object:nil];
+}
+
+/**
+ *  日记保存成功执行的方法
+ *
+ *  @param nitification 日记保存成功的通知
+ */
+- (void)dismissTipView:(NSNotification *)nitification {
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+/**
+ *  添加上传日记提示
+ */
+- (void)addUploadingDiaryIndicatorView {
+    CGRect tipViewRect = CGRectMake(0, 0, 200, 200);
+    self.tipView = [[UIView alloc] initWithFrame:tipViewRect];
+    self.tipView.hidden = NO;
+    [self.view addSubview:self.tipView];
+    self.tipView.center = self.view.center;
+    self.tipView.hidden = YES;
+    
+    CGRect tipLabelRect = CGRectMake(0, 50 - 30, 200, 60);
+    self.tipLabel = [[UILabel alloc] initWithFrame:tipLabelRect];
+    self.tipLabel.text = @"正在上传图片，请稍后";
+    [self.tipView addSubview:self.tipLabel];
+    
+    CGRect indicatorViewRect = CGRectMake(100 - 30, 100 + 50 - 30, 60, 60);
+    self.uploadingDiaryIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    self.uploadingDiaryIndicatorView.frame = indicatorViewRect;
+    [self.tipView addSubview:self.uploadingDiaryIndicatorView];
+    
+    self.uploadingDiaryIndicatorView.color = [UIColor redColor];
+    self.uploadingDiaryIndicatorView.hidesWhenStopped = YES;
+    [self.uploadingDiaryIndicatorView startAnimating];
 }
 
 /**
@@ -477,6 +554,12 @@
     if ([WLLDailyNoteDataManager sharedInstance].isNetworkAvailable == NO) {
         [self tipOfNoneDairyContent];
     } else {
+        
+        //显示上传日记提示，遮盖视图出现
+        [self.view addSubview:self.ignoreAllEventView];
+        [self.view bringSubviewToFront:self.tipView];
+        self.tipView.hidden = NO;
+        
         //归档背景颜色
         NSMutableData *backColorData = [[NSMutableData alloc] init];
         NSKeyedArchiver *archiverBackColor = [[NSKeyedArchiver alloc] initForWritingWithMutableData:backColorData];
@@ -550,6 +633,12 @@
                         //保存日记的作者为当前用户
                         [object saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                             if (succeeded) {
+                                //保存成功发送通知，去掉上传日记的提示框
+                                [[NSNotificationCenter defaultCenter] postNotificationName:@"dismissTipView"
+                                                                                    object:nil
+                                                                                  userInfo:nil];
+                                
+                                //保存成功之后，获取图片数组里面图片的url
                                 NSArray *photoArray = [object objectForKey:@"photoArray"];
                                 NSMutableArray *tempArray = [NSMutableArray arrayWithCapacity:10];
                                 
@@ -568,17 +657,7 @@
                             }
                         }];
                     }];
-                    
-                    [self.navigationController popViewControllerAnimated:YES];
                 }
-            } else {
-                UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"请稍后保存，正在处理网络" message:nil preferredStyle:UIAlertControllerStyleAlert];
-                
-                UIAlertAction *alertAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                }];
-                
-                [alertVC addAction:alertAction];
-                [self.navigationController presentViewController:alertVC animated:YES completion:nil];
             }
         } else {
             
@@ -632,6 +711,11 @@
                 
                 [object saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                     if (succeeded) {
+                        //保存成功发送通知，去掉上传日记的提示框
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"dismissTipView"
+                                                                            object:nil
+                                                                          userInfo:nil];
+                        //保存成功把objectId传给model
                         model.diaryId = object.objectId;
                         
                         NSArray *photoArray = [object objectForKey:@"photoArray"];
@@ -652,7 +736,6 @@
                     }
                 }];
             }
-            [self.navigationController popViewControllerAnimated:YES];
         }
     }
 }
@@ -711,6 +794,12 @@
     //保存photoUrArray
     if (self.indexPath) {
         model.photoUrlArray = self.photoUrlArray;
+    }
+    
+    //位置信息,如果是编辑，就不用重新添加地理位置信息，如果是新建日记,则添加地理位置
+    if (self.indexPath) {
+    } else {
+        model.locationString = self.locationString;
     }
 }
 
@@ -771,6 +860,12 @@
         [object removeObjectForKey:@"photoUrlArray"];
         [object addObjectsFromArray:self.photoUrlArray forKey:@"photoUrlArray"];
     }
+    
+    //位置信息
+    if (self.indexPath) {
+    } else {
+        [object setObject:self.locationString forKey:@"location"];
+    }
 }
 
 // 如果日记内容为空, 弹出提示框
@@ -784,7 +879,6 @@
     }
     
     UIAlertAction *executeAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        
     }];
     
     [alertController addAction:executeAction];
@@ -1125,9 +1219,9 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
             
             NSString *sublocality = dic[@"SubLocality"];
             
-            NSString *string1 = [state stringByAppendingString:city];
+            self.locationString = [state stringByAppendingString:city];
             
-            string1 = [string1 stringByAppendingString:sublocality];
+            self.locationString = [self.locationString stringByAppendingString:sublocality];
             
             [self.locationManager stopUpdatingLocation];
             

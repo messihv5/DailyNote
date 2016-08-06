@@ -137,11 +137,12 @@
         [self.navigationController pushViewController:topicController animated:YES];
         
     } else if (indexPath.section == 2 && indexPath.row == 1) {
+        
+        //开关地理位置
         if ([[self.theCurrentUser objectForKey:@"displayAddress"] isEqualToString:@"YES"]) {
             UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"关闭地理位置" message:nil preferredStyle:UIAlertControllerStyleAlert];
             
             UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-                
             }];
             
             UIAlertAction *executeAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -157,7 +158,6 @@
         } else {
             UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"打开地理位置" message:nil preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-                
             }];
             
             UIAlertAction *executeAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {

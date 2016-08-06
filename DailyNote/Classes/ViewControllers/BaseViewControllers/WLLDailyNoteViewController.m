@@ -65,7 +65,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     self.isLoadedFromViewDidLoad = YES;
 
     self.userDefaults = [NSUserDefaults standardUserDefaults];
@@ -658,23 +658,23 @@ static NSString  *const reuseIdentifier = @"note_cell";
         
         NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:navigationImagesAndTabbarImages];
         
-        [tabbar setTintColor:[UIColor lightGrayColor]];
-        [bar setBarTintColor:[UIColor lightGrayColor]];
+        [tabbar setTintColor:[UIColor magentaColor]];
+        [bar setBarTintColor:[UIColor magentaColor]];
         UIImage *tabbarImage4 = [self imageWithView:tabbar];
         UIImage *navigationImage4 = [self imageWithView:bar];
         
-        [tabbar setTintColor:[UIColor darkTextColor]];
-        [bar setBarTintColor:[UIColor darkTextColor]];
+        [tabbar setTintColor:[UIColor greenColor]];
+        [bar setBarTintColor:[UIColor greenColor]];
         UIImage *tabbarImage2 = [self imageWithView:tabbar];
         UIImage *navigationImage2 = [self imageWithView:bar];
         
-        [tabbar setTintColor:[UIColor redColor]];
-        [bar setBarTintColor:[UIColor redColor]];
+        [tabbar setTintColor:[UIColor cyanColor]];
+        [bar setBarTintColor:[UIColor cyanColor]];
         UIImage *tabbarImage3 = [self imageWithView:tabbar];
         UIImage *navigationImage3 = [self imageWithView:bar];
         
-        [tabbar setTintColor:[UIColor blueColor]];
-        [bar setBarTintColor:[UIColor blueColor]];
+        [tabbar setTintColor:[UIColor lightGrayColor]];
+        [bar setBarTintColor:[UIColor lightGrayColor]];
         UIImage *tabbarImage1 = [self imageWithView:tabbar];
         UIImage *navigationImage1 = [self imageWithView:bar];
         
@@ -697,20 +697,20 @@ static NSString  *const reuseIdentifier = @"note_cell";
     NSString *colorString = [[AVUser currentUser] objectForKey:@"navigationColor"];
     
     if (colorString == nil) {
-        [tabbar setTintColor:[UIColor blueColor]];
-        [bar setBarTintColor:[UIColor blueColor]];
-    } else if ([colorString isEqualToString:@"blue"]) {
-        [tabbar setTintColor:[UIColor blueColor]];
-        [bar setBarTintColor:[UIColor blueColor]];
-    } else if ([colorString isEqualToString:@"black"]) {
-        [tabbar setTintColor:[UIColor darkTextColor]];
-        [bar setBarTintColor:[UIColor darkTextColor]];
+        [tabbar setTintColor:[UIColor lightGrayColor]];
+        [bar setBarTintColor:[UIColor lightGrayColor]];
     } else if ([colorString isEqualToString:@"gray"]) {
         [tabbar setTintColor:[UIColor lightGrayColor]];
         [bar setBarTintColor:[UIColor lightGrayColor]];
-    } else if ([colorString isEqualToString:@"red"]) {
-        [tabbar setTintColor:[UIColor redColor]];
-        [bar setBarTintColor:[UIColor redColor]];
+    } else if ([colorString isEqualToString:@"magenta"]) {
+        [tabbar setTintColor:[UIColor magentaColor]];
+        [bar setBarTintColor:[UIColor magentaColor]];
+    } else if ([colorString isEqualToString:@"green"]) {
+        [tabbar setTintColor:[UIColor greenColor]];
+        [bar setBarTintColor:[UIColor greenColor]];
+    } else if ([colorString isEqualToString:@"cyan"]) {
+        [tabbar setTintColor:[UIColor cyanColor]];
+        [bar setBarTintColor:[UIColor cyanColor]];
     }
 }
 

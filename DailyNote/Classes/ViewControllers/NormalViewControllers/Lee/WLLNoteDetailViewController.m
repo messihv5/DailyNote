@@ -40,7 +40,18 @@
  *  用于计算到下一篇日记
  */
 @property (assign, nonatomic) NSInteger nextDiary;
+/**
+ *  天气图标
+ */
 @property (weak, nonatomic) IBOutlet UIImageView *weatherImageView;
+/**
+ *  位置图标
+ */
+@property (weak, nonatomic) IBOutlet UIImageView *locationImageView;
+/**
+ *  位置label
+ */
+@property (weak, nonatomic) IBOutlet UILabel *locationLabel;
 
 @end
 
@@ -123,8 +134,9 @@
                                                                  target:self
                                                                  action:@selector(editDaily:)];
     
-    UIBarButtonItem *deleteDiary = [[UIBarButtonItem alloc] initWithTitle:@"删除日记" style:UIBarButtonItemStylePlain target:self action:@selector(deleteDiary:)];
+//    UIBarButtonItem *deleteDiary = [[UIBarButtonItem alloc] initWithTitle:@"删除日记" style:UIBarButtonItemStylePlain target:self action:@selector(deleteDiary:)];
     
+    UIBarButtonItem *deleteDiary = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"deleteImage30X30"] style:UIBarButtonItemStylePlain target:self action:@selector(deleteDiary:)];
     self.navigationItem.rightBarButtonItems = @[rightItem, deleteDiary];
 }
 
@@ -341,6 +353,18 @@
     
     //天气图标
     self.weatherImageView.image = model.weatherImage;
+    
+    //是否显示地理位置
+    NSString *locationString = [[AVUser currentUser] objectForKey:@"displayAddress"];
+    if ([locationString isEqualToString:@"NO"]) {
+        self.locationLabel.hidden = YES;
+        self.locationImageView.image = nil;
+    } else {
+        self.locationLabel.hidden = NO;
+        
+        //地理位置信息
+        self.locationLabel.text = model.locationString;
+    }
 }
 
 #pragma mark - 导航栏左右键响应

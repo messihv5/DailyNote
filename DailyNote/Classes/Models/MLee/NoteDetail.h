@@ -66,5 +66,9 @@
  *  保存天气的图标
  */
 @property (strong, nonatomic) UIImage *weatherImage;
+/**
+ *  位置信息
+ */
+@property (strong, nonatomic) NSString *locationString;
 
 @end

@@ -134,7 +134,7 @@
     [self.redButton setImage:[UIImage imageNamed:@"redButton"] forState:UIControlStateNormal];
     [self.grayButton setImage:[UIImage imageNamed:@"grayButton"] forState:UIControlStateNormal];
 
-    self.navigationController.navigationBar.barTintColor = [UIColor blueColor];
+    self.navigationController.navigationBar.barTintColor = [UIColor lightGrayColor];
     
     //更改截图
     self.navigationImageView.image = self.navigationImage1;
@@ -145,7 +145,7 @@
     NSData *tabbarData = UIImagePNGRepresentation(self.tabbarImageView.image);
     
     //把设置的颜色、image保存在currentUser里面
-    [self.theCurrentUser setObject:@"blue" forKey:@"navigationColor"];
+    [self.theCurrentUser setObject:@"gray" forKey:@"navigationColor"];
     [self.theCurrentUser setObject:naviData forKey:@"navigationImage"];
     [self.theCurrentUser setObject:tabbarData forKey:@"tabbarImage"];
     self.theCurrentUser.fetchWhenSave = YES;
@@ -159,7 +159,7 @@
     [self.redButton setImage:[UIImage imageNamed:@"redButton"] forState:UIControlStateNormal];
     [self.grayButton setImage:[UIImage imageNamed:@"grayButton"] forState:UIControlStateNormal];
     
-    self.navigationController.navigationBar.barTintColor = [UIColor darkTextColor];
+    self.navigationController.navigationBar.barTintColor = [UIColor greenColor];
     
     //更改截图
     self.navigationImageView.image = self.navigationImage2;
@@ -169,7 +169,7 @@
     NSData *tabbarData = UIImagePNGRepresentation(self.tabbarImageView.image);
     
     //把设置的颜色、image保存在currentUser里面
-    [self.theCurrentUser setObject:@"black" forKey:@"navigationColor"];
+    [self.theCurrentUser setObject:@"green" forKey:@"navigationColor"];
     [self.theCurrentUser setObject:naviData forKey:@"navigationImage"];
     [self.theCurrentUser setObject:tabbarData forKey:@"tabbarImage"];
     self.theCurrentUser.fetchWhenSave = YES;
@@ -184,7 +184,7 @@
     [self.darkButton setImage:[UIImage imageNamed:@"darkButton"] forState:UIControlStateNormal];
     [self.grayButton setImage:[UIImage imageNamed:@"grayButton"] forState:UIControlStateNormal];
     
-    self.navigationController.navigationBar.barTintColor = [UIColor redColor];
+    self.navigationController.navigationBar.barTintColor = [UIColor cyanColor];
     
     //更改截图
     self.navigationImageView.image = self.navigationImage3;
@@ -194,7 +194,7 @@
     NSData *tabbarData = UIImagePNGRepresentation(self.tabbarImageView.image);
     
     //把设置的颜色、image保存在currentUser里面
-    [self.theCurrentUser setObject:@"red" forKey:@"navigationColor"];
+    [self.theCurrentUser setObject:@"cyan" forKey:@"navigationColor"];
     [self.theCurrentUser setObject:naviData forKey:@"navigationImage"];
     [self.theCurrentUser setObject:tabbarData forKey:@"tabbarImage"];
     self.theCurrentUser.fetchWhenSave = YES;
@@ -209,7 +209,7 @@
     [self.darkButton setImage:[UIImage imageNamed:@"darkButton"] forState:UIControlStateNormal];
     [self.redButton setImage:[UIImage imageNamed:@"redButton"] forState:UIControlStateNormal];
     
-    self.navigationController.navigationBar.barTintColor = [UIColor lightGrayColor];
+    self.navigationController.navigationBar.barTintColor = [UIColor magentaColor];
     
     //获取保存在单例中的image
     self.navigationImageView.image = self.navigationImage4;
@@ -219,13 +219,11 @@
     NSData *tabbarData = UIImagePNGRepresentation(self.tabbarImageView.image);
     
     //把设置的颜色、image保存在currentUser里面
-    [self.theCurrentUser setObject:@"gray" forKey:@"navigationColor"];
+    [self.theCurrentUser setObject:@"magenta" forKey:@"navigationColor"];
     [self.theCurrentUser setObject:naviData forKey:@"navigationImage"];
     [self.theCurrentUser setObject:tabbarData forKey:@"tabbarImage"];
     self.theCurrentUser.fetchWhenSave = YES;
     [self.theCurrentUser saveInBackground];
-
-
 }
 
 - (void)didReceiveMemoryWarning {

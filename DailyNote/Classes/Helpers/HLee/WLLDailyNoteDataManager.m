@@ -409,6 +409,9 @@ static WLLDailyNoteDataManager *manager = nil;
         //photoUrlArray解析
         model.photoUrlArray = [object objectForKey:@"photoUrlArray"];
         
+        //地理位置解析
+        model.locationString = [object objectForKey:@"location"];
+        
         [self.noteData addObject:model];
     }
 }
