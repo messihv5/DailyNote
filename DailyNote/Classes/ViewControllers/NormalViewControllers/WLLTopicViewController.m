@@ -126,7 +126,7 @@
     
 }
 
-//改变主题颜色为蓝色的操作
+//改变主题颜色为gray
 - (void)changeTopicToBlueAction:(UIButton *)sender {
     //把button的图片改为已选择
     [sender setImage:[UIImage imageNamed:@"blue_selectedButton"] forState:UIControlStateNormal];
@@ -134,7 +134,7 @@
     [self.redButton setImage:[UIImage imageNamed:@"redButton"] forState:UIControlStateNormal];
     [self.grayButton setImage:[UIImage imageNamed:@"grayButton"] forState:UIControlStateNormal];
 
-    self.navigationController.navigationBar.barTintColor = [UIColor lightGrayColor];
+    self.navigationController.navigationBar.barTintColor = [UIColor grayColor];
     
     //更改截图
     self.navigationImageView.image = self.navigationImage1;
@@ -152,7 +152,7 @@
     [self.theCurrentUser saveInBackground];
 }
 
-//改变主体颜色为黑色
+//改变主体颜色为green
 - (void)changeTopicToDarkAction:(UIButton *)sender {
     [sender setImage:[UIImage imageNamed:@"dark_selectedButton"] forState:UIControlStateNormal];
     [self.blueButton setImage:[UIImage imageNamed:@"blueButton"] forState:UIControlStateNormal];
@@ -177,14 +177,14 @@
 
 }
 
-//改变主题颜色为红色
+//改变主题颜色为purple
 - (void)changeTopicToRedAction:(UIButton *)sender {
     [sender setImage:[UIImage imageNamed:@"red_selectedButton"] forState:UIControlStateNormal];
     [self.blueButton setImage:[UIImage imageNamed:@"blueButton"] forState:UIControlStateNormal];
     [self.darkButton setImage:[UIImage imageNamed:@"darkButton"] forState:UIControlStateNormal];
     [self.grayButton setImage:[UIImage imageNamed:@"grayButton"] forState:UIControlStateNormal];
     
-    self.navigationController.navigationBar.barTintColor = [UIColor cyanColor];
+    self.navigationController.navigationBar.barTintColor = [UIColor purpleColor];
     
     //更改截图
     self.navigationImageView.image = self.navigationImage3;
@@ -194,7 +194,7 @@
     NSData *tabbarData = UIImagePNGRepresentation(self.tabbarImageView.image);
     
     //把设置的颜色、image保存在currentUser里面
-    [self.theCurrentUser setObject:@"cyan" forKey:@"navigationColor"];
+    [self.theCurrentUser setObject:@"purple" forKey:@"navigationColor"];
     [self.theCurrentUser setObject:naviData forKey:@"navigationImage"];
     [self.theCurrentUser setObject:tabbarData forKey:@"tabbarImage"];
     self.theCurrentUser.fetchWhenSave = YES;
@@ -202,7 +202,7 @@
 
 }
 
-//更改主题颜色为灰色
+//更改主题颜色为magenta
 - (void)changeTopicToGrayAction:(UIButton *)sender {
     [sender setImage:[UIImage imageNamed:@"gray_selectedButton"] forState:UIControlStateNormal];
     [self.blueButton setImage:[UIImage imageNamed:@"blueButton"] forState:UIControlStateNormal];

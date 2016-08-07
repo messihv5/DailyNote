@@ -38,31 +38,31 @@
 + (instancetype)sharedInstance;
 
 //根据点击的日期加载日记
-- (void)loadTenDiariesOfDateString:(NSString *)dateString finished:(void (^)())finished;
+- (void)loadFiveDiariesOfDateString:(NSString *)dateString finished:(void (^)())finished;
 
 //加载dailyNoteViewcontroller页面的10篇日记
-- (void)loadTenDiariesOfTheCurrentUserByDate:(NSDate *)date finished:(void (^)())finished error:(void (^)())hasError;
+- (void)loadFiveDiariesOfTheCurrentUserByDate:(NSDate *)date finished:(void (^)())finished error:(void (^)())hasError;
 
 //下拉加载某一天剩余的日记
 - (void)loadMoreDiariesOfDateString:(NSString *)dateString dateFromloadedDiary:(NSDate *)date finished:(void (^)())finished;
 
 //下拉刷新dailyNoteViewcontroller主页面的10篇日记
-- (void)refreshTenDiariesOfTheCurrentUserByDate:(NSDate *)date finished:(void (^)())finished;
+- (void)refreshFiveDiariesOfTheCurrentUserByDate:(NSDate *)date finished:(void (^)())finished;
 
 //下拉刷新指定日期的10篇日记
-- (void)refreshTenDiriesOfTheCurrentUserByDateString:(NSString *)dateString dateFromLoadDiary:(NSDate *)date finished:(void (^)())finished;
+- (void)refreshFiveDiriesOfTheCurrentUserByDateString:(NSString *)dateString dateFromLoadDiary:(NSDate *)date finished:(void (^)())finished;
 
 //加载10篇分享的日记
-- (void)loadTenDiariesOfSharingByDate:(NSDate *)date finished:(void (^)())finished error:(void (^)())hasError;
+- (void)loadFiveDiariesOfSharingByDate:(NSDate *)date finished:(void (^)())finished error:(void (^)())hasError;
 
 //刷新10篇分享的日记
-- (void)refreshTenDiariesOfSharingByDate:(NSDate *)date finished:(void (^)())finished;
+- (void)refreshFiveDiariesOfSharingByDate:(NSDate *)date finished:(void (^)())finished;
 
 //加载10篇收藏的日记
-- (void)loadTenDiariesOfCollectionByDate:(NSDate *)date finished:(void (^)())finished;
+- (void)loadFiveDiariesOfCollectionByDate:(NSDate *)date finished:(void (^)())finished;
 
 //刷新10篇收藏的日记
-- (void)refreshTenDiariesOfCollectionByDate:(NSDate *)date finished:(void (^)())finished;
+- (void)refreshFiveDiariesOfCollectionByDate:(NSDate *)date finished:(void (^)())finished;
 /**
  *  加载五篇回收站的日记
  *

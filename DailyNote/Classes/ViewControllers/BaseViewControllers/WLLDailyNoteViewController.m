@@ -140,12 +140,12 @@ static NSString  *const reuseIdentifier = @"note_cell";
                                                      name:@"resumeDiary"
                                                    object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(updateNoteFromCalendarPage:) name:@"calendarPageChangeNote"
+                                                 selector:@selector(updaFiveoteFromCalendarPage:) name:@"calendarPageChangeNote"
                                                    object:nil];
     }
 }
 
-- (void)updateNoteFromCalendarPage:(NSNotification *)notification {
+- (void)updaFiveoteFromCalendarPage:(NSNotification *)notification {
     NSDictionary *dic = notification.userInfo;
     
     NoteDetail *editedNoteModel = dic[@"editedNote"];
@@ -256,7 +256,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
         //添加标题
         self.navigationItem.title = self.dateString;
         //从calendar点击来的，加载对应的那一天的日记
-        [[WLLDailyNoteDataManager sharedInstance] loadTenDiariesOfDateString:self.dateString finished:^{
+        [[WLLDailyNoteDataManager sharedInstance] loadFiveDiariesOfDateString:self.dateString finished:^{
             NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
             
             [self.data addObjectsFromArray:array];
@@ -268,12 +268,12 @@ static NSString  *const reuseIdentifier = @"note_cell";
 /**
  *  加载主页面的5篇日记
  */
-- (void)loadTenDiaries {
+- (void)loadFiveDiaries {
     NSDate *cacheDate = [[AVUser currentUser] objectForKey:@"cacheDate"];
     
     NSDate *date = [NSDate date];
     
-    [[WLLDailyNoteDataManager sharedInstance] loadTenDiariesOfTheCurrentUserByDate:date finished:^{
+    [[WLLDailyNoteDataManager sharedInstance] loadFiveDiariesOfTheCurrentUserByDate:date finished:^{
         NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
         [self.data addObjectsFromArray:array];
         [self.notesTableView reloadData];
@@ -281,7 +281,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
         [[AVUser currentUser] setObject:date forKey:@"cacheDate"];
         [[AVUser currentUser] saveInBackground];
     } error:^{
-        [[WLLDailyNoteDataManager sharedInstance] loadTenDiariesOfTheCurrentUserByDate:cacheDate finished:^{
+        [[WLLDailyNoteDataManager sharedInstance] loadFiveDiariesOfTheCurrentUserByDate:cacheDate finished:^{
             NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
             [self.data addObjectsFromArray:array];
             [self.notesTableView reloadData];
@@ -348,7 +348,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
 //                
 //                NSDate *firstDate = firstObject.date;
 //                
-//                [[WLLDailyNoteDataManager sharedInstance] refreshTenDiriesOfTheCurrentUserByDateString:self.dateString dateFromLoadDiary:firstDate finished:^{
+//                [[WLLDailyNoteDataManager sharedInstance] refreshFiveDiriesOfTheCurrentUserByDateString:self.dateString dateFromLoadDiary:firstDate finished:^{
 //                    
 //                    NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
 //                    
@@ -371,7 +371,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
 //            } else {
 //                //数据数组中没有数据时，数据数组直接添加数据
 //                NSDate *date = [NSDate date];
-//                [[WLLDailyNoteDataManager sharedInstance]  loadTenDiariesOfTheCurrentUserByDate:date finished:^{
+//                [[WLLDailyNoteDataManager sharedInstance]  loadFiveDiariesOfTheCurrentUserByDate:date finished:^{
 //                    NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
 //                    if (array.count != 0) {
 //                        [self.data addObjectsFromArray:array];
@@ -398,7 +398,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
 //                
 //                NSDate *firstDate = firstObject.date;
 //                
-//                [[WLLDailyNoteDataManager sharedInstance] refreshTenDiariesOfTheCurrentUserByDate:firstDate finished:^{
+//                [[WLLDailyNoteDataManager sharedInstance] refreshFiveDiariesOfTheCurrentUserByDate:firstDate finished:^{
 //                    NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
 //                    if (array.count != 0) {
 //                        NSInteger number = array.count;
@@ -419,7 +419,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
 //                
 //                NSDate *date = [NSDate date];
 //                
-//                [[WLLDailyNoteDataManager sharedInstance] loadTenDiariesOfTheCurrentUserByDate:date finished:^{
+//                [[WLLDailyNoteDataManager sharedInstance] loadFiveDiariesOfTheCurrentUserByDate:date finished:^{
 //                    NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
 //                    if (array.count != 0) {
 //                        [self.data addObjectsFromArray:array];
@@ -484,8 +484,8 @@ static NSString  *const reuseIdentifier = @"note_cell";
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     CGFloat offset = scrollView.contentOffset.y;
     
-    //contentsize减去scrollView的height + 富余量10
-    CGFloat loadDataContentOffset = scrollView.contentSize.height - self.notesTableView.height + 10;
+    //conFivetsize减去scrollView的height + 富余量10
+    CGFloat loadDataConFivetOffset = scrollView.contentSize.height - self.notesTableView.height + 10;
     
     BOOL networkAvailable = [WLLDailyNoteDataManager sharedInstance].isNetworkAvailable;
 
@@ -495,7 +495,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
     
     if (self.data.count < 5) {
         if (networkAvailable == NO) {
-            if (offset > loadDataContentOffset) {
+            if (offset > loadDataConFivetOffset) {
                 self.upLabel.hidden = NO;
                 self.upLabel.text = @"网络出错";
                 [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(dismissAlertVC:) userInfo:self.upLabel repeats:NO];
@@ -503,7 +503,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
                 return;
             }
         } else {
-            if (offset > loadDataContentOffset) {
+            if (offset > loadDataConFivetOffset) {
                 self.upLabel.hidden = NO;
                 self.upLabel.text = @"日记已加载完";
                 [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(dismissAlertVC:) userInfo:self.upLabel repeats:NO];
@@ -513,13 +513,13 @@ static NSString  *const reuseIdentifier = @"note_cell";
         }
     }
     
-    if (offset > loadDataContentOffset) {
+    if (offset > loadDataConFivetOffset) {
         if (networkAvailable == YES) {
             self.isLoading = YES;
             self.upLabel.hidden = NO;
             self.upLabel.text = @"日记已加载完";
             //调用加载方法
-            [self loadTenMoreDiaries];
+            [self loadFiveMoreDiaries];
         } else {
             self.isLoading = YES;
             self.upLabel.hidden = NO;
@@ -534,7 +534,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
 /**
  *  下拉加载5篇日记
  */
-- (void)loadTenMoreDiaries {
+- (void)loadFiveMoreDiaries {
     NoteDetail *model = [self.data lastObject];
     
     NSDate *date = model.date;
@@ -565,7 +565,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
         }];
     }else {
         //加载主页面的日记
-        [[WLLDailyNoteDataManager sharedInstance] loadTenDiariesOfTheCurrentUserByDate:date finished:^{
+        [[WLLDailyNoteDataManager sharedInstance] loadFiveDiariesOfTheCurrentUserByDate:date finished:^{
             NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
             if (array.count != 0) {
                 [self.data addObjectsFromArray:array];
@@ -607,6 +607,8 @@ static NSString  *const reuseIdentifier = @"note_cell";
                                                                  action:@selector(newDaily:)];
     self.parentViewController.navigationItem.rightBarButtonItem = rightItem;
     self.parentViewController.navigationItem.rightBarButtonItem.tintColor = [UIColor grayColor];
+    
+    self.tabBarController.navigationController.navigationBar.hidden = NO;
 }
 
 /**
@@ -643,7 +645,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
     
     //进入日记，从viewDidLoad进入时，加载一次日记
     if ([AVUser currentUser] && self.isFromCalendar == NO && self.isFromRecycle == NO && self.isLoadedFromViewDidLoad == YES) {
-        [self loadTenDiaries];
+        [self loadFiveDiaries];
         self.isLoadedFromViewDidLoad = NO;
     }
 
@@ -668,13 +670,13 @@ static NSString  *const reuseIdentifier = @"note_cell";
         UIImage *tabbarImage2 = [self imageWithView:tabbar];
         UIImage *navigationImage2 = [self imageWithView:bar];
         
-        [tabbar setTintColor:[UIColor cyanColor]];
-        [bar setBarTintColor:[UIColor cyanColor]];
+        [tabbar setTintColor:[UIColor purpleColor]];
+        [bar setBarTintColor:[UIColor purpleColor]];
         UIImage *tabbarImage3 = [self imageWithView:tabbar];
         UIImage *navigationImage3 = [self imageWithView:bar];
         
-        [tabbar setTintColor:[UIColor lightGrayColor]];
-        [bar setBarTintColor:[UIColor lightGrayColor]];
+        [tabbar setTintColor:[UIColor grayColor]];
+        [bar setBarTintColor:[UIColor grayColor]];
         UIImage *tabbarImage1 = [self imageWithView:tabbar];
         UIImage *navigationImage1 = [self imageWithView:bar];
         
@@ -700,17 +702,17 @@ static NSString  *const reuseIdentifier = @"note_cell";
         [tabbar setTintColor:[UIColor lightGrayColor]];
         [bar setBarTintColor:[UIColor lightGrayColor]];
     } else if ([colorString isEqualToString:@"gray"]) {
-        [tabbar setTintColor:[UIColor lightGrayColor]];
-        [bar setBarTintColor:[UIColor lightGrayColor]];
+        [tabbar setTintColor:[UIColor grayColor]];
+        [bar setBarTintColor:[UIColor grayColor]];
     } else if ([colorString isEqualToString:@"magenta"]) {
         [tabbar setTintColor:[UIColor magentaColor]];
         [bar setBarTintColor:[UIColor magentaColor]];
     } else if ([colorString isEqualToString:@"green"]) {
         [tabbar setTintColor:[UIColor greenColor]];
         [bar setBarTintColor:[UIColor greenColor]];
-    } else if ([colorString isEqualToString:@"cyan"]) {
-        [tabbar setTintColor:[UIColor cyanColor]];
-        [bar setBarTintColor:[UIColor cyanColor]];
+    } else if ([colorString isEqualToString:@"purple"]) {
+        [tabbar setTintColor:[UIColor purpleColor]];
+        [bar setBarTintColor:[UIColor purpleColor]];
     }
 }
 
@@ -854,7 +856,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
  *  移除更新日记通知
  */
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"readyToUpdateNewNote" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"readyToUpdaFiveewNote" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"dailyNoteAndSharePageDeleteDiary" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"calendarPageChangeNote" object:nil];
     if (self.isFromRecycle == YES) {

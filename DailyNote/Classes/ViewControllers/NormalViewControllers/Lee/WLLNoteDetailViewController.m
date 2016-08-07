@@ -134,8 +134,6 @@
                                                                  target:self
                                                                  action:@selector(editDaily:)];
     
-//    UIBarButtonItem *deleteDiary = [[UIBarButtonItem alloc] initWithTitle:@"删除日记" style:UIBarButtonItemStylePlain target:self action:@selector(deleteDiary:)];
-    
     UIBarButtonItem *deleteDiary = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"deleteImage30X30"] style:UIBarButtonItemStylePlain target:self action:@selector(deleteDiary:)];
     self.navigationItem.rightBarButtonItems = @[rightItem, deleteDiary];
 }
@@ -290,6 +288,8 @@
     [self dataFromNoteDailyModel:self.passedObject];
     
     [self addNoteImages];
+    
+    self.navigationController.navigationBar.hidden = NO;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -382,14 +382,6 @@
         editVC.isFromeCalendar = self.isFromCalendar;
         
         [self.navigationController pushViewController:editVC animated:YES];
-    }
-}
-
-
-#pragma mark - 分享到三方
-- (IBAction)sharedToThirdParty:(UIButton *)sender {
-    if ([WLLDailyNoteDataManager sharedInstance].isNetworkAvailable == NO) {
-        [self addTipNoteToButton:nil];
     }
 }
 

@@ -58,7 +58,7 @@ static WLLDailyNoteDataManager *manager = nil;
  *  @param dateString 日期字符串
  *  @param finished   返回主页面执行的block
  */
-- (void)loadTenDiariesOfDateString:(NSString *)dateString finished:(void (^)())finished{
+- (void)loadFiveDiariesOfDateString:(NSString *)dateString finished:(void (^)())finished{
     [self.noteData removeAllObjects];
     NSString *zeroString = [dateString stringByAppendingString:@" 00:00:00"];
     
@@ -141,7 +141,7 @@ static WLLDailyNoteDataManager *manager = nil;
  *  @param date       日期
  *  @param finished   回主页面执行的block
  */
-- (void)refreshTenDiriesOfTheCurrentUserByDateString:(NSString *)dateString dateFromLoadDiary:(NSDate *)date finished:(void (^)())finished {
+- (void)refreshFiveDiriesOfTheCurrentUserByDateString:(NSString *)dateString dateFromLoadDiary:(NSDate *)date finished:(void (^)())finished {
     [self.noteData removeAllObjects];
     
     NSString *twentyfourString = [dateString stringByAppendingString:@" 23:59:59"];
@@ -179,7 +179,7 @@ static WLLDailyNoteDataManager *manager = nil;
  *  @param finished 会主页面执行的block
  *  @param hasError 加载出错时执行的block
  */
-- (void)loadTenDiariesOfTheCurrentUserByDate:(NSDate *)date finished:(void (^)())finished error:(void (^)())hasError{
+- (void)loadFiveDiariesOfTheCurrentUserByDate:(NSDate *)date finished:(void (^)())finished error:(void (^)())hasError{
     [self.noteData removeAllObjects];
     AVQuery *query = [AVQuery queryWithClassName:@"Diary"];
     
@@ -209,7 +209,7 @@ static WLLDailyNoteDataManager *manager = nil;
  *  @param date     日期
  *  @param finished 回主页面执行的block
  */
-- (void)refreshTenDiariesOfTheCurrentUserByDate:(NSDate *)date finished:(void (^)())finished {
+- (void)refreshFiveDiariesOfTheCurrentUserByDate:(NSDate *)date finished:(void (^)())finished {
     [self.noteData removeAllObjects];
     
     AVQuery *query = [AVQuery queryWithClassName:@"Diary"];
@@ -233,7 +233,7 @@ static WLLDailyNoteDataManager *manager = nil;
  *  @param finished 回主页面执行的block
  *  @param hasError 加载错误时的block
  */
-- (void)loadTenDiariesOfSharingByDate:(NSDate *)date finished:(void (^)())finished error:(void (^)())hasError{
+- (void)loadFiveDiariesOfSharingByDate:(NSDate *)date finished:(void (^)())finished error:(void (^)())hasError{
     [self.noteData removeAllObjects];
     AVQuery *query = [AVQuery queryWithClassName:@"Diary"];
     
@@ -261,7 +261,7 @@ static WLLDailyNoteDataManager *manager = nil;
  *  @param date     日期
  *  @param finished 返回主页面执行的操作
  */
-- (void)refreshTenDiariesOfSharingByDate:(NSDate *)date finished:(void (^)())finished {
+- (void)refreshFiveDiariesOfSharingByDate:(NSDate *)date finished:(void (^)())finished {
     [self.noteData removeAllObjects];
     AVQuery *query = [AVQuery queryWithClassName:@"Diary"];
     
@@ -282,7 +282,7 @@ static WLLDailyNoteDataManager *manager = nil;
  *  @param date     日期
  *  @param finished 回主页面执行的block
  */
-- (void)loadTenDiariesOfCollectionByDate:(NSDate *)date finished:(void (^)())finished {
+- (void)loadFiveDiariesOfCollectionByDate:(NSDate *)date finished:(void (^)())finished {
     [self.noteData removeAllObjects];
     
     AVRelation *collectionRelation = [[AVUser currentUser] relationForKey:@"collectionDiaries"];
@@ -307,7 +307,7 @@ static WLLDailyNoteDataManager *manager = nil;
  *  @param date     日期
  *  @param finished 回主页面执行的block
  */
-- (void)refreshTenDiariesOfCollectionByDate:(NSDate *)date finished:(void (^)())finished {
+- (void)refreshFiveDiariesOfCollectionByDate:(NSDate *)date finished:(void (^)())finished {
     [self.noteData removeAllObjects];
     
     AVRelation *collectionRelation = [[AVUser currentUser] relationForKey:@"collectionDiaries"];

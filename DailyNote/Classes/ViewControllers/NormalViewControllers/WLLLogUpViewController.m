@@ -52,8 +52,9 @@
     user.email = self.emailTextField.text;
     user.password = self.passwordTextField.text;
     
-    //设置user的nickName
+    //设置user的nickName,及设置地址为显示
     [user setObject:self.nickNameTextField.text forKey:@"nickName"];
+    [user setObject:@"YES" forKey:@"displayAddress"];
     
     [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
@@ -82,7 +83,7 @@
             [diary saveInBackground];
             
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"注册成功,请到邮箱激活账号"
-                                                                           message:@""
+                                                                           message:nil
                                                                     preferredStyle:UIAlertControllerStyleAlert];
             
             UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault
@@ -91,7 +92,6 @@
             }];
             
             [alert addAction:action];
-            
             [self presentViewController:alert animated:YES completion:nil];
         } else {
 
@@ -105,7 +105,6 @@
             }];
             
             [alert addAction:action];
-            
             [self presentViewController:alert animated:YES completion:nil];
         }
     }];

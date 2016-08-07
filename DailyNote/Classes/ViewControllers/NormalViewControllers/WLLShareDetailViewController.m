@@ -187,30 +187,25 @@
 
 //添加底部栏按钮
 - (void)addToolBarButtons {
-    CGRect backButtonRect = CGRectMake(ScreenWidth / 10 - 15, 15, 30, 30);
+    CGRect backButtonRect = CGRectMake(ScreenWidth / 8 - 15, 15, 30, 30);
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeSystem];
     backButton.frame = backButtonRect;
     [backButton setImage:[UIImage imageNamed:@"backImage2"] forState:UIControlStateNormal];
     [backButton addTarget:self action:@selector(backAction:) forControlEvents:UIControlEventTouchUpInside];
     
-    CGRect starButtonRect = CGRectMake(ScreenWidth / 10 - 15  + ScreenWidth / 5, 15, 30, 30);
+    CGRect starButtonRect = CGRectMake(ScreenWidth / 8 - 15  + ScreenWidth / 4, 15, 30, 30);
     self.starButton = [UIButton buttonWithType:UIButtonTypeSystem];
     self.starButton.frame = starButtonRect;
     [self.starButton setImage:[UIImage imageNamed:@"heart40X40"] forState:UIControlStateNormal];
     [self.starButton addTarget:self action:@selector(starAction:) forControlEvents:UIControlEventTouchUpInside];
     
-    CGRect collectionButtoonRect = CGRectMake(ScreenWidth / 10 - 15 + 2 * ScreenWidth / 5, 15, 30, 30);
+    CGRect collectionButtoonRect = CGRectMake(ScreenWidth / 8 - 15 + 2 * ScreenWidth / 4, 15, 30, 30);
     self.collectionButton = [UIButton buttonWithType:UIButtonTypeSystem];
     self.collectionButton.frame = collectionButtoonRect;
     [self.collectionButton setImage:[UIImage imageNamed:@"collectionImage2"] forState:UIControlStateNormal];
     [self.collectionButton addTarget:self action:@selector(collectionAction:) forControlEvents:UIControlEventTouchUpInside];
     
-    CGRect shareButtonRect = CGRectMake(ScreenWidth / 10 - 15 + 3 * ScreenWidth / 5, 15, 30, 30);
-    UIButton *shareButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    shareButton.frame = shareButtonRect;
-    [shareButton setImage:[UIImage imageNamed:@"shareImage2"] forState:UIControlStateNormal];
-    
-    CGRect reportButtonRect = CGRectMake(ScreenWidth / 10 - 15 + 4 * ScreenWidth / 5, 15, 30, 30);
+    CGRect reportButtonRect = CGRectMake(ScreenWidth / 8 - 15 + 3 * ScreenWidth / 4, 15, 30, 30);
     UIButton *reportButton = [UIButton buttonWithType:UIButtonTypeSystem];
     reportButton.frame = reportButtonRect;
     [reportButton setImage:[UIImage imageNamed:@"reportImage2"] forState:UIControlStateNormal];
@@ -219,7 +214,6 @@
     [self.toolBarView addSubview:backButton];
     [self.toolBarView addSubview:self.starButton];
     [self.toolBarView addSubview:self.collectionButton];
-    [self.toolBarView addSubview:shareButton];
     [self.toolBarView addSubview:reportButton];
 }
 
@@ -431,7 +425,7 @@
         [self reportActionOfTitle:@"其他"];
     }];
     
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
     }];
     
     [alertVC addAction:salacityAction];

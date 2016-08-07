@@ -132,7 +132,7 @@
             
             if (self.passedIndexPath) {
                 //点击收藏加载数据
-                [[WLLDailyNoteDataManager sharedInstance] refreshTenDiariesOfCollectionByDate:firstDate finished:^{
+                [[WLLDailyNoteDataManager sharedInstance] refreshFiveDiariesOfCollectionByDate:firstDate finished:^{
                     NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
                     if (array.count != 0) {
                         NSInteger number = array.count;
@@ -148,7 +148,7 @@
             } else {
                 
                 //嵌套在tabbar中的Viewcontroller加载数据
-                [[WLLDailyNoteDataManager sharedInstance] refreshTenDiariesOfSharingByDate:firstDate finished:^{
+                [[WLLDailyNoteDataManager sharedInstance] refreshFiveDiariesOfSharingByDate:firstDate finished:^{
                     NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
                     if (array.count != 0) {
                         NSInteger number = array.count;
@@ -168,7 +168,7 @@
             NSDate *date = [NSDate date];
             //点击收藏按钮加载的数据
             if (self.passedIndexPath) {
-                [[WLLDailyNoteDataManager sharedInstance] refreshTenDiariesOfCollectionByDate:date finished:^{
+                [[WLLDailyNoteDataManager sharedInstance] refreshFiveDiariesOfCollectionByDate:date finished:^{
                     NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
                     if (array != 0) {
                         [self.data addObjectsFromArray:array];
@@ -181,7 +181,7 @@
                 }];
             } else {
                 //嵌套在tabbar中的Viewcontroller加载数据
-                [[WLLDailyNoteDataManager sharedInstance] loadTenDiariesOfSharingByDate:date finished:^{
+                [[WLLDailyNoteDataManager sharedInstance] loadFiveDiariesOfSharingByDate:date finished:^{
                     NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
                     if (array.count != 0) {
                         [self.data addObjectsFromArray:array];
@@ -296,7 +296,7 @@
     NSDate *date = object.date;
     
     if (self.passedIndexPath) {
-        [[WLLDailyNoteDataManager sharedInstance] loadTenDiariesOfCollectionByDate:date finished:^{
+        [[WLLDailyNoteDataManager sharedInstance] loadFiveDiariesOfCollectionByDate:date finished:^{
             NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
             if (array != 0) {
                 [self.data removeAllObjects];
@@ -306,7 +306,7 @@
             self.isLoading = NO;
         }];
     } else {
-        [[WLLDailyNoteDataManager sharedInstance] loadTenDiariesOfSharingByDate:date finished:^{
+        [[WLLDailyNoteDataManager sharedInstance] loadFiveDiariesOfSharingByDate:date finished:^{
             NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
             if (array.count != 0) {
                 [self.data addObjectsFromArray:array];
@@ -334,7 +334,7 @@
     if (self.passedIndexPath) {
         
         //从收藏页面过来的
-        [[WLLDailyNoteDataManager sharedInstance] loadTenDiariesOfCollectionByDate:todayDate finished:^{
+        [[WLLDailyNoteDataManager sharedInstance] loadFiveDiariesOfCollectionByDate:todayDate finished:^{
             NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
             if (array.count != 0) {
                 [self.data addObjectsFromArray:array];
@@ -342,7 +342,7 @@
             }
         }];
     } else {
-        [[WLLDailyNoteDataManager sharedInstance] loadTenDiariesOfSharingByDate:todayDate finished:^{
+        [[WLLDailyNoteDataManager sharedInstance] loadFiveDiariesOfSharingByDate:todayDate finished:^{
             NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
             if (array.count != 0) {
                 [self.data addObjectsFromArray:array];
@@ -353,7 +353,7 @@
             } else {
             }
         } error:^{
-            [[WLLDailyNoteDataManager sharedInstance] loadTenDiariesOfSharingByDate:shareCacheDate finished:^{
+            [[WLLDailyNoteDataManager sharedInstance] loadFiveDiariesOfSharingByDate:shareCacheDate finished:^{
                 NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
                 if (array.count != 0) {
                     [self.data addObjectsFromArray:array];

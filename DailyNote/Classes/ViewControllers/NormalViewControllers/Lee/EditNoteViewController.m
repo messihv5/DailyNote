@@ -196,9 +196,10 @@
  *  初始化一个遮盖所有事件的view
  */
 - (void)initIgnoreAllEventView {
-    CGRect ignoreAllEventViewRect = CGRectMake(0, -64, kWidth, kHeight);
+    CGRect ignoreAllEventViewRect = CGRectMake(0, -64, kWidth, kHeight + 64);
     self.ignoreAllEventView = [[UIView alloc] initWithFrame:ignoreAllEventViewRect];
     self.ignoreAllEventView.backgroundColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:0.5];
+    self.ignoreAllEventView.userInteractionEnabled = YES;
 }
 
 /**
@@ -559,6 +560,7 @@
         [self.view addSubview:self.ignoreAllEventView];
         [self.view bringSubviewToFront:self.tipView];
         self.tipView.hidden = NO;
+        self.navigationController.navigationBar.hidden = YES;
         
         //归档背景颜色
         NSMutableData *backColorData = [[NSMutableData alloc] init];
@@ -574,7 +576,7 @@
         [archiverFontColor finishEncoding];
 
         if (_indexPath) {
-            
+        
             // 如果是由点击DailyNote页面cell 进入，就是编辑
             // 移除遮盖view
             [self.coverView removeFromSuperview];
@@ -594,70 +596,67 @@
             
             //修改传过来的日记，并保存在网络
             //通过model获取日记
+            AVObject *object = [AVObject objectWithClassName:@"Diary" objectId:self.passedObject.diaryId];
             
-            NSString *objectId = self.passedObject.diaryId;
-            
-            if (objectId != nil) {
-                AVObject *object = [AVObject objectWithClassName:@"Diary" objectId:self.passedObject.diaryId];
+            //保存日记内容,确保作者的内容不为空
+            NSCharacterSet *set = [NSCharacterSet whitespaceAndNewlineCharacterSet];
                 
-                //保存日记内容,确保作者的内容不为空
-                NSCharacterSet *set = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+            NSString *string = [self.contentText.text stringByTrimmingCharactersInSet:set];
                 
-                NSString *string = [self.contentText.text stringByTrimmingCharactersInSet:set];
+            if (self.contentText.text == nil || string.length == 0) {
                 
-                if (self.contentText.text == nil || string.length == 0) {
-                    
-                    //日记内容为空，弹出提示框
-                    [self tipOfNoneDairyContent];
-                    
-                } else {
-                    
-                    //model保存数据
-                    [self saveDataInModel:self.passedObject];
-                    
-                    if (self.isFromeCalendar == YES) {
-                        NSDictionary *dic = [NSDictionary dictionaryWithObject:self.passedObject forKey:@"editedNote"];
-                        [[NSNotificationCenter defaultCenter] postNotificationName:@"calendarPageChangeNote" object:nil userInfo:dic];
+                //日记内容为空，弹出提示框
+                [self tipOfNoneDairyContent];
+            } else {
+                
+                //model保存数据
+                [self saveDataInModel:self.passedObject];
+                
+                if (self.isFromeCalendar == YES) {
+                    NSDictionary *dic = [NSDictionary dictionaryWithObject:self.passedObject forKey:@"editedNote"];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"calendarPageChangeNote"
+                                                                        object:nil
+                                                                      userInfo:dic];
                     }
                     
-                    //数据库保存
-                    [object fetchInBackgroundWithBlock:^(AVObject *object, NSError *error) {
+                //数据库保存
+                [object fetchInBackgroundWithBlock:^(AVObject *object, NSError *error) {
+                    
+                    //图片保存
+                    [object removeObjectForKey:@"photoArray"];
                         
-                        //图片保存
-                        [object removeObjectForKey:@"photoArray"];
+                    [self saveDataInAVObject:object backColorData:backColorData fontColorData:fontColor];
                         
-                        [self saveDataInAVObject:object backColorData:backColorData fontColorData:fontColor];
+                    object.fetchWhenSave = YES;
                         
-                        object.fetchWhenSave = YES;
-                        
-                        //保存日记的作者为当前用户
-                        [object saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                            if (succeeded) {
-                                //保存成功发送通知，去掉上传日记的提示框
-                                [[NSNotificationCenter defaultCenter] postNotificationName:@"dismissTipView"
+                    //保存日记的作者为当前用户
+                    [object saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                        if (succeeded) {
+                            
+                            //保存成功发送通知，去掉上传日记的提示框
+                            [[NSNotificationCenter defaultCenter] postNotificationName:@"dismissTipView"
                                                                                     object:nil
                                                                                   userInfo:nil];
                                 
-                                //保存成功之后，获取图片数组里面图片的url
-                                NSArray *photoArray = [object objectForKey:@"photoArray"];
-                                NSMutableArray *tempArray = [NSMutableArray arrayWithCapacity:10];
+                            //保存成功之后，获取图片数组里面图片的url
+                            NSArray *photoArray = [object objectForKey:@"photoArray"];
+                            NSMutableArray *tempArray = [NSMutableArray arrayWithCapacity:10];
                                 
-                                for (AVFile *file in photoArray) {
-                                    [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
-                                        NSString *urlString = file.url;
-                                        [tempArray addObject:urlString];
-                                        if (tempArray.count == photoArray.count) {
-                                            self.passedObject.photoUrlArray = tempArray;
-                                            [object removeObjectForKey:@"photoUrlArray"];
-                                            [object addObjectsFromArray:tempArray forKey:@"photoUrlArray"];
-                                            [object saveInBackground];
-                                        }
-                                    }];
-                                }
+                            for (AVFile *file in photoArray) {
+                                [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
+                                    NSString *urlString = file.url;
+                                    [tempArray addObject:urlString];
+                                    if (tempArray.count == photoArray.count) {
+                                        self.passedObject.photoUrlArray = tempArray;
+                                        [object removeObjectForKey:@"photoUrlArray"];
+                                        [object addObjectsFromArray:tempArray forKey:@"photoUrlArray"];
+                                        [object saveInBackground];
+                                    }
+                                }];
                             }
-                        }];
+                        }
                     }];
-                }
+                }];
             }
         } else {
             
@@ -718,6 +717,7 @@
                         //保存成功把objectId传给model
                         model.diaryId = object.objectId;
                         
+                        //保存日记成功后，把图片数组里面的图片url保存在photoUrlArray里面
                         NSArray *photoArray = [object objectForKey:@"photoArray"];
                         NSMutableArray *tempArray = [NSMutableArray arrayWithCapacity:10];
                         
@@ -746,6 +746,7 @@
  *  @param model NoteDetail的实例
  */
 - (void)saveDataInModel:(NoteDetail *)model {
+    
     //日记内容
     model.content = self.contentText.text;
     
@@ -1232,10 +1233,10 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
 }
 
 //移除观察着
-#pragma mark - 辅助工具栏按钮响应
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"change" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillChangeFrameNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"dismissTipView" object:nil];
 }
 
 @end
