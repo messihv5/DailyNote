@@ -18,6 +18,8 @@
 #import <CoreLocation/CoreLocation.h>
 #import "SDImageCache.h"
 #import "WLLPictureViewController.h"
+#import "WLLAssetTableViewController.h"
+#import "WLLAlbumTableViewController.h"
 
 #import "WLLAssetPickerController.h"
 #import "WLLAssetPickerState.h"
@@ -553,8 +555,10 @@
 - (void)saveNote:(UIBarButtonItem *)button {
     //没有网络的时候，不能编辑，弹出提示框
     if ([WLLDailyNoteDataManager sharedInstance].isNetworkAvailable == NO) {
-        [self tipOfNoneDairyContent];
+        [self tipOfNoneDiaryContent:button];
     } else {
+        //保存或编辑日记时，注销第一响应，不在编辑
+        [self.contentText resignFirstResponder];
         
         //显示上传日记提示，遮盖视图出现
         [self.view addSubview:self.ignoreAllEventView];
@@ -578,21 +582,20 @@
         if (_indexPath) {
         
             // 如果是由点击DailyNote页面cell 进入，就是编辑
-            // 移除遮盖view
-            [self.coverView removeFromSuperview];
-            
-            // 注销第一响应
-            [self.contentText resignFirstResponder];
-            
-            // 收回font view
-            self.fontView.frame = CGRectMake(0, kHeight, kWidth, 0.4*kHeight);
-            
-            // 收回选择背景色视图
-            self.noteBackgroundColor.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.3);
-            self.choiceView.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.05);
-            
-            // 收回心情视图
-            self.mood.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.4);
+//            // 移除遮盖view
+//            [self.coverView removeFromSuperview];
+//            
+//
+//
+//            // 收回font view
+//            self.fontView.frame = CGRectMake(0, kHeight, kWidth, 0.4*kHeight);
+//            
+//            // 收回选择背景色视图
+//            self.noteBackgroundColor.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.3);
+//            self.choiceView.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.05);
+//            
+//            // 收回心情视图
+//            self.mood.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.4);
             
             //修改传过来的日记，并保存在网络
             //通过model获取日记
@@ -606,7 +609,7 @@
             if (self.contentText.text == nil || string.length == 0) {
                 
                 //日记内容为空，弹出提示框
-                [self tipOfNoneDairyContent];
+                [self tipOfNoneDiaryContent:button];
             } else {
                 
                 //model保存数据
@@ -617,7 +620,7 @@
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"calendarPageChangeNote"
                                                                         object:nil
                                                                       userInfo:dic];
-                    }
+                }
                     
                 //数据库保存
                 [object fetchInBackgroundWithBlock:^(AVObject *object, NSError *error) {
@@ -661,19 +664,6 @@
         } else {
             
             // 如果是由DailyNote页面直接点击添加进入，就是添加
-            // 移除遮盖view
-            [self.coverView removeFromSuperview];
-            
-            // 收回选择背景色视图
-            self.noteBackgroundColor.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.3);
-            self.choiceView.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.05);
-            
-            // 收回心情视图
-            self.mood.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.4);
-            
-            // 收回font view
-            self.fontView.frame = CGRectMake(0, kHeight, kWidth, 0.4*kHeight);
-            
             //创建日记对象，保存日记到网络
             AVObject *object = [AVObject objectWithClassName:@"Diary"];
             
@@ -688,7 +678,7 @@
             if (self.contentText.text == nil || string.length == 0) {
                 
                 //日记内容为空，弹出提示框
-                [self tipOfNoneDairyContent];
+                [self tipOfNoneDiaryContent:button];
                 
             } else {
                 
@@ -870,19 +860,28 @@
 }
 
 // 如果日记内容为空, 弹出提示框
-- (void)tipOfNoneDairyContent {
+- (void)tipOfNoneDiaryContent:(UIButton *)sender {
     UIAlertController *alertController;
     
-    if ([WLLDailyNoteDataManager sharedInstance].isNetworkAvailable == NO) {
-        alertController = [UIAlertController alertControllerWithTitle:@"网络故障，保存失败" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    if (sender) {
+        if ([WLLDailyNoteDataManager sharedInstance].isNetworkAvailable == NO) {
+            alertController = [UIAlertController alertControllerWithTitle:@"网络故障，保存失败" message:nil preferredStyle:UIAlertControllerStyleAlert];
+        } else {
+            alertController = [UIAlertController alertControllerWithTitle:@"日记内容不能为空" message:nil preferredStyle:UIAlertControllerStyleAlert];
+        }
+        
+        UIAlertAction *executeAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        }];
+        
+        [alertController addAction:executeAction];
     } else {
-        alertController = [UIAlertController alertControllerWithTitle:@"日记内容不能为空" message:nil preferredStyle:UIAlertControllerStyleAlert];
+        alertController = [UIAlertController alertControllerWithTitle:@"每篇日记最多保存10副图片" message:nil preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *noMorePicturesAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        }];
+        
+        [alertController addAction:noMorePicturesAction];
     }
     
-    UIAlertAction *executeAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-    }];
-    
-    [alertController addAction:executeAction];
     [self.navigationController presentViewController:alertController animated:YES completion:nil];
 }
 
@@ -933,7 +932,6 @@
 }
 // 改变字体颜色
 - (void)changeFontColor:(UIColor *)fontColor {
-
     self.contentText.textColor = fontColor;
 }
 
@@ -1023,6 +1021,10 @@
 
 // 图片来自拍照
 - (void)pictureFromCamera {
+    if (self.numberOfPictures == 10) {
+        return;
+    }
+    
     UIImagePickerController *pictureController = [[UIImagePickerController alloc] init];
     
     pictureController.sourceType = UIImagePickerControllerSourceTypeCamera;
@@ -1097,6 +1099,12 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
 
 // 图片来自相册
 - (void)pictureFromLibrary {
+    
+    //给图片控制器发送图片数目的通知
+//    NSDictionary *dic = [NSDictionary dictionaryWithObject:[NSNumber numberWithInteger:self.numberOfPictures ]
+//                                                    forKey:@"numberOfPictures"];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"numberOfPictures" object:nil userInfo:dic];
+    
     __weak typeof(self) weakSelf = self;
     WLLAssetPickerController *assetPicker = [WLLAssetPickerController pickerWithCompletion:^(NSDictionary *info) {
         
@@ -1172,7 +1180,12 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
         [weakSelf dismissViewControllerAnimated:YES completion:nil];
     }];
     
-    assetPicker.selectionLimit = 10;
+    assetPicker.selectionLimit = 10 - self.numberOfPictures;
+    
+    //把照片数量传递给WLLAlbumTableViewController
+    NSArray *controllers =  assetPicker.childViewControllers;
+    WLLAlbumTableViewController *vc = controllers[0];
+    vc.numberOfPictures = self.numberOfPictures;
     
     [weakSelf presentViewController:assetPicker animated:YES completion:nil];
 }

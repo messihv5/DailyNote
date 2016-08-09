@@ -15,6 +15,7 @@
 @interface WLLAssetTableViewController () <WLLAssetsTableViewCellDelegate>
 @property (nonatomic, strong) NSMutableArray *fetchedAssets;
 @property (nonatomic, readonly) NSInteger assetsPerRow;
+@property (nonatomic, assign) NSInteger numberOf;
 @end
 
 
@@ -64,6 +65,14 @@
     self.tableView.allowsSelection = NO;
     
     [self fetchAssets];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getNumberOfPictures:) name:@"numberOfPictures" object:nil];
+}
+
+- (void)getNumberOfPictures:(NSNotification *)notification {
+    NSDictionary *dic = notification.userInfo;
+    NSNumber *number = dic[@"numberOfPictures"];
+    self.numberOfPictures = [number integerValue];
 }
 
 #pragma mark - Getters
@@ -127,10 +136,31 @@
     [self.assetPickerState sessionCompleted];
 }
 
-
 #pragma mark - WLLAssetsTableViewCellDelegate Methods
 
 - (BOOL)assetsTableViewCell:(WLLAssetsCell *)cell shouldSelectAssetAtColumn:(NSUInteger)column {
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+    
+    NSUInteger assetIndex = indexPath.row * self.assetsPerRow + column;
+    
+    WLLAssetWrapper *assetWrapper = [self.fetchedAssets objectAtIndex:assetIndex];
+    
+    if (assetWrapper.isSelected == YES) {
+        self.assetPickerState.selectedCount--;
+    }
+    
+    if (self.numberOfPictures + self.assetPickerState.selectedCount + 1 > 10 ) {
+        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"每篇日记图片不超过10"
+                                                                         message:nil
+                                                                  preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        }];
+        
+        [alertVC addAction:cancelAction];
+        
+        [self.navigationController presentViewController:alertVC animated:YES completion:nil];
+    }
+
     return (self.assetPickerState.selectedCount < self.assetPickerState.selectionLimit);
 }
 

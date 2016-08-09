@@ -16,5 +16,6 @@
 
 @property (nonatomic, weak) WLLAssetPickerState *assetPickerState;
 @property (nonatomic, weak) ALAssetsGroup *assetsGroup; // Data source (a specific, filtered, group of assets).
+@property (assign, nonatomic) NSInteger numberOfPictures;
 
 @end

@@ -13,5 +13,6 @@
 @interface WLLAlbumTableViewController : UITableViewController
 
 @property (nonatomic, weak) WLLAssetPickerState *assetPickerState;
+@property (assign, nonatomic) NSInteger numberOfPictures;
 
 @end

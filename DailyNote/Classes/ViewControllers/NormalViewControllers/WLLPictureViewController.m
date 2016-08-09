@@ -330,9 +330,9 @@
     [self.localPictureArray removeObjectAtIndex:offSetByInteger];
     [self.internetPictureArray removeObjectAtIndex:offSetByInteger];
     
-    if (offSetByInteger < self.photoUrlArray.count) {
-        [self.photoUrlArray removeObjectAtIndex:offSetByInteger];
-    }
+//    if (offSetByInteger < self.photoUrlArray.count) {
+//        [self.photoUrlArray removeObjectAtIndex:offSetByInteger];
+//    }
 }
 
 /**

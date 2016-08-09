@@ -218,7 +218,7 @@
 //                        [imageV sd_setImageWithURL:url];
 //                    }
 //                }
-//                
+//
                 if (self.photoUrlArray != nil && self.photoUrlArray.count == self.photoArray.count) {
                     NSString *urlString = self.photoUrlArray[index];
                     [imageV sd_setImageWithURL:[NSURL URLWithString:urlString]];
@@ -284,29 +284,31 @@
     
     [super viewWillAppear:YES];
 
-    // 本页数据加载自日志页面
+    //本页数据加载自日志页面，每次将要出现时，从新加载一次，相当于tableview的reload
     [self dataFromNoteDailyModel:self.passedObject];
     
+    //添加照片
     [self addNoteImages];
-    
+
     self.navigationController.navigationBar.hidden = NO;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     
+    //视图消失时，移除所有的图片imageView
     [self removeAllImageView];
 }
 
+//移除图片imageView
 - (void)removeAllImageView {
     NSArray *views = [self.contentView subviews];
     
     for (UIView *view in views) {
-        if ([view isKindOfClass:[UIImageView class]] && view.tag < 8) {
+        if ([view isKindOfClass:[UIImageView class]] && view.tag < 100) {
             [view removeFromSuperview];
         }
     }
-
 }
 
 /**

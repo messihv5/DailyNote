@@ -113,6 +113,7 @@
     WLLAssetTableViewController *assetTableViewController = [[WLLAssetTableViewController alloc] initWithStyle:UITableViewStylePlain];
     assetTableViewController.assetPickerState = self.assetPickerState;
     assetTableViewController.assetsGroup = group;
+    assetTableViewController.numberOfPictures = self.numberOfPictures;
     
     [self.navigationController pushViewController:assetTableViewController animated:YES];
 }

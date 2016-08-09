@@ -7,8 +7,8 @@
 //
 
 #import "WLLAssetPickerController.h"
-#import "WLLAssetPickerState.h"
 #import "WLLAlbumTableViewController.h"
+#import "WLLAssetPickerState.h"
 
 #define SELECTED_COUNT_KEY @"selectedCount"
 
