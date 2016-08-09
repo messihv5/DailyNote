@@ -65,6 +65,35 @@
     [self addAlertView];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sharePageDeleteDiary:) name:@"dailyNoteAndSharePageDeleteDiary" object:nil];
+    
+    //分享主页面注册更新日记通知
+    [self registerUpdateNotification];
+}
+
+- (void)registerUpdateNotification {
+    if (self.passedIndexPath == nil) {
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(updateDiaries:)
+                                                     name:@"sharePageToUpdateThreeInfo"
+                                                   object:nil];
+    }
+}
+
+- (void)updateDiaries:(NSNotification *)notification {
+    NSDictionary *dic = notification.userInfo;
+    
+    NSString *objectId = dic[@"objectId"];
+    
+    for (NoteDetail *model in self.data) {
+        if ([model.diaryId isEqualToString:objectId]) {
+            model.staredUserArray = dic[@"staredUserArray"];
+            model.collectionDiaries = dic[@"collectionDiaries"];
+            model.readTime = dic[@"readTime"];
+            model.currentDiaryStarNumber = dic[@"starNumber"];
+            [self.shareTableView reloadData];
+            return;
+        }
+    }
 }
 
 //加载从收藏界面push过来的controller
@@ -299,7 +328,6 @@
         [[WLLDailyNoteDataManager sharedInstance] loadFiveDiariesOfCollectionByDate:date finished:^{
             NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
             if (array != 0) {
-                [self.data removeAllObjects];
                 [self.data addObjectsFromArray:array];
                 [self.shareTableView reloadData];
             }

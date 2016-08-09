@@ -37,12 +37,11 @@
     self.dateLabel.text = [NSString nt_monthAndYearFromDate:createdDate];
     
     //图片解析
-    
     NSArray *photoArray = model.photoArray;
     
     NSArray *photoUrlArray = model.photoUrlArray;
     
-    if (photoUrlArray != nil && photoUrlArray.count == photoArray.count) {
+    if (photoUrlArray.count != 0 && photoUrlArray.count == photoArray.count) {
         NSString *urlString = photoUrlArray[0];
         
         [self.noteImage sd_setImageWithURL:[NSURL URLWithString:urlString]];

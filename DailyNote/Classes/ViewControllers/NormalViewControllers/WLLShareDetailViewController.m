@@ -219,6 +219,17 @@
 
 //返回操作
 - (void)backAction:(UIButton *)sender {
+    if (self.passedIndexPath) {
+        NSArray *staredUserArray = self.passedObject.staredUserArray;
+        NSArray *collectionDiaries = self.passedObject.collectionDiaries;
+        NSString *readTime = self.passedObject.readTime;
+        NSString *starNumber = self.passedObject.currentDiaryStarNumber;
+        NSString *objectId = self.passedObject.diaryId;
+        
+        NSDictionary *dic = @{@"staredUserArray":staredUserArray, @"collectionDiaries":collectionDiaries, @"readTime":readTime, @"starNumber":starNumber, @"objectId":objectId};
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"sharePageToUpdateThreeInfo" object:nil userInfo:dic];
+    }
+   
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -292,55 +303,6 @@
 
 //收藏操作
 - (void)collectionAction:(UIButton *)sender {
-//    AVRelation *collectionRelation = [self.currentUser relationForKey:@"collectionDiaries"];
-//    
-//    AVQuery *collectionQuery = [collectionRelation query];
-//    
-//    AVObject *diary = [AVObject objectWithClassName:@"Diary" objectId:self.passedObject.diaryId];
-//    
-//    [collectionQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-//        if ([objects containsObject:diary]) {
-//            
-//            //已经收藏，点击之后取消收藏
-//            [collectionRelation removeObject:diary];
-//            [self.passedObject.collectionDiaries removeObject:diary];
-//            [self.currentUser saveInBackground];
-//            
-//            self.reminderLabel.hidden = NO;
-//            self.reminderLabel.text = @"已取消收藏";
-//            [sender setImage:[UIImage imageNamed:@"collection"] forState:UIControlStateNormal];
-//            [NSTimer scheduledTimerWithTimeInterval:1
-//                                             target:self
-//                                           selector:@selector(hidesAlertLabel)
-//                                           userInfo:nil
-//                                            repeats:NO];
-//            
-//            //如果是从收藏页面进来的，点取消收藏时，给收藏主页面发通知，让其删除已经取消收藏的日记
-//            if (self.passedIndexPath) {
-//                NSDictionary *usrInfo = @{@"passedObject":self.passedObject};
-//                [[NSNotificationCenter defaultCenter] postNotificationName:@"deleteThisDiariyCollection"
-//                                                                    object:nil
-//                                                                  userInfo:usrInfo];
-//            }
-//        } else {
-//            
-//            //没有收藏
-//            [diary saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-//                if (error) {
-//                } else {
-//                    AVRelation *collectionRelation = [self.currentUser relationForKey:@"collectionDiaries"];
-//                    [collectionRelation addObject:diary];
-//                    [self.passedObject.collectionDiaries addObject:diary];
-//                    [self.currentUser saveInBackground];
-//                    
-//                    self.reminderLabel.hidden = NO;
-//                    self.reminderLabel.text = @"已收藏";
-//                    [self.collectionButton setImage:[UIImage imageNamed:@"collectionSelected"] forState:UIControlStateNormal];
-//                    [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(hidesAlertLabel) userInfo:nil repeats:NO];
-//                }
-//            }];
-//        }
-//    }];
     NSMutableArray *collectionDiaries = self.passedObject.collectionDiaries;
     
     AVObject *object = [AVObject objectWithClassName:@"Diary" objectId:self.passedObject.diaryId];
