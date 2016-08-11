@@ -155,7 +155,7 @@
     self.collectionDiaries = self.passedObject.collectionDiaries;
     
     if ([self.collectionDiaries containsObject:object]) {
-        [self.collectionButton setImage:[UIImage imageNamed:@"collectionSelected"] forState:UIControlStateNormal];
+//        [self.collectionButton setImage:[UIImage imageNamed:@"collectionSelected"] forState:UIControlStateNormal];
     } else {
         [self.collectionButton setImage:[UIImage imageNamed:@"collection"] forState:UIControlStateNormal];
     }
@@ -382,7 +382,7 @@
                 
                 self.reminderLabel.hidden = NO;
                 self.reminderLabel.text = @"已收藏";
-                [sender setImage:[UIImage imageNamed:@"collectionSelected"] forState:UIControlStateNormal];
+//                [sender setImage:[UIImage imageNamed:@"collectionSelected"] forState:UIControlStateNormal];
                 [NSTimer scheduledTimerWithTimeInterval:1
                                                  target:self
                                                selector:@selector(hidesAlertLabel)

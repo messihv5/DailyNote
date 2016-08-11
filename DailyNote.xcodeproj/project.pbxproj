@@ -107,7 +107,6 @@
 		4DC3459E1D10F64A00D260BA /* backButton2.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DC3459D1D10F64A00D260BA /* backButton2.png */; };
 		4DCAD5961D1F60BC007E47E9 /* heart40X40.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DCAD5951D1F60BC007E47E9 /* heart40X40.png */; };
 		4DCAD5981D1F60EB007E47E9 /* heartSelected40X40.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DCAD5971D1F60EB007E47E9 /* heartSelected40X40.png */; };
-		4DCCEEA41D4DA5EB00AB1E5C /* collectionSelected.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DCCEEA31D4DA5EB00AB1E5C /* collectionSelected.png */; };
 		4DCCEEA61D4DA64300AB1E5C /* collection.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DCCEEA51D4DA64300AB1E5C /* collection.png */; };
 		4DD28D161D04F37500ADA78D /* WLLSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DD28D141D04F37500ADA78D /* WLLSettingViewController.m */; };
 		4DD28D171D04F37500ADA78D /* WLLSettingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4DD28D151D04F37500ADA78D /* WLLSettingViewController.xib */; };
@@ -313,7 +312,6 @@
 		4DC3459D1D10F64A00D260BA /* backButton2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = backButton2.png; sourceTree = "<group>"; };
 		4DCAD5951D1F60BC007E47E9 /* heart40X40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = heart40X40.png; sourceTree = "<group>"; };
 		4DCAD5971D1F60EB007E47E9 /* heartSelected40X40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = heartSelected40X40.png; sourceTree = "<group>"; };
-		4DCCEEA31D4DA5EB00AB1E5C /* collectionSelected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = collectionSelected.png; sourceTree = "<group>"; };
 		4DCCEEA51D4DA64300AB1E5C /* collection.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = collection.png; sourceTree = "<group>"; };
 		4DD28D131D04F37500ADA78D /* WLLSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLSettingViewController.h; sourceTree = "<group>"; };
 		4DD28D141D04F37500ADA78D /* WLLSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLSettingViewController.m; sourceTree = "<group>"; };
@@ -725,7 +723,6 @@
 				4DA0FB371D5590BF0099203B /* location100X100.png */,
 				4DA0FB351D5583C10099203B /* deleteImage30X30.png */,
 				4DCCEEA51D4DA64300AB1E5C /* collection.png */,
-				4DCCEEA31D4DA5EB00AB1E5C /* collectionSelected.png */,
 				4DCAD5971D1F60EB007E47E9 /* heartSelected40X40.png */,
 				4DCAD5951D1F60BC007E47E9 /* heart40X40.png */,
 				4D2010231D1A3AFD00CE8EC9 /* heart15X15.png */,
@@ -1126,7 +1123,6 @@
 				4DA9CD661D0CF31D0075D1B3 /* grayButton.png in Resources */,
 				4D1550D31CFD8B79001CF139 /* WLLModifyInfomationViewController.xib in Resources */,
 				4DAFDC661D0697520027B677 /* WLLSecurityViewController.xib in Resources */,
-				4DCCEEA41D4DA5EB00AB1E5C /* collectionSelected.png in Resources */,
 				4D48D1C81CF56CDA00D9E4F1 /* WLLResetPasswordViewController.xib in Resources */,
 				4D8A3EFF1CF3D14D000C2D42 /* Assets.xcassets in Resources */,
 				4D83E3391D0C5C9B003D5756 /* darkButton.png in Resources */,

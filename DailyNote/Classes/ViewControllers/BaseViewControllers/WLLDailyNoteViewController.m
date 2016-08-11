@@ -591,6 +591,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
     [self.notesTableView reloadData];
     
     self.parentViewController.navigationItem.title = @"Time Line";
+   
     
     // 左侧barbutton
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"calendarNotes"]
