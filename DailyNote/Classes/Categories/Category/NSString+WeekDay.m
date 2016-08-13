@@ -22,7 +22,7 @@
 
     // 设置时间格式
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"yyyy.MM"];
+    [formatter setDateFormat:@"yyyy.MM.dd"];
     return [formatter stringFromDate:date];
 }
 

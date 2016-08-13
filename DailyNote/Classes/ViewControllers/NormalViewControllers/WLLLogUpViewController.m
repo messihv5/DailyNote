@@ -40,8 +40,9 @@
     self.nickNameTextField.returnKeyType = UIReturnKeyNext;
     self.passwordTextField.returnKeyType = UIReturnKeyDefault;
     
-    
-    }
+    self.logUpImageView.layer.cornerRadius = kWidth / 6;
+    self.logUpImageView.layer.masksToBounds = YES;
+}
 
 #pragma mark - 注册操作
 

@@ -71,6 +71,7 @@
     //查询nickName及signature
     [self searchForNickNameAndSignature];
     
+    self.tabBarController.navigationController.navigationBar.tintColor = [UIColor whiteColor];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -176,7 +177,8 @@
     CGRect logOutButtonRect = CGRectMake(kWidth / 2 - 100, 10, 200, 30);
     UIButton *logOutButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [logOutButton setTitle:@"退出系统" forState:UIControlStateNormal];
-    logOutButton.backgroundColor = [UIColor greenColor];
+    logOutButton.tintColor = [UIColor whiteColor];
+    logOutButton.backgroundColor = [UIColor colorWithRed:0.3 green:0.2 blue:0.1 alpha:0.5];
     logOutButton.titleLabel.font = [UIFont systemFontOfSize:20];
     logOutButton.frame = logOutButtonRect;
     [footView addSubview:logOutButton];
@@ -200,6 +202,7 @@
                                                             forIndexPath:indexPath];
     SystemModel *cellModel = self.data[indexPath.section][indexPath.row];
     cell.imageView.image = cellModel.systemImage;
+    cell.imageView.contentMode = UIViewContentModeScaleAspectFit;
     cell.textLabel.text = cellModel.systemString;
     return cell;
 }
@@ -234,7 +237,7 @@
     } else if (indexPath.section == 1 && indexPath.row == 0) {
         
         //进入AppStore去评价
-        NSString *str = @"https://itunes.apple.com/us/app/wu-ji-zuo-zui-hao-jing-zhi/id1084747109?mt=8";
+        NSString *str = @"http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=1143422067&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8 ";
         
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:str]];
 
@@ -251,7 +254,7 @@
     } else if (indexPath.section == 1 && indexPath.row == 3) {
         
         //进入分享页面
-//        NSArray* imageArray = @[[UIImage imageNamed:@"blue_circle"]];
+        NSArray* imageArray = @[[UIImage imageNamed:@"mNote"]];
 //        if (imageArray) {
 //            
 //            NSMutableDictionary *shareParams = [NSMutableDictionary dictionary];
@@ -301,11 +304,11 @@
     NSMutableArray *firstSection = [NSMutableArray array];
     
     SystemModel *userDocumentModel = [[SystemModel alloc] init];
-    userDocumentModel.systemImage = [UIImage imageNamed:@"changeUserInformation"];
+    userDocumentModel.systemImage = [UIImage imageNamed:@"editPersonalInfo"];
     userDocumentModel.systemString = @"资料修改";
     
     SystemModel *collectionModel = [[SystemModel alloc] init];
-    collectionModel.systemImage = [UIImage imageNamed:@"systemNotice2"];
+    collectionModel.systemImage = [UIImage imageNamed:@"personalCollection"];
     collectionModel.systemString = @"个人收藏";
     
     [firstSection addObject:userDocumentModel];
@@ -314,11 +317,11 @@
     
     NSMutableArray *thirdSection = [NSMutableArray array];
     SystemModel *encourageModel = [[SystemModel alloc] init];
-    encourageModel.systemImage = [UIImage imageNamed:@"encourage"];
+    encourageModel.systemImage = [UIImage imageNamed:@"evaluateApp"];
     encourageModel.systemString = @"给予好评";
     
     SystemModel *moreFunctionModel = [[SystemModel alloc] init];
-    moreFunctionModel.systemImage = [UIImage imageNamed:@"moreFunction"];
+    moreFunctionModel.systemImage = [UIImage imageNamed:@"moreUserFunction"];
     moreFunctionModel.systemString = @"更多功能";
     
     SystemModel *settingModel = [[SystemModel alloc] init];

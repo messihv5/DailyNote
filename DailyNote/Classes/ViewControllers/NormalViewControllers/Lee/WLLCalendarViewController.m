@@ -29,6 +29,19 @@
     [super viewDidLoad];
     
     [self presentCalendarView];
+    
+    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    
+    [self addLeftAction];
+}
+
+- (void)addLeftAction {
+    UIBarButtonItem *left = [[UIBarButtonItem alloc] initWithTitle:@"返回" style:UIBarButtonItemStylePlain target:self action:@selector(backAction:)];
+    self.navigationItem.leftBarButtonItem = left;
+}
+
+- (void)backAction:(UIBarButtonItem *)button {
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)presentCalendarView {

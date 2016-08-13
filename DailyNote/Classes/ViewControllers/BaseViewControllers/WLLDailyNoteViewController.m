@@ -29,6 +29,7 @@
  *  存放NoteDetail对象的数组
  */
 @property (strong, nonatomic) NSMutableArray *data;
+@property (strong, nonatomic) NSMutableArray *data1;
 @property (strong, nonatomic) NSUserDefaults *userDefaults;
 @property (strong, nonatomic) UILabel *downLoadLabel;
 @property (strong, nonatomic) UIView *alertView;
@@ -94,15 +95,25 @@ static NSString  *const reuseIdentifier = @"note_cell";
     //加载recycle的5篇日记
     [self loadFiveDiariesOfRecycle];
     
-    //注册恢复日记的通知
+    //注册恢复日记的通知,及更新在calendar页面编辑的日记
     [self addNotificationObserver];
     
     //注册删除日记的通知
     [self addDeleteDiaryNotification];
+    
+    [self.data1 addObjectsFromArray:self.data];
+    [self.data addObjectsFromArray:self.data1];
+}
+
+- (NSMutableArray *)data1 {
+    if (_data1 == nil) {
+        _data1 = [NSMutableArray arrayWithCapacity:10];
+    }
+    return _data1;
 }
 
 /**
- *  添加删除日记的通知，只要勇于在详情页面删除日记时，dailyNote页面同时删除数据
+ *  添加删除日记的通知，主要用于在详情页面删除日记时，dailyNote页面同时删除数据
  */
 - (void)addDeleteDiaryNotification {
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -140,12 +151,12 @@ static NSString  *const reuseIdentifier = @"note_cell";
                                                      name:@"resumeDiary"
                                                    object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(updaFiveoteFromCalendarPage:) name:@"calendarPageChangeNote"
+                                                 selector:@selector(updaFiveNoteFromCalendarPage:) name:@"calendarPageChangeNote"
                                                    object:nil];
     }
 }
 
-- (void)updaFiveoteFromCalendarPage:(NSNotification *)notification {
+- (void)updaFiveNoteFromCalendarPage:(NSNotification *)notification {
     NSDictionary *dic = notification.userInfo;
     
     NoteDetail *editedNoteModel = dic[@"editedNote"];
@@ -281,18 +292,16 @@ static NSString  *const reuseIdentifier = @"note_cell";
         [[AVUser currentUser] setObject:date forKey:@"cacheDate"];
         [[AVUser currentUser] saveInBackground];
     } error:^{
-        [[WLLDailyNoteDataManager sharedInstance] loadFiveDiariesOfTheCurrentUserByDate:cacheDate finished:^{
-            NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
-            [self.data addObjectsFromArray:array];
-            [self.notesTableView reloadData];
-
-            self.upLabel.hidden = YES;
-        } error:^{
-            //添加网络错误的代码
-            UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"网络故障" message:nil preferredStyle:UIAlertControllerStyleAlert];
-            [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(dismissAlertVC:) userInfo:alertVC repeats:NO];
-            [self.navigationController presentViewController:alertVC animated:YES completion:nil];
-        }];
+        if (cacheDate != nil) {
+            [[WLLDailyNoteDataManager sharedInstance] loadFiveDiariesOfTheCurrentUserByDate:cacheDate finished:^{
+                NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
+                [self.data addObjectsFromArray:array];
+                [self.notesTableView reloadData];
+                
+                self.upLabel.hidden = YES;
+            } error:^{
+            }];
+        }
     }];
 }
 
@@ -459,10 +468,10 @@ static NSString  *const reuseIdentifier = @"note_cell";
  *  本页面添加一个提示标签“日记已加载完”，“网络故障”等提示内容
  */
 - (void)addAlertView {
-    self.alertView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
-    self.alertView.center = CGPointMake(kWidth*0.5, kHeight*0.5);
+    self.alertView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 250, 40)];
+    self.alertView.center = CGPointMake(kWidth * 0.5, kHeight * 0.5);
     
-    self.upLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
+    self.upLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 250, 40)];
     self.upLabel.text = @"日记已经加载完";
     self.upLabel.textColor = [UIColor whiteColor];
     self.upLabel.alpha = 0.5;
@@ -589,8 +598,13 @@ static NSString  *const reuseIdentifier = @"note_cell";
     [super viewWillAppear:YES];
     
     [self.notesTableView reloadData];
+        
+    self.parentViewController.navigationItem.title = @"我的日记";
     
-    self.parentViewController.navigationItem.title = @"Time Line";
+    UIFont *font = [UIFont systemFontOfSize:17];
+    NSDictionary *dic = @{NSFontAttributeName:font,
+                          NSForegroundColorAttributeName: [UIColor whiteColor]};
+    self.parentViewController.navigationController.navigationBar.titleTextAttributes =dic;
     
     // 左侧barbutton
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"calendarNotes"]
@@ -598,7 +612,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
                                                                 target:self
                                                                 action:@selector(checkPastNotes:)];
     self.parentViewController.navigationItem.leftBarButtonItem = leftItem;
-    self.parentViewController.navigationItem.leftBarButtonItem.tintColor = [UIColor grayColor];
+    self.parentViewController.navigationItem.leftBarButtonItem.tintColor = [UIColor whiteColor];
     
     // 右侧barbutton
     UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"newNote"]
@@ -606,7 +620,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
                                                                  target:self
                                                                  action:@selector(newDaily:)];
     self.parentViewController.navigationItem.rightBarButtonItem = rightItem;
-    self.parentViewController.navigationItem.rightBarButtonItem.tintColor = [UIColor grayColor];
+    self.parentViewController.navigationItem.rightBarButtonItem.tintColor = [UIColor whiteColor];
     
     self.tabBarController.navigationController.navigationBar.hidden = NO;
 }
@@ -665,13 +679,13 @@ static NSString  *const reuseIdentifier = @"note_cell";
         UIImage *tabbarImage4 = [self imageWithView:tabbar];
         UIImage *navigationImage4 = [self imageWithView:bar];
         
-        [tabbar setTintColor:[UIColor greenColor]];
-        [bar setBarTintColor:[UIColor greenColor]];
+        [tabbar setTintColor:[UIColor orangeColor]];
+        [bar setBarTintColor:[UIColor orangeColor]];
         UIImage *tabbarImage2 = [self imageWithView:tabbar];
         UIImage *navigationImage2 = [self imageWithView:bar];
         
-        [tabbar setTintColor:[UIColor purpleColor]];
-        [bar setBarTintColor:[UIColor purpleColor]];
+        [tabbar setTintColor:[UIColor brownColor]];
+        [bar setBarTintColor:[UIColor brownColor]];
         UIImage *tabbarImage3 = [self imageWithView:tabbar];
         UIImage *navigationImage3 = [self imageWithView:bar];
         
@@ -699,20 +713,20 @@ static NSString  *const reuseIdentifier = @"note_cell";
     NSString *colorString = [[AVUser currentUser] objectForKey:@"navigationColor"];
     
     if (colorString == nil) {
-        [tabbar setTintColor:[UIColor lightGrayColor]];
-        [bar setBarTintColor:[UIColor lightGrayColor]];
+        [tabbar setTintColor:[UIColor grayColor]];
+        [bar setBarTintColor:[UIColor grayColor]];
     } else if ([colorString isEqualToString:@"gray"]) {
         [tabbar setTintColor:[UIColor grayColor]];
         [bar setBarTintColor:[UIColor grayColor]];
     } else if ([colorString isEqualToString:@"magenta"]) {
         [tabbar setTintColor:[UIColor magentaColor]];
         [bar setBarTintColor:[UIColor magentaColor]];
-    } else if ([colorString isEqualToString:@"green"]) {
-        [tabbar setTintColor:[UIColor greenColor]];
-        [bar setBarTintColor:[UIColor greenColor]];
-    } else if ([colorString isEqualToString:@"purple"]) {
-        [tabbar setTintColor:[UIColor purpleColor]];
-        [bar setBarTintColor:[UIColor purpleColor]];
+    } else if ([colorString isEqualToString:@"orange"]) {
+        [tabbar setTintColor:[UIColor orangeColor]];
+        [bar setBarTintColor:[UIColor orangeColor]];
+    } else if ([colorString isEqualToString:@"brown"]) {
+        [tabbar setTintColor:[UIColor brownColor]];
+        [bar setBarTintColor:[UIColor brownColor]];
     }
 }
 
@@ -750,7 +764,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
 - (void)newDaily:(UIBarButtonItem *)button {
     if ([WLLDailyNoteDataManager sharedInstance].isNetworkAvailable == NO) {
         self.upLabel.hidden = NO;
-        self.upLabel.text = @"网络故障，不能编辑";
+        self.upLabel.text = @"网络故障，不能创建日记";
         [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(dismissAlertVC:) userInfo:self.upLabel repeats:NO];
     } else {
         EditNoteViewController *editVC = [[EditNoteViewController alloc] initWithNibName:@"EditNoteViewController" bundle:[NSBundle mainBundle]];
@@ -821,7 +835,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
             [object setObject:@"NO" forKey:@"wasDeleted"];
             [object saveInBackground];
             
-            //发送恢复日记的通知,让dailyNote页面和日历页面恢复日记
+            //发送恢复日记的通知,让dailyNote页面和share页面恢复日记
             NSDictionary *dic = [NSDictionary dictionaryWithObject:model forKey:@"diary"];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"resumeDiary" object:nil userInfo:dic];
         }];

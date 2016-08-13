@@ -46,6 +46,11 @@
     self.navigationItem.leftBarButtonItem = left;
     self.navigationItem.rightBarButtonItem = right;
     
+    self.logInButton.layer.cornerRadius = 5;
+    self.logInButton.layer.masksToBounds = YES;
+    
+    self.headImageView.layer.cornerRadius = kWidth / 6;
+    self.headImageView.layer.masksToBounds = YES;
     
     // Do any additional setup after loading the view from its nib.
     
@@ -115,9 +120,6 @@
         self.view.frame = viewRect;
     } else {
         [textField resignFirstResponder];
-        CGRect originalRect = self.view.frame;
-        originalRect.origin.y = originalRect.origin.y + 20;
-        self.view.frame = originalRect;
     }
     return YES;
 }

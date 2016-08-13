@@ -17,10 +17,10 @@
 @property (weak, nonatomic) IBOutlet UIImageView *topicImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *tabbarImageView;
 @property (weak, nonatomic) IBOutlet UIView *changeTopicView;
-@property (strong, nonatomic) UIButton *blueButton;
-@property (strong, nonatomic) UIButton *darkButton;
-@property (strong, nonatomic) UIButton *redButton;
 @property (strong, nonatomic) UIButton *grayButton;
+@property (strong, nonatomic) UIButton *orangeButton;
+@property (strong, nonatomic) UIButton *brownButton;
+@property (strong, nonatomic) UIButton *magentaButton;
 @property (strong, nonatomic) UIColor *theBarTintColor;
 @property (strong, nonatomic) NSUserDefaults *userDefaults;
 @property (strong, nonatomic) UIImage *navigationImage1;
@@ -80,59 +80,59 @@
 
 //配置4个改变导航栏颜色的按钮
 - (void)addFourButton {
-    self.blueButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.blueButton.frame = CGRectMake(ScreenWidth / 5 - ScreenHeight / 20, ScreenHeight / 40, ScreenHeight / 20, ScreenHeight / 20);
-    [self.blueButton setImage:[UIImage imageNamed:@"blueButton"]
+    self.grayButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.grayButton.frame = CGRectMake(ScreenWidth / 5 - ScreenHeight / 20, ScreenHeight / 40, ScreenHeight / 20, ScreenHeight / 20);
+    [self.grayButton setImage:[UIImage imageNamed:@"grayTopic"]
                      forState:UIControlStateNormal];
     //设置button的highlighted效果为NO
-    self.blueButton.adjustsImageWhenHighlighted = NO;
-    [self.blueButton addTarget:self action:@selector(changeTopicToBlueAction:)
+    self.grayButton.adjustsImageWhenHighlighted = NO;
+    [self.grayButton addTarget:self action:@selector(changeTopicToGrayAction:)
               forControlEvents:UIControlEventTouchUpInside];
     
-    self.darkButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.darkButton.frame = CGRectMake(ScreenWidth / 5 - ScreenHeight / 20 + ScreenWidth / 5, ScreenHeight / 40, ScreenHeight / 20, ScreenHeight / 20);
-    [self.darkButton setImage:[UIImage imageNamed:@"darkButton"] forState:UIControlStateNormal];
-    self.darkButton.adjustsImageWhenHighlighted = NO;
-    [self.darkButton addTarget:self action:@selector(changeTopicToDarkAction:) forControlEvents:UIControlEventTouchUpInside];
+    self.orangeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.orangeButton.frame = CGRectMake(ScreenWidth / 5 - ScreenHeight / 20 + ScreenWidth / 5, ScreenHeight / 40, ScreenHeight / 20, ScreenHeight / 20);
+    [self.orangeButton setImage:[UIImage imageNamed:@"orangeTopic"] forState:UIControlStateNormal];
+    self.orangeButton.adjustsImageWhenHighlighted = NO;
+    [self.orangeButton addTarget:self action:@selector(changeTopicToOrangeAction:) forControlEvents:UIControlEventTouchUpInside];
     
-    self.redButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.redButton.frame = CGRectMake(ScreenWidth / 5 - ScreenHeight / 20 + 2 * ScreenWidth / 5, ScreenHeight / 40, ScreenHeight / 20, ScreenHeight / 20);
-    [self.redButton setImage:[UIImage imageNamed:@"redButton"] forState:UIControlStateNormal];
-    self.redButton.adjustsImageWhenHighlighted = NO;
-    [self.redButton addTarget:self action:@selector(changeTopicToRedAction:) forControlEvents:UIControlEventTouchUpInside];
+    self.brownButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.brownButton.frame = CGRectMake(ScreenWidth / 5 - ScreenHeight / 20 + 2 * ScreenWidth / 5, ScreenHeight / 40, ScreenHeight / 20, ScreenHeight / 20);
+    [self.brownButton setImage:[UIImage imageNamed:@"brownTopic"] forState:UIControlStateNormal];
+    self.brownButton.adjustsImageWhenHighlighted = NO;
+    [self.brownButton addTarget:self action:@selector(changeTopicToBrownAction:) forControlEvents:UIControlEventTouchUpInside];
     
-    self.grayButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.grayButton.frame = CGRectMake(ScreenWidth / 5 - ScreenHeight / 20 + 3 * ScreenWidth / 5, ScreenHeight / 40, ScreenHeight / 20, ScreenHeight / 20);
-    [self.grayButton setImage:[UIImage imageNamed:@"grayButton"] forState:UIControlStateNormal];
-    self.grayButton.adjustsImageWhenHighlighted = NO;
-    [self.grayButton addTarget:self action:@selector(changeTopicToGrayAction:) forControlEvents:UIControlEventTouchUpInside];
+    self.magentaButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.magentaButton.frame = CGRectMake(ScreenWidth / 5 - ScreenHeight / 20 + 3 * ScreenWidth / 5, ScreenHeight / 40, ScreenHeight / 20, ScreenHeight / 20);
+    [self.magentaButton setImage:[UIImage imageNamed:@"magentaTopic"] forState:UIControlStateNormal];
+    self.magentaButton.adjustsImageWhenHighlighted = NO;
+    [self.magentaButton addTarget:self action:@selector(changeTopicToMagentaAction:) forControlEvents:UIControlEventTouchUpInside];
     
     NSString *colorString = [self.theCurrentUser objectForKey:@"navigationColor"];
     
-    if ([colorString isEqualToString:@"blue"]) {
-        [self.blueButton setImage:[UIImage imageNamed:@"blue_selectedButton"] forState:UIControlStateNormal];
-    } else if ([colorString isEqualToString:@"black"]) {
-        [self.darkButton setImage:[UIImage imageNamed:@"dark_selectedButton"] forState:UIControlStateNormal];
-    } else if ([colorString isEqualToString:@"red"]) {
-        [self.redButton setImage:[UIImage imageNamed:@"red_selectedButton"] forState:UIControlStateNormal];
-    } else if ([colorString isEqualToString:@"gray"]) {
-        [self.grayButton setImage:[UIImage imageNamed:@"gray_selectedButton"] forState:UIControlStateNormal];
+    if ([colorString isEqualToString:@"gray"]) {
+        [self.grayButton setImage:[UIImage imageNamed:@"selectedGrayTopic"] forState:UIControlStateNormal];
+    } else if ([colorString isEqualToString:@"orange"]) {
+        [self.orangeButton setImage:[UIImage imageNamed:@"selectedOrangeTopic"] forState:UIControlStateNormal];
+    } else if ([colorString isEqualToString:@"brown"]) {
+        [self.brownButton setImage:[UIImage imageNamed:@"selectedBrownTopic"] forState:UIControlStateNormal];
+    } else if ([colorString isEqualToString:@"magenta"]) {
+        [self.magentaButton setImage:[UIImage imageNamed:@"selectedMagentaTopic"] forState:UIControlStateNormal];
     }
     
-    [self.changeTopicView addSubview:self.blueButton];
-    [self.changeTopicView addSubview:self.darkButton];
-    [self.changeTopicView addSubview:self.redButton];
     [self.changeTopicView addSubview:self.grayButton];
+    [self.changeTopicView addSubview:self.orangeButton];
+    [self.changeTopicView addSubview:self.brownButton];
+    [self.changeTopicView addSubview:self.magentaButton];
     
 }
 
 //改变主题颜色为gray
-- (void)changeTopicToBlueAction:(UIButton *)sender {
+- (void)changeTopicToGrayAction:(UIButton *)sender {
     //把button的图片改为已选择
-    [sender setImage:[UIImage imageNamed:@"blue_selectedButton"] forState:UIControlStateNormal];
-    [self.darkButton setImage:[UIImage imageNamed:@"darkButton"] forState:UIControlStateNormal];
-    [self.redButton setImage:[UIImage imageNamed:@"redButton"] forState:UIControlStateNormal];
-    [self.grayButton setImage:[UIImage imageNamed:@"grayButton"] forState:UIControlStateNormal];
+    [sender setImage:[UIImage imageNamed:@"selectedGrayTopic"] forState:UIControlStateNormal];
+    [self.orangeButton setImage:[UIImage imageNamed:@"orangeTopic"] forState:UIControlStateNormal];
+    [self.brownButton setImage:[UIImage imageNamed:@"brownTopic"] forState:UIControlStateNormal];
+    [self.magentaButton setImage:[UIImage imageNamed:@"magentaTopic"] forState:UIControlStateNormal];
 
     self.navigationController.navigationBar.barTintColor = [UIColor grayColor];
     
@@ -152,14 +152,14 @@
     [self.theCurrentUser saveInBackground];
 }
 
-//改变主体颜色为green
-- (void)changeTopicToDarkAction:(UIButton *)sender {
-    [sender setImage:[UIImage imageNamed:@"dark_selectedButton"] forState:UIControlStateNormal];
-    [self.blueButton setImage:[UIImage imageNamed:@"blueButton"] forState:UIControlStateNormal];
-    [self.redButton setImage:[UIImage imageNamed:@"redButton"] forState:UIControlStateNormal];
-    [self.grayButton setImage:[UIImage imageNamed:@"grayButton"] forState:UIControlStateNormal];
+//改变主体颜色为orange
+- (void)changeTopicToOrangeAction:(UIButton *)sender {
+    [sender setImage:[UIImage imageNamed:@"selectedOrangeTopic"] forState:UIControlStateNormal];
+    [self.grayButton setImage:[UIImage imageNamed:@"grayTopic"] forState:UIControlStateNormal];
+    [self.brownButton setImage:[UIImage imageNamed:@"brownTopic"] forState:UIControlStateNormal];
+    [self.magentaButton setImage:[UIImage imageNamed:@"magentaTopic"] forState:UIControlStateNormal];
     
-    self.navigationController.navigationBar.barTintColor = [UIColor greenColor];
+    self.navigationController.navigationBar.barTintColor = [UIColor orangeColor];
     
     //更改截图
     self.navigationImageView.image = self.navigationImage2;
@@ -169,7 +169,7 @@
     NSData *tabbarData = UIImagePNGRepresentation(self.tabbarImageView.image);
     
     //把设置的颜色、image保存在currentUser里面
-    [self.theCurrentUser setObject:@"green" forKey:@"navigationColor"];
+    [self.theCurrentUser setObject:@"orange" forKey:@"navigationColor"];
     [self.theCurrentUser setObject:naviData forKey:@"navigationImage"];
     [self.theCurrentUser setObject:tabbarData forKey:@"tabbarImage"];
     self.theCurrentUser.fetchWhenSave = YES;
@@ -177,14 +177,14 @@
 
 }
 
-//改变主题颜色为purple
-- (void)changeTopicToRedAction:(UIButton *)sender {
-    [sender setImage:[UIImage imageNamed:@"red_selectedButton"] forState:UIControlStateNormal];
-    [self.blueButton setImage:[UIImage imageNamed:@"blueButton"] forState:UIControlStateNormal];
-    [self.darkButton setImage:[UIImage imageNamed:@"darkButton"] forState:UIControlStateNormal];
-    [self.grayButton setImage:[UIImage imageNamed:@"grayButton"] forState:UIControlStateNormal];
+//改变主题颜色为brown
+- (void)changeTopicToBrownAction:(UIButton *)sender {
+    [sender setImage:[UIImage imageNamed:@"selectedBrownTopic"] forState:UIControlStateNormal];
+    [self.grayButton setImage:[UIImage imageNamed:@"grayTopic"] forState:UIControlStateNormal];
+    [self.orangeButton setImage:[UIImage imageNamed:@"orangeTopic"] forState:UIControlStateNormal];
+    [self.magentaButton setImage:[UIImage imageNamed:@"magentaTopic"] forState:UIControlStateNormal];
     
-    self.navigationController.navigationBar.barTintColor = [UIColor purpleColor];
+    self.navigationController.navigationBar.barTintColor = [UIColor brownColor];
     
     //更改截图
     self.navigationImageView.image = self.navigationImage3;
@@ -194,7 +194,7 @@
     NSData *tabbarData = UIImagePNGRepresentation(self.tabbarImageView.image);
     
     //把设置的颜色、image保存在currentUser里面
-    [self.theCurrentUser setObject:@"purple" forKey:@"navigationColor"];
+    [self.theCurrentUser setObject:@"brown" forKey:@"navigationColor"];
     [self.theCurrentUser setObject:naviData forKey:@"navigationImage"];
     [self.theCurrentUser setObject:tabbarData forKey:@"tabbarImage"];
     self.theCurrentUser.fetchWhenSave = YES;
@@ -203,11 +203,11 @@
 }
 
 //更改主题颜色为magenta
-- (void)changeTopicToGrayAction:(UIButton *)sender {
-    [sender setImage:[UIImage imageNamed:@"gray_selectedButton"] forState:UIControlStateNormal];
-    [self.blueButton setImage:[UIImage imageNamed:@"blueButton"] forState:UIControlStateNormal];
-    [self.darkButton setImage:[UIImage imageNamed:@"darkButton"] forState:UIControlStateNormal];
-    [self.redButton setImage:[UIImage imageNamed:@"redButton"] forState:UIControlStateNormal];
+- (void)changeTopicToMagentaAction:(UIButton *)sender {
+    [sender setImage:[UIImage imageNamed:@"selectedMagentaTopic"] forState:UIControlStateNormal];
+    [self.grayButton setImage:[UIImage imageNamed:@"grayTopic"] forState:UIControlStateNormal];
+    [self.orangeButton setImage:[UIImage imageNamed:@"orangeTopic"] forState:UIControlStateNormal];
+    [self.brownButton setImage:[UIImage imageNamed:@"magentaTopic"] forState:UIControlStateNormal];
     
     self.navigationController.navigationBar.barTintColor = [UIColor magentaColor];
     

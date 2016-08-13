@@ -51,21 +51,26 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <imageView userInteractionEnabled="NO" tag="100" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="T5N-qR-4PV">
-                                    <rect key="frame" x="48" y="8" width="30" height="30"/>
+                                    <rect key="frame" x="48" y="10.5" width="25" height="25"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="30" id="H7y-9r-T0S"/>
                                         <constraint firstAttribute="width" secondItem="T5N-qR-4PV" secondAttribute="height" id="xJc-2U-3wP"/>
                                     </constraints>
+                                    <variation key="default">
+                                        <mask key="constraints">
+                                            <exclude reference="H7y-9r-T0S"/>
+                                        </mask>
+                                    </variation>
                                 </imageView>
                                 <imageView userInteractionEnabled="NO" tag="101" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="location100X100.png" translatesAutoresizingMaskIntoConstraints="NO" id="Nb4-xH-5ZX">
-                                    <rect key="frame" x="83" y="8" width="30" height="30"/>
+                                    <rect key="frame" x="78" y="13" width="20" height="20"/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="Nb4-xH-5ZX" secondAttribute="height" id="6nj-hL-MeO"/>
-                                        <constraint firstAttribute="width" constant="30" id="Cy3-Rf-Raf"/>
+                                        <constraint firstAttribute="width" constant="20" id="GmF-aq-VL1"/>
                                     </constraints>
                                 </imageView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cC0-JK-6c7">
-                                    <rect key="frame" x="115" y="15" width="33" height="16"/>
+                                    <rect key="frame" x="103" y="15" width="33" height="16"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
@@ -73,9 +78,11 @@
                             </subviews>
                             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
+                                <constraint firstItem="Nb4-xH-5ZX" firstAttribute="height" secondItem="T5N-qR-4PV" secondAttribute="height" id="7Zl-eO-yVy"/>
+                                <constraint firstItem="T5N-qR-4PV" firstAttribute="height" secondItem="Nb4-xH-5ZX" secondAttribute="height" constant="5" id="97t-dg-nes"/>
                                 <constraint firstItem="T5N-qR-4PV" firstAttribute="leading" secondItem="d4O-2n-gC8" secondAttribute="trailing" constant="5" id="9ca-QJ-HcS"/>
                                 <constraint firstItem="AvE-M5-Y7y" firstAttribute="top" secondItem="amd-nD-FLY" secondAttribute="bottom" constant="10" id="Bty-Vq-XDc"/>
-                                <constraint firstItem="cC0-JK-6c7" firstAttribute="leading" secondItem="Nb4-xH-5ZX" secondAttribute="trailing" constant="2" id="Ewv-rG-ANL"/>
+                                <constraint firstItem="cC0-JK-6c7" firstAttribute="leading" secondItem="Nb4-xH-5ZX" secondAttribute="trailing" constant="5" id="Ewv-rG-ANL"/>
                                 <constraint firstItem="d4O-2n-gC8" firstAttribute="top" secondItem="Dt1-yy-Jw1" secondAttribute="top" constant="15" id="HiL-UP-Rcr"/>
                                 <constraint firstItem="T5N-qR-4PV" firstAttribute="centerY" secondItem="d4O-2n-gC8" secondAttribute="centerY" id="MWx-vr-j7V"/>
                                 <constraint firstItem="Nb4-xH-5ZX" firstAttribute="centerY" secondItem="T5N-qR-4PV" secondAttribute="centerY" id="bJk-7W-tkN"/>
@@ -86,13 +93,19 @@
                                 <constraint firstAttribute="trailing" secondItem="amd-nD-FLY" secondAttribute="trailing" constant="10" id="pNy-VG-91r"/>
                                 <constraint firstItem="d4O-2n-gC8" firstAttribute="leading" secondItem="Dt1-yy-Jw1" secondAttribute="leading" constant="10" id="rMZ-om-wis"/>
                                 <constraint firstItem="cC0-JK-6c7" firstAttribute="centerY" secondItem="Nb4-xH-5ZX" secondAttribute="centerY" id="rYy-Rp-cLR"/>
+                                <constraint firstItem="T5N-qR-4PV" firstAttribute="height" secondItem="d4O-2n-gC8" secondAttribute="height" id="scH-5J-4gJ"/>
                                 <constraint firstItem="amd-nD-FLY" firstAttribute="leading" secondItem="Dt1-yy-Jw1" secondAttribute="leading" constant="10" id="vqz-Sg-yqE"/>
+                                <constraint firstItem="Nb4-xH-5ZX" firstAttribute="leading" secondItem="d4O-2n-gC8" secondAttribute="trailing" constant="26" id="xKP-5o-f4N"/>
                                 <constraint firstItem="AvE-M5-Y7y" firstAttribute="leading" secondItem="d4O-2n-gC8" secondAttribute="leading" id="yEs-wk-R1R"/>
                                 <constraint firstItem="T5N-qR-4PV" firstAttribute="top" secondItem="Dt1-yy-Jw1" secondAttribute="top" constant="10" id="ysg-Zg-o58"/>
                             </constraints>
                             <variation key="default">
                                 <mask key="constraints">
+                                    <exclude reference="scH-5J-4gJ"/>
                                     <exclude reference="ysg-Zg-o58"/>
+                                    <exclude reference="7Zl-eO-yVy"/>
+                                    <exclude reference="mEH-JK-qSa"/>
+                                    <exclude reference="xKP-5o-f4N"/>
                                 </mask>
                             </variation>
                         </view>

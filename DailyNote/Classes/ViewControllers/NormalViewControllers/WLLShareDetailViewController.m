@@ -139,25 +139,25 @@
     
     NSDate *createdDate = self.passedObject.date;
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"yyyy年MM月dd日EEEE"];
+    [dateFormatter setDateFormat:@"yyyy年MM月dd日 EE"];
     self.dateLabel.text = [dateFormatter stringFromDate:createdDate];
 
     //如果用户已点赞，图片设置为已点赞
     NSArray *staredUserArray = self.passedObject.staredUserArray;
     
     if ([staredUserArray containsObject:self.currentUser]) {
-        [self.starButton setImage:[UIImage imageNamed:@"heartSelected40X40"] forState:UIControlStateNormal];
+        [self.starButton setImage:[UIImage imageNamed:@"heartSelectedImage"] forState:UIControlStateNormal];
     } else {
-        [self.starButton setImage:[UIImage imageNamed:@"heart40X40"] forState:UIControlStateNormal];
+        [self.starButton setImage:[UIImage imageNamed:@"heartImage"] forState:UIControlStateNormal];
     }
     
     //如果用户已收藏，图片设置为已收藏
     self.collectionDiaries = self.passedObject.collectionDiaries;
     
     if ([self.collectionDiaries containsObject:object]) {
-        [self.collectionButton setImage:[UIImage imageNamed:@"collectionSelected"] forState:UIControlStateNormal];
+        [self.collectionButton setImage:[UIImage imageNamed:@"fiveStarImageSelected"] forState:UIControlStateNormal];
     } else {
-        [self.collectionButton setImage:[UIImage imageNamed:@"collection"] forState:UIControlStateNormal];
+        [self.collectionButton setImage:[UIImage imageNamed:@"fiveStarImage"] forState:UIControlStateNormal];
     }
 }
 
@@ -165,7 +165,7 @@
 - (void)layoutHeadImageViewAndNickNameLabel {
     
     //设置图片
-    self.starImageView.image = [UIImage imageNamed:@"heart40X40"];
+    self.starImageView.image = [UIImage imageNamed:@"heartImage"];
     self.currentDiaryStarImageView.image = [UIImage imageNamed:@"heartSelected15X15"];
     self.readImageView.image = [UIImage imageNamed:@"eye15X15"];
     
@@ -190,25 +190,25 @@
     CGRect backButtonRect = CGRectMake(ScreenWidth / 8 - 15, 15, 30, 30);
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeSystem];
     backButton.frame = backButtonRect;
-    [backButton setImage:[UIImage imageNamed:@"backImage2"] forState:UIControlStateNormal];
+    [backButton setImage:[UIImage imageNamed:@"backImage"] forState:UIControlStateNormal];
     [backButton addTarget:self action:@selector(backAction:) forControlEvents:UIControlEventTouchUpInside];
     
     CGRect starButtonRect = CGRectMake(ScreenWidth / 8 - 15  + ScreenWidth / 4, 15, 30, 30);
     self.starButton = [UIButton buttonWithType:UIButtonTypeSystem];
     self.starButton.frame = starButtonRect;
-    [self.starButton setImage:[UIImage imageNamed:@"heart40X40"] forState:UIControlStateNormal];
+    [self.starButton setImage:[UIImage imageNamed:@"heartImage"] forState:UIControlStateNormal];
     [self.starButton addTarget:self action:@selector(starAction:) forControlEvents:UIControlEventTouchUpInside];
     
     CGRect collectionButtoonRect = CGRectMake(ScreenWidth / 8 - 15 + 2 * ScreenWidth / 4, 15, 30, 30);
     self.collectionButton = [UIButton buttonWithType:UIButtonTypeSystem];
     self.collectionButton.frame = collectionButtoonRect;
-    [self.collectionButton setImage:[UIImage imageNamed:@"collectionImage2"] forState:UIControlStateNormal];
+    [self.collectionButton setImage:[UIImage imageNamed:@"fiveStarImage"] forState:UIControlStateNormal];
     [self.collectionButton addTarget:self action:@selector(collectionAction:) forControlEvents:UIControlEventTouchUpInside];
     
     CGRect reportButtonRect = CGRectMake(ScreenWidth / 8 - 15 + 3 * ScreenWidth / 4, 15, 30, 30);
     UIButton *reportButton = [UIButton buttonWithType:UIButtonTypeSystem];
     reportButton.frame = reportButtonRect;
-    [reportButton setImage:[UIImage imageNamed:@"reportImage2"] forState:UIControlStateNormal];
+    [reportButton setImage:[UIImage imageNamed:@"reportImage"] forState:UIControlStateNormal];
     [reportButton addTarget:self action:@selector(reportAction:) forControlEvents:UIControlEventTouchUpInside];
     
     [self.toolBarView addSubview:backButton];
@@ -220,13 +220,7 @@
 //返回操作
 - (void)backAction:(UIButton *)sender {
     if (self.passedIndexPath) {
-        NSArray *staredUserArray = self.passedObject.staredUserArray;
-        NSArray *collectionDiaries = self.passedObject.collectionDiaries;
-        NSString *readTime = self.passedObject.readTime;
-        NSString *starNumber = self.passedObject.currentDiaryStarNumber;
-        NSString *objectId = self.passedObject.diaryId;
-        
-        NSDictionary *dic = @{@"staredUserArray":staredUserArray, @"collectionDiaries":collectionDiaries, @"readTime":readTime, @"starNumber":starNumber, @"objectId":objectId};
+        NSDictionary *dic = @{@"passedObject":self.passedObject};
         [[NSNotificationCenter defaultCenter] postNotificationName:@"sharePageToUpdateThreeInfo" object:nil userInfo:dic];
     }
    
@@ -290,7 +284,7 @@
         }
     }
     
-    [self.starButton setImage:[UIImage imageNamed:@"heartSelected40X40"] forState:UIControlStateNormal];
+    [self.starButton setImage:[UIImage imageNamed:@"heartSelectedImage"] forState:UIControlStateNormal];
     
     //如果该用户没有点赞，UI上的点赞数加1
     NSInteger numberOfStar = [self.currentDiaryStarNumberLabel.text integerValue];
@@ -323,7 +317,7 @@
         //提示信息处理
         self.reminderLabel.hidden = NO;
         self.reminderLabel.text = @"已取消收藏";
-        [sender setImage:[UIImage imageNamed:@"collection"] forState:UIControlStateNormal];
+        [sender setImage:[UIImage imageNamed:@"fiveStarImage"] forState:UIControlStateNormal];
         [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(hidesAlertLabel) userInfo:nil repeats:NO];
         
         //如果是从收藏页面进来的，点击取消收藏，给收藏页面发送通知，删除该篇日记
@@ -344,7 +338,7 @@
                 
                 self.reminderLabel.hidden = NO;
                 self.reminderLabel.text = @"已收藏";
-                [sender setImage:[UIImage imageNamed:@"collectionSelected"] forState:UIControlStateNormal];
+                [sender setImage:[UIImage imageNamed:@"fiveStarImageSelected"] forState:UIControlStateNormal];
                 [NSTimer scheduledTimerWithTimeInterval:1
                                                  target:self
                                                selector:@selector(hidesAlertLabel)
@@ -445,6 +439,7 @@
 
 -(void)dealloc {
     [WLLDailyNoteDataManager sharedInstance].isReport = NO;
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"sharePageToUpdateThreeInfo" object:nil];
 }
 
 - (void)didReceiveMemoryWarning {

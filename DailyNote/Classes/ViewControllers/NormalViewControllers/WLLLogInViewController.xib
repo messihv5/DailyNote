@@ -18,30 +18,24 @@
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Daily Note" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YRj-hv-ZK2">
-                    <rect key="frame" x="121" y="227" width="79" height="21"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                    <nil key="highlightedColor"/>
-                </label>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="email.png" translatesAutoresizingMaskIntoConstraints="NO" id="KDx-4Q-VXa">
-                    <rect key="frame" x="20" y="278" width="32" height="36"/>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="email.png" translatesAutoresizingMaskIntoConstraints="NO" id="KDx-4Q-VXa">
+                    <rect key="frame" x="20" y="350.5" width="26.5" height="30"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="KDx-4Q-VXa" secondAttribute="height" multiplier="31:35" id="yLV-4H-V9G"/>
                     </constraints>
                 </imageView>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="lock.png" translatesAutoresizingMaskIntoConstraints="NO" id="7IJ-RP-6Wc">
-                    <rect key="frame" x="20" y="344" width="32" height="32"/>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="lock.png" translatesAutoresizingMaskIntoConstraints="NO" id="7IJ-RP-6Wc">
+                    <rect key="frame" x="20" y="410.5" width="26.5" height="26.5"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="7IJ-RP-6Wc" secondAttribute="height" id="GHj-06-zmh"/>
                     </constraints>
                 </imageView>
-                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ajU-vy-cUK">
-                    <rect key="frame" x="20" y="408" width="279.5" height="30"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ajU-vy-cUK">
+                    <rect key="frame" x="20" y="469" width="559.5" height="30"/>
+                    <color key="backgroundColor" red="1" green="0.92724492449999996" blue="0.24090861" alpha="1" colorSpace="calibratedRGB"/>
                     <state key="normal" title="登录">
                         <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     </state>
@@ -49,18 +43,18 @@
                         <action selector="logInAction:" destination="-1" eventType="touchUpInside" id="QAd-06-QwR"/>
                     </connections>
                 </button>
-                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="请输入账号邮箱" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="MbK-DO-KM9">
-                    <rect key="frame" x="62" y="278" width="238" height="36"/>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="请输入邮箱账号" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="MbK-DO-KM9">
+                    <rect key="frame" x="56.5" y="350.5" width="523.5" height="30"/>
                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                     <textInputTraits key="textInputTraits"/>
                 </textField>
-                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="请输入密码" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="XRP-eG-NNG">
-                    <rect key="frame" x="62" y="342" width="238" height="36.5"/>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="请输入密码" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="XRP-eG-NNG">
+                    <rect key="frame" x="56.5" y="409" width="523.5" height="30.5"/>
                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                     <textInputTraits key="textInputTraits"/>
                 </textField>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="wanting.png" translatesAutoresizingMaskIntoConstraints="NO" id="9rX-iM-cn7">
-                    <rect key="frame" x="107" y="100" width="107" height="107"/>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mNote.png" translatesAutoresizingMaskIntoConstraints="NO" id="9rX-iM-cn7">
+                    <rect key="frame" x="200" y="100" width="200" height="200.5"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="9rX-iM-cn7" secondAttribute="height" multiplier="1:1" id="fNt-cY-VkT"/>
                     </constraints>
@@ -68,7 +62,6 @@
             </subviews>
             <color key="backgroundColor" red="0.21021195128200332" green="0.91082926907722694" blue="1" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
-                <constraint firstItem="YRj-hv-ZK2" firstAttribute="top" secondItem="9rX-iM-cn7" secondAttribute="bottom" constant="20" id="4JU-dr-s61"/>
                 <constraint firstItem="MbK-DO-KM9" firstAttribute="leading" secondItem="KDx-4Q-VXa" secondAttribute="trailing" constant="10" id="7Xf-ex-sfe"/>
                 <constraint firstItem="XRP-eG-NNG" firstAttribute="width" secondItem="MbK-DO-KM9" secondAttribute="width" id="8x0-sg-pSU"/>
                 <constraint firstAttribute="trailing" secondItem="MbK-DO-KM9" secondAttribute="trailing" constant="20" id="BHM-qS-n7L"/>
@@ -76,27 +69,25 @@
                 <constraint firstItem="7IJ-RP-6Wc" firstAttribute="width" secondItem="KDx-4Q-VXa" secondAttribute="width" id="ECX-Hx-s1n"/>
                 <constraint firstItem="9rX-iM-cn7" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" multiplier="1/3" id="IrE-3B-t9q"/>
                 <constraint firstItem="XRP-eG-NNG" firstAttribute="centerY" secondItem="7IJ-RP-6Wc" secondAttribute="centerY" id="TkP-3D-jNi"/>
-                <constraint firstItem="MbK-DO-KM9" firstAttribute="top" secondItem="YRj-hv-ZK2" secondAttribute="bottom" constant="30" id="Usl-0i-qjI"/>
                 <constraint firstItem="XRP-eG-NNG" firstAttribute="leading" secondItem="MbK-DO-KM9" secondAttribute="leading" id="Yic-3y-DIy"/>
                 <constraint firstItem="KDx-4Q-VXa" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="Zr2-EA-05j"/>
                 <constraint firstItem="ajU-vy-cUK" firstAttribute="leading" secondItem="7IJ-RP-6Wc" secondAttribute="leading" id="aer-Tw-LkN"/>
                 <constraint firstItem="ajU-vy-cUK" firstAttribute="top" secondItem="XRP-eG-NNG" secondAttribute="bottom" constant="30" id="fGZ-J4-Y5a"/>
-                <constraint firstItem="YRj-hv-ZK2" firstAttribute="centerX" secondItem="9rX-iM-cn7" secondAttribute="centerX" id="gtA-tF-4xn"/>
                 <constraint firstItem="9rX-iM-cn7" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="jb8-EI-zty"/>
                 <constraint firstItem="KDx-4Q-VXa" firstAttribute="height" secondItem="MbK-DO-KM9" secondAttribute="height" id="kh1-Tu-Ptu"/>
                 <constraint firstItem="7IJ-RP-6Wc" firstAttribute="top" secondItem="MbK-DO-KM9" secondAttribute="bottom" constant="30" id="lCQ-SO-5IS"/>
                 <constraint firstItem="9rX-iM-cn7" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="100" id="lWq-9v-t4E"/>
+                <constraint firstItem="MbK-DO-KM9" firstAttribute="top" secondItem="9rX-iM-cn7" secondAttribute="bottom" constant="50" id="nQj-ba-nxU"/>
                 <constraint firstItem="ajU-vy-cUK" firstAttribute="trailing" secondItem="XRP-eG-NNG" secondAttribute="trailing" id="sPz-ih-BgX"/>
                 <constraint firstItem="KDx-4Q-VXa" firstAttribute="centerY" secondItem="MbK-DO-KM9" secondAttribute="centerY" id="t96-yM-T0a"/>
                 <constraint firstItem="XRP-eG-NNG" firstAttribute="height" secondItem="MbK-DO-KM9" secondAttribute="height" id="vFL-lj-hWG"/>
             </constraints>
-            <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
-            <point key="canvasLocation" x="508" y="98"/>
+            <point key="canvasLocation" x="472" y="98"/>
         </view>
     </objects>
     <resources>
-        <image name="email.png" width="32" height="32"/>
-        <image name="lock.png" width="32" height="32"/>
-        <image name="wanting.png" width="200" height="112"/>
+        <image name="email.png" width="25" height="25"/>
+        <image name="lock.png" width="25" height="25"/>
+        <image name="mNote.png" width="40" height="40"/>
     </resources>
 </document>

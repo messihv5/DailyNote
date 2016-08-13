@@ -108,7 +108,7 @@
 
     self.contentView = [[UIView alloc] initWithFrame:contentViewRect];
 
-    self.contentView.backgroundColor = [UIColor greenColor];
+//    self.contentView.backgroundColor = [UIColor greenColor];
     
     self.pictureScrollView.contentSize = CGSizeMake(width, height);
     
@@ -329,10 +329,6 @@
     
     [self.localPictureArray removeObjectAtIndex:offSetByInteger];
     [self.internetPictureArray removeObjectAtIndex:offSetByInteger];
-    
-//    if (offSetByInteger < self.photoUrlArray.count) {
-//        [self.photoUrlArray removeObjectAtIndex:offSetByInteger];
-//    }
 }
 
 /**

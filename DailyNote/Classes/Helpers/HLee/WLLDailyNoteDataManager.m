@@ -292,8 +292,9 @@ static WLLDailyNoteDataManager *manager = nil;
     relationQuery.limit = 5;
     relationQuery.cachePolicy = kAVCachePolicyCacheElseNetwork;
     relationQuery.maxCacheAge = 24 * 60 * 60;
-    [relationQuery orderByDescending:@"createdAt"];
-    [relationQuery whereKey:@"createdAt" lessThan:date];
+    [relationQuery orderByDescending:@"sharedDate"];
+    [relationQuery whereKey:@"sharedDate" lessThan:date];
+    [relationQuery whereKey:@"wasDeleted" notEqualTo:@"YES"];
     [relationQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         [self getDataFromShareArray:objects];
         finished();
@@ -315,8 +316,9 @@ static WLLDailyNoteDataManager *manager = nil;
     AVQuery *relationQuery = [collectionRelation query];
     
     relationQuery.limit = 5;
-    [relationQuery orderByDescending:@"createdAt"];
-    [relationQuery whereKey:@"createdAt" greaterThan:date];
+    [relationQuery orderByDescending:@"sharedDate"];
+    [relationQuery whereKey:@"sharedDate" greaterThan:date];
+    [relationQuery whereKey:@"wasDeleted" notEqualTo:@"YES"];
     [relationQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         [self getDataFromShareArray:objects];
         finished();
@@ -438,6 +440,7 @@ static WLLDailyNoteDataManager *manager = nil;
         
         //添加当前用户收藏的日记
         model.collectionDiaries = collectionArray;
+        
         //diaryID
         model.diaryId = object.objectId;
         
@@ -476,9 +479,6 @@ static WLLDailyNoteDataManager *manager = nil;
         
         //内容
         model.content = [object objectForKey:@"content"];
-        
-        //获取当前日记的点赞数
-        model.currentDiaryStarNumber = [object objectForKey:@"starNumber"];
         
         //获取日记的阅读次数
         NSString *readTime = [object objectForKey:@"readTime"];

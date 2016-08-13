@@ -43,7 +43,7 @@
     UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
     button.frame = CGRectMake(0, 0, 100, 44);
     [button setTitle:@"更多功能" forState:UIControlStateNormal];
-    [button setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [button setImage:[UIImage imageNamed:@"backButton2"] forState:UIControlStateNormal];
     
     //向左偏移使button的位置合适

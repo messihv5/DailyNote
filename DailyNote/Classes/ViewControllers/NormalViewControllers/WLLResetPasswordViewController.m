@@ -28,7 +28,8 @@
     
     self.emailTextField.delegate = self;
     
-    // Do any additional setup after loading the view from its nib.
+    self.resetImageView.layer.cornerRadius = kWidth / 6;
+    self.resetImageView.layer.masksToBounds = YES;
 }
 
 - (IBAction)resetPasswordAction:(UIButton *)sender {

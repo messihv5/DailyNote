@@ -14,8 +14,8 @@
 
 @property (weak, nonatomic) IBOutlet UITextField *nickNameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *signatureTextField;
-@property (strong, nonatomic) AppDelegate *modifyDelegate;
-@property (strong, nonatomic) NSManagedObjectContext *modifyContext;
+//@property (strong, nonatomic) AppDelegate *modifyDelegate;
+//@property (strong, nonatomic) NSManagedObjectContext *modifyContext;
 
 @end
 
@@ -31,12 +31,13 @@
     
     UIBarButtonItem *rightBarButton = [[UIBarButtonItem alloc] initWithTitle:@"确定" style:UIBarButtonItemStyleDone target:self action:@selector(modifyUserInfoAction)];
     self.navigationItem.rightBarButtonItem = rightBarButton;
+    
     //接受从用户界面传过来的nickName和signature
     self.nickNameTextField.text = self.nickNameString;
     self.signatureTextField.text = self.signatureString;
     
-    self.modifyDelegate = [UIApplication sharedApplication].delegate;
-    self.modifyContext = self.modifyDelegate.managedObjectContext;
+//    self.modifyDelegate = [UIApplication sharedApplication].delegate;
+//    self.modifyContext = self.modifyDelegate.managedObjectContext;
     
 }
 

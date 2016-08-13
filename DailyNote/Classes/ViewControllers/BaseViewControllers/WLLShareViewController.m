@@ -66,7 +66,7 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sharePageDeleteDiary:) name:@"dailyNoteAndSharePageDeleteDiary" object:nil];
     
-    //分享主页面注册更新日记通知
+    //分享主页面注册更新日记通知（收藏页面操作导致的更新），及注册calendar页面修改日记的通知，dailyNote页面修改日记的通知
     [self registerUpdateNotification];
 }
 
@@ -76,20 +76,193 @@
                                                  selector:@selector(updateDiaries:)
                                                      name:@"sharePageToUpdateThreeInfo"
                                                    object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(updateContentFromCalendarPage:)
+                                                     name:@"calendarPageChangeNote"
+                                                   object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(updateContentFromDailyNotePage:) name:@"dailyNotePageChangeNote"
+                                                   object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(resumeDiary:)
+                                                     name:@"resumeDiary"
+                                                   object:nil];
     }
 }
 
+- (void)resumeDiary:(NSNotification *)notification {
+    NSDictionary *dic = notification.userInfo;
+    
+    NoteDetail *model = dic[@"diary"];
+    
+    AVObject *object = [AVObject objectWithClassName:@"Diary" objectId:model.diaryId];
+    
+    [object fetchInBackgroundWithBlock:^(AVObject *object, NSError *error) {
+        NSDate *sharedDate = [object objectForKey:@"sharedDate"];
+        
+        if (sharedDate != nil) {
+            [self addResumedModelByObject:object];
+        }
+    }];
+}
+
+- (void)addResumedModelByObject:(AVObject *)object {
+    NoteDetail *model = [[NoteDetail alloc] init];
+    
+    //当前用户收藏的日记
+    NSMutableArray *collectionArray = [NSMutableArray arrayWithCapacity:5];
+    
+    AVRelation *collectionRelation = [[AVUser currentUser] relationForKey:@"collectionDiaries"];
+    
+    AVQuery *collectionQuery = [collectionRelation query];
+    
+    [collectionQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        [collectionArray addObjectsFromArray:objects];
+    }];
+    
+    //当前用户收藏的日记
+    model.collectionDiaries = collectionArray;
+    
+    //diaryID
+    model.diaryId = object.objectId;
+    
+    //获取日期
+    model.date = [object objectForKey:@"createdAt"];
+    
+    //获取点赞用户数组，判断用户是否点赞
+    NSMutableArray *staredUserArray = [object objectForKey:@"staredUser"];
+    model.staredUserArray = staredUserArray;
+    
+    //获取日记的创建时间
+    NSString *string = nil;
+    
+    NSDate *createdDate = [object objectForKey:@"createdAt"];
+    
+    NSDate *currentDate = [NSDate date];
+    
+    NSTimeInterval timeInterval = [currentDate timeIntervalSinceDate:createdDate];
+    
+    if (timeInterval / (24 * 60 * 60) >= 1) {
+        string = [NSString stringWithFormat:@"%ld天前", (NSInteger)timeInterval / (24 * 60 * 60)];
+    } else if (timeInterval / (60 * 60) >= 1) {
+        string = [NSString stringWithFormat:@"%ld小时前", (NSInteger)timeInterval / (60 * 60)];
+    } else if (timeInterval / 60 >= 1) {
+        string = [NSString stringWithFormat:@"%ld分钟以前", (NSInteger)timeInterval / 60];
+    } else {
+        string = [NSString stringWithFormat:@"%ld秒前", (NSInteger)timeInterval];
+    }
+    model.timeString = string;
+    
+    //点赞数
+    model.starNumber = [object objectForKey:@"starNumber"];
+    if (model.starNumber == nil) {
+        model.starNumber = @"0";
+    }
+    
+    //内容
+    model.content = [object objectForKey:@"content"];
+    
+    //获取日记的阅读次数
+    NSString *readTime = [object objectForKey:@"readTime"];
+    if (readTime == nil) {
+        model.readTime = @"0";
+    }
+    model.readTime = readTime;
+    
+    //日记是否分享
+    model.sharedDate = [object objectForKey:@"sharedDate"];
+    
+    //获取到这篇日记的作者的信息
+    NSArray *keys = [NSArray arrayWithObjects:@"belong", nil];
+    [object fetchInBackgroundWithKeys:keys block:^(AVObject *object, NSError *error) {
+        AVUser *relatedUser = [object objectForKey:@"belong"];
+        
+        //获取用户的nickName
+        model.nickName = [relatedUser objectForKey:@"nickName"];
+        
+        //获取签名
+        model.signature = [relatedUser objectForKey:@"signature"];
+        
+        //获取总的点赞数
+        model.totalStarNumber = [relatedUser objectForKey:@"starNumber"];
+        
+        //获取背景图片
+        AVFile *backgroundImage = [relatedUser objectForKey:@"theBackgroundImage"];
+        
+        [AVFile getFileWithObjectId:backgroundImage.objectId withBlock:^(AVFile *file, NSError *error) {
+            model.backgroundImageUrl = [NSURL URLWithString:backgroundImage.url];
+        }];
+        
+        //获取headImage
+        AVFile *headImage = [relatedUser objectForKey:@"headImage"];
+        [AVFile getFileWithObjectId:headImage.objectId withBlock:^(AVFile *file, NSError *error) {
+            model.headImageUrl = [NSURL URLWithString:headImage.url];
+        }];
+    }];
+    
+    [self.data addObject:model];
+    
+    NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"sharedDate" ascending:NO];
+    
+    [self.data sortUsingDescriptors:@[descriptor]];
+    
+    [self.shareTableView reloadData];
+}
+
+/**
+ *  dailyNote页面修改日记，本页面更新
+ *
+ *  @param notification 通知
+ */
+- (void)updateContentFromDailyNotePage:(NSNotification *)notification {
+    NSDictionary *dic = notification.userInfo;
+    
+    NoteDetail *model = dic[@"editedNote"];
+    
+    for (NoteDetail *object in self.data) {
+        if ([object.diaryId isEqualToString:model.diaryId]) {
+            object.content = model.content;
+            [self.shareTableView reloadData];
+            return;
+        }
+    }
+}
+
+/**
+ *  日历页面编辑日记
+ *
+ *  @param notification 通知
+ */
+- (void)updateContentFromCalendarPage:(NSNotification *)notification {
+    NSDictionary *dic = notification.userInfo;
+    
+    NoteDetail *model = dic[@"editedNote"];
+    
+    for (NoteDetail *object in self.data) {
+        if ([object.diaryId isEqualToString:model.diaryId]) {
+            object.content = model.content;
+            [self.shareTableView reloadData];
+            return;
+        }
+    }
+}
+
+/**
+ *  更新收藏页面操作的内容
+ *
+ *  @param notification 通知
+ */
 - (void)updateDiaries:(NSNotification *)notification {
     NSDictionary *dic = notification.userInfo;
     
-    NSString *objectId = dic[@"objectId"];
+    NoteDetail *passedModel = dic[@"passedObject"];
     
     for (NoteDetail *model in self.data) {
-        if ([model.diaryId isEqualToString:objectId]) {
-            model.staredUserArray = dic[@"staredUserArray"];
-            model.collectionDiaries = dic[@"collectionDiaries"];
-            model.readTime = dic[@"readTime"];
-            model.currentDiaryStarNumber = dic[@"starNumber"];
+        if ([model.diaryId isEqualToString:passedModel.diaryId]) {
+            model.staredUserArray = passedModel.staredUserArray;
+            model.collectionDiaries = passedModel.collectionDiaries;
+            model.readTime = passedModel.readTime;
+            model.starNumber = passedModel.starNumber;
             [self.shareTableView reloadData];
             return;
         }
@@ -145,7 +318,6 @@
     
     self.isLoading = YES;
     
-    //得到数据中的第一个数据
     if (self.isNetworkAvailable == NO) {
         self.upLabel.hidden = NO;
         self.upLabel.text = @"网络错误";
@@ -153,6 +325,7 @@
         [refreshControl endRefreshing];
     } else {
         
+        //得到数据中的第一个数据
         //刷新数据，加载最新的数据，当数组存储了数据，查询的新数据插到数组的最前面
         if (self.data.count != 0) {
             NoteDetail *firstObject = self.data[0];
@@ -322,7 +495,7 @@
     
     NoteDetail *object = [self.data lastObject];
     
-    NSDate *date = object.date;
+    NSDate *date = object.sharedDate;
     
     if (self.passedIndexPath) {
         [[WLLDailyNoteDataManager sharedInstance] loadFiveDiariesOfCollectionByDate:date finished:^{
@@ -381,16 +554,19 @@
             } else {
             }
         } error:^{
-            [[WLLDailyNoteDataManager sharedInstance] loadFiveDiariesOfSharingByDate:shareCacheDate finished:^{
-                NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
-                if (array.count != 0) {
-                    [self.data addObjectsFromArray:array];
-                    [self.shareTableView reloadData];
-                } else {
-                }
-            } error:^{
-                //添加网络错误代码
-            }];
+            if (shareCacheDate != nil) {
+                [[WLLDailyNoteDataManager sharedInstance] loadFiveDiariesOfSharingByDate:shareCacheDate finished:^{
+                    NSArray *array = [WLLDailyNoteDataManager sharedInstance].noteData;
+                    if (array.count != 0) {
+                        [self.data addObjectsFromArray:array];
+                        [self.shareTableView reloadData];
+                    } else {
+                    }
+                } error:^{
+                    //添加网络错误代码
+                }];
+
+            }
         }];
 
     }
@@ -559,6 +735,8 @@
 -(void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"deleteThisDiariyCollection" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"dailyNoteAndSharePageDeleteDiary" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"calendarPageChangeNote" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"dailyNotePageChangeNote" object:nil];
 }
 
 - (void)didReceiveMemoryWarning {

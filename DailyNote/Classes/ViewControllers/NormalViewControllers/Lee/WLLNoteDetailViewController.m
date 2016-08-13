@@ -107,7 +107,7 @@
     if ([WLLDailyNoteDataManager sharedInstance].isNetworkAvailable ) {
          alertVC = [UIAlertController alertControllerWithTitle:@"网络忙，请稍后尝试谢谢!" message:nil preferredStyle:UIAlertControllerStyleAlert];
     } else {
-        alertVC = [UIAlertController alertControllerWithTitle:@"网络错误，不能编辑" message:nil preferredStyle:UIAlertControllerStyleAlert];
+        alertVC = [UIAlertController alertControllerWithTitle:@"网络错误，不能删除、编辑" message:nil preferredStyle:UIAlertControllerStyleAlert];
     }
     
     UIAlertAction *alertAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
@@ -127,14 +127,17 @@
                                                             action:@selector(backToFront)];
     
     self.navigationItem.leftBarButtonItem = left;
+    left.tintColor = [UIColor whiteColor];
     
     // 右边
     UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"newNote"]
                                                                   style:UIBarButtonItemStylePlain
                                                                  target:self
                                                                  action:@selector(editDaily:)];
+    rightItem.tintColor = [UIColor whiteColor];
     
     UIBarButtonItem *deleteDiary = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"deleteImage30X30"] style:UIBarButtonItemStylePlain target:self action:@selector(deleteDiary:)];
+    deleteDiary.tintColor = [UIColor whiteColor];
     self.navigationItem.rightBarButtonItems = @[rightItem, deleteDiary];
 }
 

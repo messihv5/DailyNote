@@ -64,13 +64,13 @@
                                             </constraints>
                                         </imageView>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="k3e-Of-cKF">
-                                            <rect key="frame" x="189.5" y="145" width="35" height="34.5"/>
+                                            <rect key="frame" x="189" y="145" width="35" height="34.5"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="k3e-Of-cKF" secondAttribute="height" id="0Vv-IT-rkA"/>
                                             </constraints>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0AA-hB-WKZ">
-                                            <rect key="frame" x="229" y="153" width="9.5" height="18"/>
+                                            <rect key="frame" x="229" y="154" width="9.5" height="18"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>

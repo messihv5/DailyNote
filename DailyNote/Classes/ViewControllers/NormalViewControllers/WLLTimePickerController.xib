@@ -15,17 +15,17 @@
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="AeP-os-vRI">
-                    <rect key="frame" x="0.0" y="64" width="320" height="216"/>
+                    <rect key="frame" x="0.0" y="64" width="600" height="216"/>
                     <date key="date" timeIntervalSinceReferenceDate="487584905.46263099">
                         <!--2016-06-14 08:15:05 +0000-->
                     </date>
                 </datePicker>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZSJ-9L-ggQ">
-                    <rect key="frame" x="80" y="330" width="160" height="30"/>
+                    <rect key="frame" x="150" y="330" width="300" height="30"/>
                     <color key="backgroundColor" red="0.48190591179999998" green="1" blue="0.23342582249999999" alpha="1" colorSpace="calibratedRGB"/>
                     <state key="normal" title="选择时间"/>
                     <connections>
@@ -42,7 +42,6 @@
                 <constraint firstAttribute="trailing" secondItem="AeP-os-vRI" secondAttribute="trailing" id="sSH-ol-wSj"/>
                 <constraint firstItem="ZSJ-9L-ggQ" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="w5p-AU-UlF"/>
             </constraints>
-            <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
             <point key="canvasLocation" x="235" y="289"/>
         </view>
     </objects>

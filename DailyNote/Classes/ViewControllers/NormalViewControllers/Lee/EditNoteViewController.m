@@ -153,6 +153,7 @@
     
     // 心情视图
     self.mood = [WLLMoodView viewFromXib];
+    self.mood.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.4);
     [self.mood.shareSwitch addTarget:self action:@selector(shareDiary:) forControlEvents:UIControlEventValueChanged];
     if (self.passedObject.sharedDate != nil) {
         self.mood.shareSwitch.on = YES;
@@ -316,12 +317,14 @@
                                                             target:self
                                                             action:@selector(cancel)];
     self.navigationItem.leftBarButtonItem = left;
+    left.tintColor = [UIColor whiteColor];
     
     UIBarButtonItem *right = [[UIBarButtonItem alloc] initWithTitle:@"确认"
                                                               style:UIBarButtonItemStylePlain
                                                              target:self
                                                              action:@selector(saveNote:)];
     self.navigationItem.rightBarButtonItem = right;
+    right.tintColor = [UIColor whiteColor];
    
 }
 
@@ -504,6 +507,7 @@
 // 设置工具条
 - (void)setToolView {
     
+    self.toolView.x = 0;
     self.toolView.y = kHeight - self.toolView.height;
     [self.view addSubview:self.toolView];
     
@@ -513,6 +517,7 @@
                                                  name:UIKeyboardWillChangeFrameNotification
                                                object:nil];
 }
+
 
 // 键盘收放通知方法
 - (void)keyboardWillChangeFrameNotification:(NSNotification *)note {
@@ -555,16 +560,11 @@
 - (void)saveNote:(UIBarButtonItem *)button {
     //没有网络的时候，不能编辑，弹出提示框
     if ([WLLDailyNoteDataManager sharedInstance].isNetworkAvailable == NO) {
-        [self tipOfNoneDiaryContent:button];
+        [self tipOfNoneDiaryContent];
     } else {
         //保存或编辑日记时，注销第一响应，不在编辑
         [self.contentText resignFirstResponder];
         
-        //显示上传日记提示，遮盖视图出现
-        [self.view addSubview:self.ignoreAllEventView];
-        [self.view bringSubviewToFront:self.tipView];
-        self.tipView.hidden = NO;
-        self.navigationController.navigationBar.hidden = YES;
         
         //归档背景颜色
         NSMutableData *backColorData = [[NSMutableData alloc] init];
@@ -582,20 +582,19 @@
         if (_indexPath) {
         
             // 如果是由点击DailyNote页面cell 进入，就是编辑
-//            // 移除遮盖view
-//            [self.coverView removeFromSuperview];
-//            
-//
-//
-//            // 收回font view
-//            self.fontView.frame = CGRectMake(0, kHeight, kWidth, 0.4*kHeight);
-//            
-//            // 收回选择背景色视图
-//            self.noteBackgroundColor.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.3);
-//            self.choiceView.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.05);
-//            
-//            // 收回心情视图
-//            self.mood.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.4);
+            
+            // 移除遮盖view
+            [self.coverView removeFromSuperview];
+            
+            // 收回font view
+            self.fontView.frame = CGRectMake(0, kHeight, kWidth, 0.4*kHeight);
+            
+            // 收回选择背景色视图
+            self.noteBackgroundColor.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.3);
+            self.choiceView.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.05);
+            
+            // 收回心情视图
+            self.mood.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.4);
             
             //修改传过来的日记，并保存在网络
             //通过model获取日记
@@ -609,17 +608,29 @@
             if (self.contentText.text == nil || string.length == 0) {
                 
                 //日记内容为空，弹出提示框
-                [self tipOfNoneDiaryContent:button];
+                [self tipOfNoneDiaryContent];
             } else {
                 
+                //显示上传日记提示，遮盖视图出现
+                [self.view addSubview:self.ignoreAllEventView];
+                [self.view bringSubviewToFront:self.tipView];
+                self.tipView.hidden = NO;
+                self.navigationController.navigationBar.hidden = YES;
+
                 //model保存数据
                 [self saveDataInModel:self.passedObject];
                 
+                //calendar页面编辑日记时，发送通知告诉主页面及分享页面更新日记
                 if (self.isFromeCalendar == YES) {
                     NSDictionary *dic = [NSDictionary dictionaryWithObject:self.passedObject forKey:@"editedNote"];
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"calendarPageChangeNote"
                                                                         object:nil
                                                                       userInfo:dic];
+                } else {
+                    NSDictionary *dic = [NSDictionary dictionaryWithObject:self.passedObject forKey:@"editedNote"];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"dailyNotePageChangeNote"
+                                                                        object:nil
+                                                                    userInfo:dic];
                 }
                     
                 //数据库保存
@@ -664,6 +675,19 @@
         } else {
             
             // 如果是由DailyNote页面直接点击添加进入，就是添加
+            // 移除遮盖view
+            [self.coverView removeFromSuperview];
+            
+            // 收回font view
+            self.fontView.frame = CGRectMake(0, kHeight, kWidth, 0.4*kHeight);
+            
+            // 收回选择背景色视图
+            self.noteBackgroundColor.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.3);
+            self.choiceView.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.05);
+            
+            // 收回心情视图
+            self.mood.frame = CGRectMake(0, kHeight, kWidth, kHeight*0.4);
+            
             //创建日记对象，保存日记到网络
             AVObject *object = [AVObject objectWithClassName:@"Diary"];
             
@@ -678,10 +702,16 @@
             if (self.contentText.text == nil || string.length == 0) {
                 
                 //日记内容为空，弹出提示框
-                [self tipOfNoneDiaryContent:button];
+                [self tipOfNoneDiaryContent];
                 
             } else {
                 
+                //显示上传日记提示，遮盖视图出现
+                [self.view addSubview:self.ignoreAllEventView];
+                [self.view bringSubviewToFront:self.tipView];
+                self.tipView.hidden = NO;
+                self.navigationController.navigationBar.hidden = YES;
+
                 //model保存数据
                 [self saveDataInModel:model];
                 
@@ -860,28 +890,20 @@
 }
 
 // 如果日记内容为空, 弹出提示框
-- (void)tipOfNoneDiaryContent:(UIButton *)sender {
+- (void)tipOfNoneDiaryContent{
     UIAlertController *alertController;
     
-    if (sender) {
-        if ([WLLDailyNoteDataManager sharedInstance].isNetworkAvailable == NO) {
-            alertController = [UIAlertController alertControllerWithTitle:@"网络故障，保存失败" message:nil preferredStyle:UIAlertControllerStyleAlert];
-        } else {
-            alertController = [UIAlertController alertControllerWithTitle:@"日记内容不能为空" message:nil preferredStyle:UIAlertControllerStyleAlert];
-        }
-        
-        UIAlertAction *executeAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        }];
-        
-        [alertController addAction:executeAction];
+    if ([WLLDailyNoteDataManager sharedInstance].isNetworkAvailable == NO) {
+        alertController = [UIAlertController alertControllerWithTitle:@"网络故障，保存失败" message:nil preferredStyle:UIAlertControllerStyleAlert];
     } else {
-        alertController = [UIAlertController alertControllerWithTitle:@"每篇日记最多保存10副图片" message:nil preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *noMorePicturesAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-        }];
-        
-        [alertController addAction:noMorePicturesAction];
+        alertController = [UIAlertController alertControllerWithTitle:@"日记内容不能为空" message:nil preferredStyle:UIAlertControllerStyleAlert];
     }
-    
+        
+    UIAlertAction *executeAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    }];
+        
+    [alertController addAction:executeAction];
+        
     [self.navigationController presentViewController:alertController animated:YES completion:nil];
 }
 
@@ -1099,12 +1121,6 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
 
 // 图片来自相册
 - (void)pictureFromLibrary {
-    
-    //给图片控制器发送图片数目的通知
-//    NSDictionary *dic = [NSDictionary dictionaryWithObject:[NSNumber numberWithInteger:self.numberOfPictures ]
-//                                                    forKey:@"numberOfPictures"];
-//    [[NSNotificationCenter defaultCenter] postNotificationName:@"numberOfPictures" object:nil userInfo:dic];
-    
     __weak typeof(self) weakSelf = self;
     WLLAssetPickerController *assetPicker = [WLLAssetPickerController pickerWithCompletion:^(NSDictionary *info) {
         
