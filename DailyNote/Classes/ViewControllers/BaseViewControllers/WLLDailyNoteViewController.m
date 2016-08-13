@@ -29,7 +29,6 @@
  *  存放NoteDetail对象的数组
  */
 @property (strong, nonatomic) NSMutableArray *data;
-@property (strong, nonatomic) NSMutableArray *data1;
 @property (strong, nonatomic) NSUserDefaults *userDefaults;
 @property (strong, nonatomic) UILabel *downLoadLabel;
 @property (strong, nonatomic) UIView *alertView;
@@ -100,16 +99,6 @@ static NSString  *const reuseIdentifier = @"note_cell";
     
     //注册删除日记的通知
     [self addDeleteDiaryNotification];
-    
-    [self.data1 addObjectsFromArray:self.data];
-    [self.data addObjectsFromArray:self.data1];
-}
-
-- (NSMutableArray *)data1 {
-    if (_data1 == nil) {
-        _data1 = [NSMutableArray arrayWithCapacity:10];
-    }
-    return _data1;
 }
 
 /**
@@ -468,10 +457,10 @@ static NSString  *const reuseIdentifier = @"note_cell";
  *  本页面添加一个提示标签“日记已加载完”，“网络故障”等提示内容
  */
 - (void)addAlertView {
-    self.alertView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 250, 40)];
-    self.alertView.center = CGPointMake(kWidth * 0.5, kHeight * 0.5);
+    self.alertView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
+    self.alertView.center = CGPointMake(kWidth*0.5, kHeight*0.5);
     
-    self.upLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 250, 40)];
+    self.upLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
     self.upLabel.text = @"日记已经加载完";
     self.upLabel.textColor = [UIColor whiteColor];
     self.upLabel.alpha = 0.5;
