@@ -384,16 +384,17 @@ static WLLDailyNoteDataManager *manager = nil;
         
         //背景颜色赋值
         NSData *backColorData = [object objectForKey:@"backColor"];
-        NSKeyedUnarchiver *backColorUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:backColorData];
-        model.backColor = [backColorUnarchiver decodeObjectForKey:@"backColor"];
+        if (backColorData == nil) {
+            model.backColor = [UIColor whiteColor];
+        } else {
+            NSKeyedUnarchiver *backColorUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:backColorData];
+            model.backColor = [backColorUnarchiver decodeObjectForKey:@"backColor"];
+        }
         
         //字体颜色解析
         NSData *fontColorData = [object objectForKey:@"fontColor"];
         NSKeyedUnarchiver *fontColorUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:fontColorData];
         model.fontColor = [fontColorUnarchiver decodeObjectForKey:@"fontColor"];
-        if (model.fontColor == nil) {
-            model.fontColor = [UIColor blackColor];
-        }
         
         //字体解析
         NSString *fontNumberString = [object objectForKey:@"fontNumber"];

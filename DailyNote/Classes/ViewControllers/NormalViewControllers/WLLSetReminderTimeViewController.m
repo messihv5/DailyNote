@@ -56,21 +56,20 @@
 
 //自定义导航栏按钮的方法
 - (void)backAction {
-    NSString *reminder = [[AVUser currentUser] objectForKey:@"noteReminder"];
+//    NSString *reminder = [[AVUser currentUser] objectForKey:@"noteReminder"];
     
+    AVInstallation *currentInstallation = [AVInstallation currentInstallation];
+    NSArray *channels = currentInstallation.channels;
+
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:1 inSection:0];
     WChaoReminderCellTableViewCell *cell = [self.remindreTableView cellForRowAtIndexPath:indexPath];
     NSString *time = cell.changeTimeButton.titleLabel.text;
-    if ([reminder isEqualToString:@"YES"]) {
+    if (channels.count != 0) {
         self.block(time);
     } else {
         self.block(@"已关闭");
     }
     
-    //把该状态设置到userDefault里面
-    [[AVUser currentUser] setObject:time forKey:@"reminderTime"];
-    [[AVUser currentUser] saveInBackground];
-
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -85,9 +84,9 @@
         
         WChaoPrivateCodeCellTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CW" forIndexPath:indexPath];
         
-        //判断提醒日记的开关状态
-        NSString *reminder = [[AVUser currentUser] objectForKey:@"noteReminder"];
-        if ([reminder isEqualToString:@"YES"]) {
+        AVInstallation *currentInstallation = [AVInstallation currentInstallation];
+        NSArray *channels = currentInstallation.channels;
+        if (channels.count != 0) {
             cell.privateCodeSwith.on = YES;
         } else {
             cell.privateCodeSwith.on = NO;
@@ -99,16 +98,12 @@
         [cell.privateCodeSwith addTarget:self action:@selector(reminderSwitch:) forControlEvents:UIControlEventValueChanged];
         return cell;
     } else {
-        
-        //从用户数据里面获取写日记的提醒时间
-        NSString *reminderTime = [[AVUser currentUser] objectForKey:@"reminderTime"];
-        
         WChaoReminderCellTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CW2" forIndexPath:indexPath];
         cell.titleLabel.text = @"提醒时间";
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         [cell.changeTimeButton addTarget:self action:@selector(changeReminderTimeAction:)
                         forControlEvents:UIControlEventTouchUpInside];
-        [cell.changeTimeButton setTitle:reminderTime forState:UIControlStateNormal];
+        [cell.changeTimeButton setTitle:@"20:00" forState:UIControlStateNormal];
         return cell;
     }
     return nil;
@@ -117,12 +112,14 @@
 //开关日记提醒
 - (void)reminderSwitch:(UISwitch *)sender {
     if (sender.on == YES) {
-        [[AVUser currentUser] setObject:@"YES" forKey:@"noteReminder"];
-        [[AVUser currentUser] saveInBackground];
+        AVInstallation *currentInstallation = [AVInstallation currentInstallation];
+        [currentInstallation addUniqueObject:@"2000" forKey:@"channels"];
+        [currentInstallation saveInBackground];
         
     } else {
-        [[AVUser currentUser] setObject:@"NO" forKey:@"noteReminder"];
-        [[AVUser currentUser] saveInBackground];
+        AVInstallation *currentInstallation = [AVInstallation currentInstallation];
+        [currentInstallation removeObject:@"2000" forKey:@"channels"];
+        [currentInstallation saveInBackground];
     }
 }
 

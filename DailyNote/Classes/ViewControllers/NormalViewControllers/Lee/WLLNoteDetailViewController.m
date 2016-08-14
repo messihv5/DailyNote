@@ -344,17 +344,8 @@
     
     UIFont *font = [UIFont systemFontOfSize:[fontNumberString floatValue]];
         
-    // 富文本
-    NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:self.contentLabel.text];
-    [attrStr addAttribute:NSForegroundColorAttributeName
-                        value:fontColor
-                        range:NSMakeRange(0, self.contentLabel.text.length)];
-        
-    [attrStr addAttribute:NSFontAttributeName
-                    value:font
-                    range:NSMakeRange(0, self.contentLabel.text.length)];
-        
-    self.contentLabel.attributedText = attrStr;
+    self.contentLabel.textColor = fontColor;
+    self.contentLabel.font = font;
     
     //天气图标
     self.weatherImageView.image = model.weatherImage;

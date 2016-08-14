@@ -15,10 +15,8 @@
 #import "WLLFunctionController.h"
 #import "WLLSettingViewController.h"
 #import "WLLShareViewController.h"
-
 #import <ShareSDK/ShareSDK.h>
 #import <ShareSDKUI/ShareSDK+SSUI.h>
-
 
 @interface WLLUserViewController ()<UITableViewDelegate,
                                     UITableViewDataSource,
@@ -27,7 +25,6 @@
                                     UINavigationControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *userTableView;
-
 @property (strong, nonatomic) NSMutableArray *data;
 @property (strong, nonatomic) UIImageView *headImageView;
 @property (strong, nonatomic) UIImageView *theBackgroundImageView;
@@ -75,13 +72,11 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    
     [super viewWillAppear:animated];
     self.navigationController.navigationBar.hidden = YES;
     
     //计算用户获得的总赞数
     AVQuery *query = [AVQuery queryWithClassName:@"Diary"];
-//    [query whereKey:@"sharedDate" notEqualTo:nil];
     [query whereKey:@"belong" equalTo:self.theCurrentUser];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         NSInteger totalStar = 0;
@@ -114,10 +109,13 @@
     self.theBackgroundImageView.backgroundColor = [UIColor cyanColor];
         
     AVFile *theBackgroundImageFile = [self.theCurrentUser objectForKey:@"theBackgroundImage"];
-    
-    [AVFile getFileWithObjectId:theBackgroundImageFile.objectId withBlock:^(AVFile *file, NSError *error) {
-        [self.theBackgroundImageView sd_setImageWithURL:[NSURL URLWithString:file.url]];
-    }];
+    if (theBackgroundImageFile == nil) {
+        self.theBackgroundImageView.image = [UIImage imageNamed:@"appIconBackgroundImage"];
+    } else {
+        [AVFile getFileWithObjectId:theBackgroundImageFile.objectId withBlock:^(AVFile *file, NSError *error) {
+            [self.theBackgroundImageView sd_setImageWithURL:[NSURL URLWithString:file.url]];
+        }];
+    }
     
     UITapGestureRecognizer *tapGestureRecognizer;
     tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
@@ -132,10 +130,13 @@
     self.headImageView.backgroundColor = [UIColor purpleColor];
     
     AVFile *headImageFile = [self.theCurrentUser objectForKey:@"headImage"];
-    
-    [AVFile getFileWithObjectId:headImageFile.objectId withBlock:^(AVFile *file, NSError *error) {
-        [self.headImageView sd_setImageWithURL:[NSURL URLWithString:file.url]];
-    }];
+    if (headImageFile == nil) {
+        self.headImageView.image = [UIImage imageNamed:@"appIconHeadImage"];
+    } else {
+        [AVFile getFileWithObjectId:headImageFile.objectId withBlock:^(AVFile *file, NSError *error) {
+            [self.headImageView sd_setImageWithURL:[NSURL URLWithString:file.url]];
+        }];
+    }
     
     self.headImageView.layer.cornerRadius = kHeight / 18;
     self.headImageView.layer.masksToBounds = YES;
@@ -160,7 +161,7 @@
     
     CGRect starNumberLabelRect = CGRectMake(CGRectGetMaxX(starImageViewRect) + 5, starImageViewRect.origin.y, 50, kHeight * 5 / 108);
     self.starNumberLabel = [[UILabel alloc] initWithFrame:starNumberLabelRect];
-    self.starNumberLabel.text = @"100";
+    self.starNumberLabel.text = @"0";
     self.starNumberLabel.textAlignment = NSTextAlignmentLeft;
     [view addSubview:self.starNumberLabel];
     
@@ -237,64 +238,70 @@
     } else if (indexPath.section == 1 && indexPath.row == 0) {
         
         //进入AppStore去评价
-        NSString *str = @"http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=1143422067&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8 ";
+        NSString *str = @"http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=1143422067&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8";
         
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:str]];
 
     } else if (indexPath.section == 1 && indexPath.row == 1) {
         
         //进入更多功能的界面
-        WLLFunctionController *fucntionController = [[WLLFunctionController alloc] initWithNibName:@"WLLFunctionController" bundle:[NSBundle mainBundle]];
+        WLLFunctionController *fucntionController = [[WLLFunctionController alloc] initWithNibName:@"WLLFunctionController"
+                                                                                            bundle:[NSBundle mainBundle]];
         [self.navigationController pushViewController:fucntionController animated:YES];
     } else if (indexPath.section == 1 && indexPath.row == 2) {
         
         //进入设置页面
-        WLLSettingViewController *viewController = [[WLLSettingViewController alloc] initWithNibName:@"WLLSettingViewController" bundle:[NSBundle mainBundle]];
+        WLLSettingViewController *viewController = [[WLLSettingViewController alloc] initWithNibName:@"WLLSettingViewController"
+                                                                                              bundle:[NSBundle mainBundle]];
         [self.navigationController pushViewController:viewController animated:YES];
     } else if (indexPath.section == 1 && indexPath.row == 3) {
         
         //进入分享页面
         NSArray* imageArray = @[[UIImage imageNamed:@"mNote"]];
-//        if (imageArray) {
-//            
-//            NSMutableDictionary *shareParams = [NSMutableDictionary dictionary];
-//            [shareParams SSDKSetupShareParamsByText:@"分享内容"
-//                                             images:imageArray
-//                                                url:[NSURL URLWithString:@"http://mob.com"]
-//                                              title:@"分享标题"
-//                                               type:SSDKContentTypeAuto];
-//            //2、分享（可以弹出我们的分享菜单和编辑界面）
-//            [ShareSDK showShareActionSheet:nil //要显示菜单的视图, iPad版中此参数作为弹出菜单的参照视图，只有传这个才可以弹出我们的分享菜单，可以传分享的按钮对象或者自己创建小的view 对象，iPhone可以传nil不会影响
-//                                     items:nil
-//                               shareParams:shareParams
-//                       onShareStateChanged:^(SSDKResponseState state, SSDKPlatformType platformType, NSDictionary *userData, SSDKContentEntity *contentEntity, NSError *error, BOOL end) {
-//                           
-//                           switch (state) {
-//                               case SSDKResponseStateSuccess:
-//                               {
-//                                   UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"分享成功"
-//                                                                                       message:nil
-//                                                                                      delegate:nil
-//                                                                             cancelButtonTitle:@"确定"
-//                                                                             otherButtonTitles:nil];
-//                                   [alertView show];
-//                                   break;
-//                               }
-//                               case SSDKResponseStateFail:
-//                               {
-//                                   UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"分享失败"
-//                                                                                   message:[NSString stringWithFormat:@"%@",error]
-//                                                                                  delegate:nil
-//                                                                         cancelButtonTitle:@"OK"
-//                                                                         otherButtonTitles:nil, nil];
-//                                   [alert show];
-//                                   break;
-//                               }
-//                               default:
-//                                   break;
-//                           }
-//                       }  
-//             ];}
+        
+        if (imageArray) {
+            NSURL *url = [NSURL URLWithString:@"http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=1143422067&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8"];
+            
+            NSMutableDictionary *shareParams = [NSMutableDictionary dictionary];
+            [shareParams SSDKSetupShareParamsByText:@"mNote带给你最好的日记体验"
+                                             images:imageArray
+                                                url:url
+                                              title:@"mNote"
+                                               type:SSDKContentTypeAuto];
+            
+            //2、分享（可以弹出我们的分享菜单和编辑界面）
+            [ShareSDK showShareActionSheet:nil
+                                     items:nil
+                               shareParams:shareParams
+                       onShareStateChanged:^(SSDKResponseState state, SSDKPlatformType platformType, NSDictionary *userData, SSDKContentEntity *contentEntity, NSError *error, BOOL end) {
+                           
+                           switch (state) {
+                               case SSDKResponseStateSuccess:
+                               {
+                                   UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"分享成功"
+                                                                                       message:nil
+                                                                                      delegate:nil
+                                                                             cancelButtonTitle:@"确定"
+                                                                             otherButtonTitles:nil];
+                                   [alertView show];
+                                   break;
+                               }
+                               case SSDKResponseStateFail:
+                               {
+                                   NSString *message = [NSString stringWithFormat:@"%@", error];
+                                   UIAlertView *alert = [[UIAlertView alloc ]initWithTitle:@"分享失败"
+                                                                                   message:message
+                                                                                  delegate:nil
+                                                                         cancelButtonTitle:@"OK"
+                                                                         otherButtonTitles:nil, nil];
+                                   [alert show];
+                                   break;
+                               }
+                               default:
+                                   break;
+                           }
+                       }  
+             ];}
     }
 }
 
@@ -342,7 +349,6 @@
 #pragma mark - 退出系统
 - (void)logOutAction:(UIButton *)sender {
     [AVUser logOut];
-    
     [[UIApplication sharedApplication].delegate application:[UIApplication sharedApplication] didFinishLaunchingWithOptions:nil];
 }
 
@@ -358,34 +364,14 @@
     }
 }
 
-#pragma mark - 使用coreData查询用户的nickName及signature
-
+//通过数据库查询用户的nickName和signature
 - (void)searchForNickNameAndSignature {
     
-    //CoreData查询用户的nickName和signature
-    /*
-    //创建查询对象
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    
-    //创建查询实体
-    self.userDelegate = [UIApplication sharedApplication].delegate;
-    self.userContext = self.userDelegate.managedObjectContext;
-    
-    NSEntityDescription *description = [NSEntityDescription entityForName:@"UserInfo" inManagedObjectContext:self.userContext];
-    [fetchRequest setEntity:description];
-    
-    NSError *error = nil;
-    NSArray *fetchedObjects = [self.userContext executeFetchRequest:fetchRequest error:&error];
-    UserInfo *userInfo = fetchedObjects[0];
-    self.nickNameLabel.text = userInfo.nickName;
-    self.signatureLabel.text = userInfo.signature;*/
-    
-    //通过数据库查询用户的nickName和signature
     self.nickNameLabel.text = [self.theCurrentUser objectForKey:@"nickName"];
     self.signatureLabel.text = [self.theCurrentUser objectForKey:@"signature"];
 }
 
-#pragma mark - 轻击手势切换图片
+#pragma mark - 轻击手势切换背景图片
 - (void)theBackgroudImageViewTapAction {
     
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"更换背景" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
@@ -416,6 +402,7 @@
     self.isTheBackgroundImageView = YES;
 }
 
+//轻击手势选取头像图片
 - (void)headImageViewTapAction {
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"切换图像"
                                                                              message:@""
@@ -455,6 +442,7 @@
                                           
 }
 
+//选图片代理方法
 - (void)imagePickerController:(UIImagePickerController *)picker
 didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
     UIImage *pickedImage = info[UIImagePickerControllerOriginalImage];

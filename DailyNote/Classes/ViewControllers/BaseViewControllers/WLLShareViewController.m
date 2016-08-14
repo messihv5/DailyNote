@@ -64,8 +64,6 @@
     
     [self addAlertView];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sharePageDeleteDiary:) name:@"dailyNoteAndSharePageDeleteDiary" object:nil];
-    
     //分享主页面注册更新日记通知（收藏页面操作导致的更新），及注册calendar页面修改日记的通知，dailyNote页面修改日记的通知
     [self registerUpdateNotification];
 }
@@ -87,6 +85,9 @@
                                                  selector:@selector(resumeDiary:)
                                                      name:@"resumeDiary"
                                                    object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                  selector:@selector(sharePageDeleteDiary:) name:@"dailyNoteAndSharePageDeleteDiary"
+                                                    object:nil];
     }
 }
 
@@ -666,9 +667,8 @@
         } else {
             
             //该用户没有点赞
-            
             //日记里面保存的点赞数字也加1
-            NSString *num = diary.diaryId;
+            NSString *num = diary.starNumber;
             num = [NSString stringWithFormat:@"%ld", [num integerValue] + 1];
             diary.starNumber = num;
             [object setObject:num forKey:@"starNumber"];
@@ -737,6 +737,8 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"dailyNoteAndSharePageDeleteDiary" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"calendarPageChangeNote" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"dailyNotePageChangeNote" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"dailyNoteAndSharePageDeleteDiary" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"sharePageToUpdateThreeInfo" object:nil];
 }
 
 - (void)didReceiveMemoryWarning {

@@ -237,7 +237,7 @@
     
     CGRect tipLabelRect = CGRectMake(0, 50 - 30, 200, 60);
     self.tipLabel = [[UILabel alloc] initWithFrame:tipLabelRect];
-    self.tipLabel.text = @"正在上传图片，请稍后";
+    self.tipLabel.text = @"正在保存日记，请稍后";
     [self.tipView addSubview:self.tipLabel];
     
     CGRect indicatorViewRect = CGRectMake(100 - 30, 100 + 50 - 30, 60, 60);
@@ -569,6 +569,9 @@
         //归档背景颜色
         NSMutableData *backColorData = [[NSMutableData alloc] init];
         NSKeyedArchiver *archiverBackColor = [[NSKeyedArchiver alloc] initForWritingWithMutableData:backColorData];
+        if (self.contentText.backgroundColor == nil) {
+            self.contentText.backgroundColor = [UIColor whiteColor];
+        }
         [archiverBackColor encodeObject:self.contentText.backgroundColor forKey:@"backColor"];
         [archiverBackColor finishEncoding];
         
@@ -576,6 +579,9 @@
         NSMutableData *fontColor = [[NSMutableData alloc] init];
         
         NSKeyedArchiver *archiverFontColor = [[NSKeyedArchiver alloc] initForWritingWithMutableData:fontColor];
+        if (self.contentText.textColor == nil) {
+            self.contentText.textColor = [UIColor blackColor];
+        }
         [archiverFontColor encodeObject:self.contentText.textColor forKey:@"fontColor"];
         [archiverFontColor finishEncoding];
 

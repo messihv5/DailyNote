@@ -83,18 +83,21 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"CW_Cell"];
     }
+    
     SystemModel *model = self.data[indexPath.section][indexPath.row];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     cell.textLabel.text = model.systemString;
     if (indexPath.section == 0) {
-        NSString *reminder = [[AVUser currentUser] objectForKey:@"noteReminder"];
-        NSString *reminderTime = [[AVUser currentUser] objectForKey:@"reminderTime"];
-        if ([reminder isEqualToString:@"YES"]) {
-            cell.detailTextLabel.text = reminderTime;
+        AVInstallation *currentInstallation = [AVInstallation currentInstallation];
+        NSArray *channels = currentInstallation.channels;
+        
+        if (channels.count != 0) {
+            cell.detailTextLabel.text = channels[0];
         } else {
             cell.detailTextLabel.text = @"已关闭";
         }
     }
+    
     return cell;
 }
 

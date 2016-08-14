@@ -59,6 +59,9 @@
     
     [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
+            AVInstallation *currentInstallation = [AVInstallation currentInstallation];
+            [currentInstallation addUniqueObject:@"2000" forKey:@"channels"];
+            [currentInstallation saveInBackground];
             
             //注册成功
             //通过coreData存储用户的nickName和signature

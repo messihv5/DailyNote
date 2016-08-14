@@ -131,7 +131,7 @@ static NSString  *const reuseIdentifier = @"note_cell";
 }
 
 /**
- *  添加观察日记恢复的通知
+ *  添加观察日记恢复的通知,及日历界面修改日记的通知
  */
 - (void)addNotificationObserver {
     if (self.isFromCalendar == NO && self.isFromRecycle == NO) {
@@ -859,8 +859,10 @@ static NSString  *const reuseIdentifier = @"note_cell";
  *  移除更新日记通知
  */
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"readyToUpdaFiveewNote" object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"dailyNoteAndSharePageDeleteDiary" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"resumeDiary" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:@"dailyNoteAndSharePageDeleteDiary"
+                                                  object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"calendarPageChangeNote" object:nil];
     if (self.isFromRecycle == YES) {
         self.isFromRecycle = NO;

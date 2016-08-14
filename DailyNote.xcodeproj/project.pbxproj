@@ -17,6 +17,8 @@
 		4D20101E1D1A3A5800CE8EC9 /* eye15X15.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D20101D1D1A3A5800CE8EC9 /* eye15X15.png */; };
 		4D2010221D1A3AD500CE8EC9 /* heartSelected15X15.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D2010211D1A3AD500CE8EC9 /* heartSelected15X15.png */; };
 		4D2010241D1A3AFD00CE8EC9 /* heart15X15.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D2010231D1A3AFD00CE8EC9 /* heart15X15.png */; };
+		4D321EF81D5FFB8000DB8726 /* appIconHeadImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D321EF71D5FFB8000DB8726 /* appIconHeadImage.png */; };
+		4D321EFA1D5FFB8600DB8726 /* appIconBackgroundImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D321EF91D5FFB8600DB8726 /* appIconBackgroundImage.png */; };
 		4D48D1C21CF5678600D9E4F1 /* WLLLogUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D48D1C01CF5678600D9E4F1 /* WLLLogUpViewController.m */; };
 		4D48D1C31CF5678600D9E4F1 /* WLLLogUpViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D48D1C11CF5678600D9E4F1 /* WLLLogUpViewController.xib */; };
 		4D48D1C71CF56CDA00D9E4F1 /* WLLResetPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D48D1C51CF56CDA00D9E4F1 /* WLLResetPasswordViewController.m */; };
@@ -108,7 +110,6 @@
 		4DB6EC771D372B9400BD7ED9 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DB6EC761D372B9400BD7ED9 /* Reachability.m */; };
 		4DBEE30A1D0268CA0082F306 /* cleanCache.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DBEE3091D0268CA0082F306 /* cleanCache.png */; };
 		4DC3459E1D10F64A00D260BA /* backButton2.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DC3459D1D10F64A00D260BA /* backButton2.png */; };
-
 		4DD28D161D04F37500ADA78D /* WLLSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DD28D141D04F37500ADA78D /* WLLSettingViewController.m */; };
 		4DD28D171D04F37500ADA78D /* WLLSettingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4DD28D151D04F37500ADA78D /* WLLSettingViewController.xib */; };
 		4DD28D1B1D05394800ADA78D /* WLLFunctionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DD28D191D05394800ADA78D /* WLLFunctionController.m */; };
@@ -195,6 +196,8 @@
 		4D20101D1D1A3A5800CE8EC9 /* eye15X15.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = eye15X15.png; sourceTree = "<group>"; };
 		4D2010211D1A3AD500CE8EC9 /* heartSelected15X15.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = heartSelected15X15.png; sourceTree = "<group>"; };
 		4D2010231D1A3AFD00CE8EC9 /* heart15X15.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = heart15X15.png; sourceTree = "<group>"; };
+		4D321EF71D5FFB8000DB8726 /* appIconHeadImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = appIconHeadImage.png; sourceTree = "<group>"; };
+		4D321EF91D5FFB8600DB8726 /* appIconBackgroundImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = appIconBackgroundImage.png; sourceTree = "<group>"; };
 		4D48D1BF1CF5678600D9E4F1 /* WLLLogUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLLogUpViewController.h; sourceTree = "<group>"; };
 		4D48D1C01CF5678600D9E4F1 /* WLLLogUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLLogUpViewController.m; sourceTree = "<group>"; };
 		4D48D1C11CF5678600D9E4F1 /* WLLLogUpViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WLLLogUpViewController.xib; sourceTree = "<group>"; };
@@ -314,7 +317,6 @@
 		4DB6EC761D372B9400BD7ED9 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		4DBEE3091D0268CA0082F306 /* cleanCache.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cleanCache.png; sourceTree = "<group>"; };
 		4DC3459D1D10F64A00D260BA /* backButton2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = backButton2.png; sourceTree = "<group>"; };
-
 		4DD28D131D04F37500ADA78D /* WLLSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLSettingViewController.h; sourceTree = "<group>"; };
 		4DD28D141D04F37500ADA78D /* WLLSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLSettingViewController.m; sourceTree = "<group>"; };
 		4DD28D151D04F37500ADA78D /* WLLSettingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WLLSettingViewController.xib; sourceTree = "<group>"; };
@@ -722,6 +724,8 @@
 		4D8A3F2C1CF3D615000C2D42 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				4D321EF91D5FFB8600DB8726 /* appIconBackgroundImage.png */,
+				4D321EF71D5FFB8000DB8726 /* appIconHeadImage.png */,
 				4D8C6ADD1D5EB7B700021A68 /* nickName.png */,
 				4D8C6AD71D5EAE1600021A68 /* mNote.png */,
 				4D7417371D5D654100924F8A /* email.png */,
@@ -749,7 +753,6 @@
 				4DAF24F71D5AA493009FC4D2 /* magentaTopic.png */,
 				4DA0FB371D5590BF0099203B /* location100X100.png */,
 				4DA0FB351D5583C10099203B /* deleteImage30X30.png */,
-
 				4D2010231D1A3AFD00CE8EC9 /* heart15X15.png */,
 				4D2010211D1A3AD500CE8EC9 /* heartSelected15X15.png */,
 				4D20101D1D1A3A5800CE8EC9 /* eye15X15.png */,
@@ -1130,7 +1133,6 @@
 				4D1550D31CFD8B79001CF139 /* WLLModifyInfomationViewController.xib in Resources */,
 				4DAFDC661D0697520027B677 /* WLLSecurityViewController.xib in Resources */,
 				4D8C6ADE1D5EB7B700021A68 /* nickName.png in Resources */,
-
 				4D48D1C81CF56CDA00D9E4F1 /* WLLResetPasswordViewController.xib in Resources */,
 				4D8A3EFF1CF3D14D000C2D42 /* Assets.xcassets in Resources */,
 				4DD519931D27778800745AA1 /* WLLNoteDetailViewController.xib in Resources */,
@@ -1138,6 +1140,7 @@
 				4D8CBD5A1D5D52F3008F8137 /* moreUserFunction.png in Resources */,
 				4D783F4D1D5C5C770031DEEE /* reportImage.png in Resources */,
 				4DC3459E1D10F64A00D260BA /* backButton2.png in Resources */,
+				4D321EF81D5FFB8000DB8726 /* appIconHeadImage.png in Resources */,
 				4D888ABC1D08191700545F7D /* WLLPrivateCodeViewController.xib in Resources */,
 				4DD519761D27747F00745AA1 /* WLLFontView.xib in Resources */,
 				4D649B931D1131290005276B /* README.txt in Resources */,
@@ -1147,6 +1150,7 @@
 				4D8A3F481CF423F1000C2D42 /* WLLLogInViewController.xib in Resources */,
 				4D8CBD551D5D52F3008F8137 /* setting.png in Resources */,
 				4D1C30E01CF85E9900C675D7 /* star.png in Resources */,
+				4D321EFA1D5FFB8600DB8726 /* appIconBackgroundImage.png in Resources */,
 				4D8CBD571D5D52F3008F8137 /* personalCollection.png in Resources */,
 				4D20101E1D1A3A5800CE8EC9 /* eye15X15.png in Resources */,
 				4D2010241D1A3AFD00CE8EC9 /* heart15X15.png in Resources */,
@@ -1475,7 +1479,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.LiWang.Two;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "e2b322b9-fd19-40a5-994f-6eba311697a7";
 			};
 			name = Debug;
 		};
@@ -1505,7 +1509,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.LiWang.Two;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "e2b322b9-fd19-40a5-994f-6eba311697a7";
 			};
 			name = Release;
 		};

@@ -122,7 +122,7 @@
     
     self.nickNameLabel.text = self.passedObject.nickName;
     self.signatureLabel.text = self.passedObject.signature;
-    self.starNumberLabel.text = self.passedObject.totalStarNumber;
+    self.starNumberLabel.text = [self.currentUser objectForKey:@"starNumber"];
     self.contentLabel.text = self.passedObject.content;
     self.currentDiaryStarNumberLabel.text = self.passedObject.starNumber;
     
@@ -134,8 +134,17 @@
     object.fetchWhenSave = YES;
     [object saveInBackground];
     
-    [self.backgroundImageView sd_setImageWithURL:self.passedObject.backgroundImageUrl];
-    [self.headImageView sd_setImageWithURL:self.passedObject.headImageUrl];
+    if (self.passedObject.backgroundImageUrl == nil) {
+        self.backgroundImageView.image = [UIImage imageNamed:@"appIconBackgroundImage"];
+    } else {
+        [self.backgroundImageView sd_setImageWithURL:self.passedObject.backgroundImageUrl];
+    }
+    
+    if (self.passedObject.headImageUrl == nil) {
+        self.headImageView.image = [UIImage imageNamed:@"appIconHeadImage"];
+    } else {
+        [self.headImageView sd_setImageWithURL:self.passedObject.headImageUrl];
+    }
     
     NSDate *createdDate = self.passedObject.date;
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];

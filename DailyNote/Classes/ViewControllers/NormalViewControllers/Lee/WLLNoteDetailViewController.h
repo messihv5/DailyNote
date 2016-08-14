@@ -21,9 +21,7 @@ typedef void(^NextDiaryBlock)(NSInteger nextDiary);
 @property (nonatomic, strong) NoteDetail *passedObject;
 /* 将cell下标传给Edit页面 */
 @property (nonatomic, assign) NSIndexPath *indexPath;
-
 @property (nonatomic, copy) NSString *title;
-
 /**
  *  删除日记block，在详情页面删除日记，执行block，dailyNoteViewcontroller删除对应的日记model
  */
