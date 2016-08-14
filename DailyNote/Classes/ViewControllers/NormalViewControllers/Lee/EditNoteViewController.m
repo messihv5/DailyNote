@@ -228,11 +228,10 @@
  *  添加上传日记提示
  */
 - (void)addUploadingDiaryIndicatorView {
-    CGRect tipViewRect = CGRectMake(0, 0, 200, 200);
+    CGRect tipViewRect = CGRectMake(kWidth / 2 - 100 , kHeight / 2 - 100, 200, 200);
     self.tipView = [[UIView alloc] initWithFrame:tipViewRect];
     self.tipView.hidden = NO;
     [self.view addSubview:self.tipView];
-    self.tipView.center = self.view.center;
     self.tipView.hidden = YES;
     
     CGRect tipLabelRect = CGRectMake(0, 50 - 30, 200, 60);
@@ -619,6 +618,7 @@
                 
                 //显示上传日记提示，遮盖视图出现
                 [self.view addSubview:self.ignoreAllEventView];
+                self.ignoreAllEventView.center = self.view.center;
                 [self.view bringSubviewToFront:self.tipView];
                 self.tipView.hidden = NO;
                 self.navigationController.navigationBar.hidden = YES;
@@ -658,22 +658,7 @@
                                                                                     object:nil
                                                                                   userInfo:nil];
                                 
-                            //保存成功之后，获取图片数组里面图片的url
-                            NSArray *photoArray = [object objectForKey:@"photoArray"];
-                            NSMutableArray *tempArray = [NSMutableArray arrayWithCapacity:10];
-                                
-                            for (AVFile *file in photoArray) {
-                                [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
-                                    NSString *urlString = file.url;
-                                    [tempArray addObject:urlString];
-                                    if (tempArray.count == photoArray.count) {
-                                        self.passedObject.photoUrlArray = tempArray;
-                                        [object removeObjectForKey:@"photoUrlArray"];
-                                        [object addObjectsFromArray:tempArray forKey:@"photoUrlArray"];
-                                        [object saveInBackground];
-                                    }
-                                }];
-                            }
+                            [self saveUrlInObject:object];
                         }
                     }];
                 }];
@@ -743,26 +728,35 @@
                         //保存成功把objectId传给model
                         model.diaryId = object.objectId;
                         
-                        //保存日记成功后，把图片数组里面的图片url保存在photoUrlArray里面
-                        NSArray *photoArray = [object objectForKey:@"photoArray"];
-                        NSMutableArray *tempArray = [NSMutableArray arrayWithCapacity:10];
-                        
-                        for (AVFile *file in photoArray) {
-                            [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
-                                NSString *urlString = file.url;
-                                [tempArray addObject:urlString];
-                                if (tempArray.count == photoArray.count) {
-                                    self.passedObject.photoUrlArray = tempArray;
-                                    [object removeObjectForKey:@"photoUrlArray"];
-                                    [object addObjectsFromArray:tempArray forKey:@"photoUrlArray"];
-                                    [object saveInBackground];
-                                }
-                            }];
-                        }
+                        [self saveUrlInObject:object];
                     }
                 }];
             }
         }
+    }
+}
+
+/**
+ *  保存url到数据库
+ *
+ *  @param object AVObject 对象
+ */
+- (void)saveUrlInObject:(AVObject *)object {
+    //保存日记成功后，把图片数组里面的图片url保存在photoUrlArray里面
+    NSArray *photoArray = [object objectForKey:@"photoArray"];
+    NSMutableArray *tempArray = [NSMutableArray arrayWithCapacity:10];
+    
+    for (AVFile *file in photoArray) {
+        [AVFile getFileWithObjectId:file.objectId withBlock:^(AVFile *file, NSError *error) {
+            NSString *urlString = file.url;
+            [tempArray addObject:urlString];
+            if (tempArray.count == photoArray.count) {
+                self.passedObject.photoUrlArray = tempArray;
+                [object removeObjectForKey:@"photoUrlArray"];
+                [object addObjectsFromArray:tempArray forKey:@"photoUrlArray"];
+                [object saveInBackground];
+            }
+        }];
     }
 }
 
@@ -900,16 +894,21 @@
     UIAlertController *alertController;
     
     if ([WLLDailyNoteDataManager sharedInstance].isNetworkAvailable == NO) {
-        alertController = [UIAlertController alertControllerWithTitle:@"网络故障，保存失败" message:nil preferredStyle:UIAlertControllerStyleAlert];
+        alertController = [UIAlertController alertControllerWithTitle:@"网络故障,不能执行操作"
+                                                              message:nil
+                                                       preferredStyle:UIAlertControllerStyleAlert];
     } else {
-        alertController = [UIAlertController alertControllerWithTitle:@"日记内容不能为空" message:nil preferredStyle:UIAlertControllerStyleAlert];
+        alertController = [UIAlertController alertControllerWithTitle:@"日记内容不能为空"
+                                                              message:nil
+                                                       preferredStyle:UIAlertControllerStyleAlert];
     }
         
-    UIAlertAction *executeAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertAction *executeAction = [UIAlertAction actionWithTitle:@"确定"
+                                                            style:UIAlertActionStyleDefault
+                                                          handler:^(UIAlertAction * _Nonnull action) {
     }];
         
     [alertController addAction:executeAction];
-        
     [self.navigationController presentViewController:alertController animated:YES completion:nil];
 }
 
@@ -1050,6 +1049,7 @@
 // 图片来自拍照
 - (void)pictureFromCamera {
     if (self.numberOfPictures == 10) {
+        [self tipOfExceedTwentyPictures];
         return;
     }
     
@@ -1060,6 +1060,20 @@
     pictureController.allowsEditing = YES;
     
     [self presentViewController:pictureController animated:YES completion:nil];
+}
+
+- (void)tipOfExceedTwentyPictures {
+    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"每篇日记最多上传20张图片"
+                                                                     message:nil
+                                                              preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"确定"
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:^(UIAlertAction * _Nonnull action) {
+    }];
+    
+    [alertVC addAction:cancelAction];
+    [self.navigationController presentViewController:alertVC animated:YES completion:nil];
 }
 
 //已选图片代理方法
@@ -1202,7 +1216,7 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
         [weakSelf dismissViewControllerAnimated:YES completion:nil];
     }];
     
-    assetPicker.selectionLimit = 10 - self.numberOfPictures;
+    assetPicker.selectionLimit = 20 - self.numberOfPictures;
     
     //把照片数量传递给WLLAlbumTableViewController
     NSArray *controllers =  assetPicker.childViewControllers;

@@ -102,16 +102,12 @@
     
     CGFloat width = kWidth * self.numberOfPicture;
     
-    CGFloat height = self.pictureScrollView.frame.size.height;
+    CGFloat height = kHeight - 44;
     
     CGRect contentViewRect = CGRectMake(0, 0, width, height);
 
     self.contentView = [[UIView alloc] initWithFrame:contentViewRect];
-
-//    self.contentView.backgroundColor = [UIColor greenColor];
-    
     self.pictureScrollView.contentSize = CGSizeMake(width, height);
-    
     [self.pictureScrollView addSubview:self.contentView];
     
     NSArray *photoArray = nil;

@@ -352,7 +352,7 @@
     
     //是否显示地理位置
     NSString *locationString = [[AVUser currentUser] objectForKey:@"displayAddress"];
-    if ([locationString isEqualToString:@"NO"]) {
+    if ([locationString isEqualToString:@"NO"] || model.locationString == nil) {
         self.locationLabel.hidden = YES;
         self.locationImageView.image = nil;
     } else {
@@ -424,8 +424,6 @@
         [alertVC addAction:action];
         [self.navigationController presentViewController:alertVC animated:YES completion:nil];
     }
-    
 }
-
 
 @end
