@@ -52,6 +52,7 @@
 
 
 - (void)viewDidLoad {
+    [super viewDidLoad];
     self.navigationItem.title = @"Loading";
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone

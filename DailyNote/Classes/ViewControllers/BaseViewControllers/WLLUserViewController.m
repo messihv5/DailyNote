@@ -289,7 +289,7 @@
                                case SSDKResponseStateFail:
                                {
                                    NSString *message = [NSString stringWithFormat:@"%@", error];
-                                   UIAlertView *alert = [[UIAlertView alloc ]initWithTitle:@"分享失败"
+                                   UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"分享失败"
                                                                                    message:message
                                                                                   delegate:nil
                                                                          cancelButtonTitle:@"OK"

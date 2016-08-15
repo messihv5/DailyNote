@@ -43,6 +43,7 @@
 		4D6E2D951D0E9CCE00AB8271 /* WLLAboutDailyNoteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D6E2D931D0E9CCE00AB8271 /* WLLAboutDailyNoteViewController.xib */; };
 		4D6E2DB81D0EB01E00AB8271 /* WLLSetReminderTimeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D6E2DB61D0EB01E00AB8271 /* WLLSetReminderTimeViewController.m */; };
 		4D6E2DB91D0EB01E00AB8271 /* WLLSetReminderTimeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D6E2DB71D0EB01E00AB8271 /* WLLSetReminderTimeViewController.xib */; };
+		4D6F15621D6194E600066F5F /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D6F15611D6194E600066F5F /* Images.xcassets */; };
 		4D70E7611D0A930900C44B66 /* WLLTopicViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D70E75F1D0A930900C44B66 /* WLLTopicViewController.m */; };
 		4D70E7621D0A930900C44B66 /* WLLTopicViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D70E7601D0A930900C44B66 /* WLLTopicViewController.xib */; };
 		4D7417341D5D64F900924F8A /* lock.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D7417311D5D64F900924F8A /* lock.png */; };
@@ -229,6 +230,7 @@
 		4D6E2DB51D0EB01E00AB8271 /* WLLSetReminderTimeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLSetReminderTimeViewController.h; sourceTree = "<group>"; };
 		4D6E2DB61D0EB01E00AB8271 /* WLLSetReminderTimeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLSetReminderTimeViewController.m; sourceTree = "<group>"; };
 		4D6E2DB71D0EB01E00AB8271 /* WLLSetReminderTimeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WLLSetReminderTimeViewController.xib; sourceTree = "<group>"; };
+		4D6F15611D6194E600066F5F /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		4D70E75E1D0A930900C44B66 /* WLLTopicViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLTopicViewController.h; sourceTree = "<group>"; };
 		4D70E75F1D0A930900C44B66 /* WLLTopicViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLTopicViewController.m; sourceTree = "<group>"; };
 		4D70E7601D0A930900C44B66 /* WLLTopicViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WLLTopicViewController.xib; sourceTree = "<group>"; };
@@ -330,7 +332,6 @@
 		4DD5193F1D2772A300745AA1 /* WLLDailyNoteDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLDailyNoteDataManager.m; sourceTree = "<group>"; };
 		4DD519401D2772A300745AA1 /* WLLMyColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLMyColor.h; sourceTree = "<group>"; };
 		4DD519411D2772A300745AA1 /* WLLMyColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLMyColor.m; sourceTree = "<group>"; };
-		4DD519441D2772E000745AA1 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		4DD519451D27731600745AA1 /* NoteDetail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoteDetail.h; sourceTree = "<group>"; };
 		4DD519461D27731600745AA1 /* NoteDetail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NoteDetail.m; sourceTree = "<group>"; };
 		4DD5194A1D2773B400745AA1 /* NSString+WeekDay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+WeekDay.h"; sourceTree = "<group>"; };
@@ -637,6 +638,7 @@
 				4D8A3F001CF3D14D000C2D42 /* LaunchScreen.storyboard */,
 				4D8A3F031CF3D14D000C2D42 /* Info.plist */,
 				4D8A3EFB1CF3D14D000C2D42 /* DailyNote.xcdatamodeld */,
+				4D6F15611D6194E600066F5F /* Images.xcassets */,
 				4D8A3EEF1CF3D14D000C2D42 /* Supporting Files */,
 			);
 			path = DailyNote;
@@ -698,7 +700,6 @@
 		4D8A3F291CF3D615000C2D42 /* Headers */ = {
 			isa = PBXGroup;
 			children = (
-				4DD519441D2772E000745AA1 /* PrefixHeader.pch */,
 			);
 			path = Headers;
 			sourceTree = "<group>";
@@ -1109,6 +1110,7 @@
 				4D8CBD561D5D52F3008F8137 /* sharing.png in Resources */,
 				4D8CBD591D5D52F3008F8137 /* evaluateApp.png in Resources */,
 				4DDB2AF91CFF1732002D7784 /* smallStar.png in Resources */,
+				4D6F15621D6194E600066F5F /* Images.xcassets in Resources */,
 				4DD5197A1D27747F00745AA1 /* WLLNoteBackgroundChoice.xib in Resources */,
 				4D8A3F021CF3D14D000C2D42 /* LaunchScreen.storyboard in Resources */,
 				4DAF25041D5AA4BD009FC4D2 /* orangeTopic.png in Resources */,
@@ -1459,6 +1461,8 @@
 			baseConfigurationReference = 0428E0BC44A15683D73BA0BF /* Pods-DailyNote.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -1488,6 +1492,8 @@
 			baseConfigurationReference = AA9803D23890D8C5859509F5 /* Pods-DailyNote.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";

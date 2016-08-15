@@ -69,7 +69,7 @@
     }
     
     //如果用户没保存主题，就默认第一主题，保存了则用自己保存的主题
-    if (navigationImageData == nil && tabbarImageData == nil) {
+    if (navigationImageData == nil || tabbarImageData == nil) {
         self.navigationImageView.image = self.navigationImage1;
         self.tabbarImageView.image = self.tabbarImage1;
     } else {
